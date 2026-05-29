@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>科技与加密货币仪表盘</title>
+<style>
+  :root { color-scheme:light; --bg:#f8f9fa; --card:#fff; --border:#e5e7eb; --t1:#111827; --t2:#6b7280; --accent:#6366f1; --green:#16a34a; --red:#dc2626; --r:12px; --shadow:0 1px 3px rgba(0,0,0,.06); }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--t1);line-height:1.6;padding:20px;max-width:1100px;margin:0 auto}
+  .hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+  .hdr h1{font-size:20px;font-weight:700}
+  .hdr .meta{font-size:12px;color:var(--t2);display:flex;gap:12px;align-items:center}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .sec{font-size:14px;font-weight:600;color:var(--t2);letter-spacing:.5px;margin:28px 0 10px;padding-left:2px;display:flex;align-items:center;gap:8px}
+  .sec .icon{font-size:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+  .btc-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:20px}
+  .btc-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#f7931a,#e8860a);color:#fff;font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .btc-price{font-size:36px;font-weight:800;letter-spacing:-1px}
+  .btc-change{font-size:16px;font-weight:600;margin-top:2px}
+  .btc-change.up{color:var(--green)}.btc-change.down{color:var(--red)}
+  .btc-info{margin-left:auto;text-align:right}
+  .btc-info div{font-size:13px;color:var(--t2);line-height:1.8}
+  .news-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;transition:background .1s}
+  .news-item:last-child{border-bottom:none}
+  .news-item:hover{background:#f9fafb}
+  .news-rank{font-size:14px;font-weight:700;color:var(--t2);min-width:22px;text-align:right;padding-top:1px}
+  .news-body{flex:1;min-width:0}
+  .news-title{font-size:14px;font-weight:600;color:var(--t1);text-decoration:none;line-height:1.5}
+  .news-title:hover{color:var(--accent)}
+  .news-sub{font-size:12px;color:var(--t2);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+  .heat{font-size:13px;font-weight:700;color:var(--accent);text-align:right;min-width:60px;padding-top:1px}
+  .tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600}
+  .tag-hot{background:#fef2f2;color:#dc2626}
+  .tag-defi{background:#eff6ff;color:#3b82f6}
+  .tag-nft{background:#fdf4ff;color:#a855f7}
+  .tag-exchange{background:#fff7ed;color:#ea580c}
+  .tag-crypto{background:#f0fdf4;color:#16a34a}
+  .sort-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap}
+  .sort-bar span{font-size:12px;color:var(--t2);font-weight:500}
+  .sort-btns{display:flex;gap:6px}
+  .sort-btn{padding:4px 12px;border:1px solid var(--border);border-radius:6px;background:var(--card);font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);transition:all .15s}
+  .sort-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .sort-btn:hover:not(.active){border-color:var(--accent);color:var(--accent)}
+  .loading{text-align:center;padding:40px;color:var(--t2);font-size:14px}
+  .loading-spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .error{color:var(--red);text-align:center;padding:20px;font-size:13px}
+  .footer{text-align:center;margin-top:28px;font-size:11px;color:var(--t2);padding-bottom:10px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>科技与加密货币仪表盘</h1>
+  <div class="meta"><span class="dot"></span> <span id="update-time">加载中...</span></div>
+</div>
+
+<!-- BTC -->
+<div class="sec"><span class="icon">₿</span> 比特币行情</div>
+<div class="card" id="btc-card">
+  <div class="btc-row">
+    <div class="btc-icon">B</div>
+    <div>
+      <div class="btc-price" id="btc-price">--</div>
+      <div class="btc-change" id="btc-change">--</div>
+    </div>
+    <div class="btc-info">
+      <div id="btc-mcap">市值：--</div>
+      <div id="btc-24h">24h变动：--</div>
+    </div>
+  </div>
+</div>
+
+<!-- 加密行业新闻 -->
+<div class="sec"><span class="icon">🔗</span> Web3 / 区块链 / 交易所热点</div>
+<div class="card" id="crypto-card">
+  <div class="loading"><div class="loading-spinner"></div>正在获取加密行业新闻...</div>
+</div>
+
+<!-- HN -->
+<div class="sec"><span class="icon">📰</span> Hacker News 热门（中文）</div>
+<div class="card" id="hn-card">
+  <div class="sort-bar">
+    <span>排序方式</span>
+    <div class="sort-btns">
+      <button class="sort-btn active" onclick="sortHN('score')">热度</button>
+      <button class="sort-btn" onclick="sortHN('comments')">评论</button>
+      <button class="sort-btn" onclick="sortHN('time')">最新</button>
+    </div>
+  </div>
+  <div id="hn-list">
+    <div class="loading"><div class="loading-spinner"></div>正在获取 Hacker News...</div>
+  </div>
+</div>
+
+<div class="footer">数据来源：CoinGecko · Cointelegraph · Hacker News | 自动更新</div>
+
+<script>
+// === 数据获取 ===
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+function parseRSS(xmlText) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xmlText, 'text/xml');
+  const items = doc.querySelectorAll('item');
+  const results = [];
+  for (let i = 0; i < Math.min(items.length, 15); i++) {
+    const title = items[i].querySelector('title')?.textContent || '';
+    const link = items[i].querySelector('link')?.textContent || '';
+    results.push({ title, link });
+  }
+  return results;
+}
+
+function timeAgo(unix) {
+  const diff = Math.floor(Date.now() / 1000) - unix;
+  if (diff < 3600) return Math.floor(diff / 60) + ' 分钟前';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' 小时前';
+  return Math.floor(diff / 86400) + ' 天前';
+}
+
+// === BTC ===
+async function loadBTC() {
+  try {
+    const data = await fetchJSON('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_market_cap=true');
+    const btc = data.bitcoin;
+    const price = btc.usd;
+    const change = btc.usd_24h_change;
+    const mcap = btc.usd_market_cap;
+
+    document.getElementById('btc-price').textContent = '$' + price.toLocaleString();
+    const changeEl = document.getElementById('btc-change');
+    const arrow = change >= 0 ? '▲' : '▼';
+    changeEl.textContent = arrow + ' ' + Math.abs(change).toFixed(2) + '%';
+    changeEl.className = 'btc-change ' + (change >= 0 ? 'up' : 'down');
+    document.getElementById('btc-mcap').textContent = '市值：$' + (mcap / 1e12).toFixed(2) + '万亿';
+    document.getElementById('btc-24h').textContent = '24h变动：' + (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+  } catch (e) {
+    document.getElementById('btc-card').innerHTML = '<div class="error">BTC 数据加载失败: ' + e.message + '</div>';
+  }
+}
+
+// === 加密新闻 ===
+async function loadCrypto() {
+  try {
+    const res = await fetch('https://cointelegraph.com/rss');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const items = parseRSS(text);
+
+    const card = document.getElementById('crypto-card');
+    if (items.length === 0) { card.innerHTML = '<div class="error">暂无新闻</div>'; return; }
+
+    const tags = ['交易所','DeFi','AI','监管','科技','开发','Web3','交易所','DeFi','开发'];
+    card.innerHTML = items.map((item, i) =>
+      '<div class="news-item"><span class="news-rank">' + (i + 1) + '</span>' +
+      '<div class="news-body"><a class="news-title" href="' + item.link + '" target="_blank" rel="noopener">' + item.title + '</a>' +
+      '<div class="news-sub"><span class="tag tag-defi">' + (tags[i % tags.length] || '行业') + '</span> Cointelegraph</div></div></div>'
+    ).join('');
+  } catch (e) {
+    document.getElementById('crypto-card').innerHTML = '<div class="error">加密新闻加载失败: ' + e.message + '</div>';
+  }
+}
+
+// === HN ===
+let hnData = [];
+
+async function loadHN() {
+  try {
+    const ids = await fetchJSON('https://hacker-news.firebaseio.com/v0/topstories.json');
+    const top15 = ids.slice(0, 15);
+    const stories = await Promise.all(
+      top15.map(id => fetchJSON('https://hacker-news.firebaseio.com/v0/item/' + id + '.json').catch(() => null))
+    );
+    hnData = stories.filter(s => s && s.title).map(s => ({
+      title: s.title,
+      score: s.score || 0,
+      comments: s.descendants || 0,
+      time: s.time || 0,
+      url: s.url || ('https://news.ycombinator.com/item?id=' + s.id),
+      by: s.by || ''
+    }));
+
+    sortHN(localStorage.getItem('hn-sort') || 'score', true);
+  } catch (e) {
+    document.getElementById('hn-list').innerHTML = '<div class="error">HN 数据加载失败: ' + e.message + '</div>';
+  }
+}
+
+function sortHN(key, skip) {
+  localStorage.setItem('hn-sort', key);
+  document.querySelectorAll('.sort-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === ({score:'热度',comments:'评论',time:'最新'}[key]));
+  });
+
+  if (!skip) {
+    if (key === 'score') hnData.sort((a, b) => b.score - a.score);
+    else if (key === 'comments') hnData.sort((a, b) => b.comments - a.comments);
+    else if (key === 'time') hnData.sort((a, b) => b.time - a.time);
+  }
+
+  const list = document.getElementById('hn-list');
+  list.innerHTML = hnData.map((item, i) => {
+    const hotTag = item.score >= 100 ? '<span class="tag tag-hot">热</span> ' : '';
+    return '<div class="news-item" data-score="' + item.score + '" data-comments="' + item.comments + '" data-time="' + item.time + '">' +
+      '<span class="news-rank">' + (i + 1) + '</span>' +
+      '<div class="news-body"><a class="news-title" href="' + item.url + '" target="_blank" rel="noopener">' + item.title + '</a>' +
+      '<div class="news-sub">' + hotTag + item.score + ' 分 · ' + item.comments + ' 评论 · ' + timeAgo(item.time) + '</div></div>' +
+      '<div class="heat">' + item.score + '</div></div>';
+  }).join('');
+}
+
+// === 初始化 ===
+function updateTime() {
+  const now = new Date();
+  document.getElementById('update-time').textContent = '更新于 ' + now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+}
+
+async function init() {
+  updateTime();
+  await Promise.all([loadBTC(), loadCrypto(), loadHN()]);
+}
+
+init();
+
+// 每 5 分钟自动刷新
+setInterval(init, 5 * 60 * 1000);
+</script>
+
+</body>
+</html>
