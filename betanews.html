@@ -1,4 +1,17 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Tech Crypto Dashboard",
+  "schemaVersion": 1,
+  "description": "实时科技新闻与加密货币行情仪表盘。显示 Hacker News 热门文章（按热度/评论/时间排序）和主流加密货币价格、24h涨跌幅、市值。数据每次打开页面时从公开 API 实时拉取。",
+  "mcpTools": [
+    "mcp__workspace__web_fetch"
+  ],
+  "mcpServerNames": [
+    "workspace"
+  ]
+}
+</script>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -50,7 +63,7 @@
 
 <div class="hdr">
   <h1>科技与加密货币仪表盘</h1>
-  <div class="meta"><span class="dot"></span> 更新于 14:38</div>
+  <div class="meta"><span class="dot"></span> 更新于 08:04</div>
 </div>
 
 <div class="sec"><span class="icon">₿</span> 比特币行情</div>
@@ -58,28 +71,28 @@
   <div class="btc-row">
     <div class="btc-icon">B</div>
     <div>
-      <div class="btc-price">$73,642</div>
-      <div class="btc-change up">▲ 1.24%</div>
+      <div class="btc-price">$73,850</div>
+      <div class="btc-change up">▲ +0.55%</div>
     </div>
     <div class="btc-info">
       <div>市值：$1.48万亿</div>
-      <div>24h变动：+1.24%</div>
+      <div>24h变动：+0.55%</div>
     </div>
   </div>
 </div>
 
 <div class="sec"><span class="icon">🔗</span> Web3 / 区块链 / 交易所热点</div>
 <div class="card">
-  <div class="news-item"><span class="news-rank">1</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/gemini-taps-grok-personalized-ai-powered-prediction-market-feeds" target="_blank">Gemini 交易所接入 Grok，推出 AI 驱动的个性化预测市场信息流</a><div class="news-sub"><span class="tag tag-exchange">交易所</span> Cointelegraph</div></div></div>
-  <div class="news-item"><span class="news-rank">2</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/trezor-usdc-usdt-yield-morpho-trezor-suite" target="_blank">Trezor 硬件钱包通过 Morpho 集成原生支持 USDT、USDC 生息</a><div class="news-sub"><span class="tag tag-defi">DeFi</span> Cointelegraph</div></div></div>
-  <div class="news-item"><span class="news-rank">3</span><div class="news-body"><a class="news-title" href="https://www.anthropic.com/news/series-h" target="_blank">Anthropic 完成 650 亿美元 H 轮融资，估值达 9650 亿美元</a><div class="news-sub"><span class="tag tag-crypto">AI</span> 行业重磅</div></div></div>
-  <div class="news-item"><span class="news-rank">4</span><div class="news-body"><a class="news-title" href="https://www.bbc.co.uk/news/articles/c1k2ydn1rz8o" target="_blank">欧盟对 Temu 开出 2 亿欧元罚单，指控其允许销售非法产品</a><div class="news-sub"><span class="tag tag-exchange">监管</span> BBC</div></div></div>
-  <div class="news-item"><span class="news-rank">5</span><div class="news-body"><a class="news-title" href="https://arstechnica.com/tech-policy/2026/05/uss-big-bet-on-quantum-computing-may-not-be-entirely-legal/" target="_blank">美国量子计算大投资可能涉嫌违法</a><div class="news-sub"><span class="tag tag-crypto">科技</span> Ars Technica</div></div></div>
-  <div class="news-item"><span class="news-rank">6</span><div class="news-body"><a class="news-title" href="https://github.com/Kaelio/ktx" target="_blank">开源项目 Ktx：为数据代理打造的可执行上下文层</a><div class="news-sub"><span class="tag tag-defi">开发</span> GitHub</div></div></div>
-  <div class="news-item"><span class="news-rank">7</span><div class="news-body"><a class="news-title" href="https://hallucinate.site" target="_blank">Hallucinate：大型多人在线 Rave 派对项目开源</a><div class="news-sub"><span class="tag tag-nft">Web3</span> Show HN</div></div></div>
-  <div class="news-item"><span class="news-rank">8</span><div class="news-body"><a class="news-title" href="https://github.com/bytecodealliance/endive" target="_blank">Endive：JVM 原生 WebAssembly 运行时发布</a><div class="news-sub"><span class="tag tag-defi">开发</span> GitHub</div></div></div>
-  <div class="news-item"><span class="news-rank">9</span><div class="news-body"><a class="news-title" href="https://ipvm.com/reports/bipartisan-alpr-amendment-killed" target="_blank">美国两党车牌识别法案被否决</a><div class="news-sub"><span class="tag tag-exchange">监管</span> IPVM</div></div></div>
-  <div class="news-item"><span class="news-rank">10</span><div class="news-body"><a class="news-title" href="https://www.anthropic.com/news/claude-opus-4-8" target="_blank">Claude Opus 4.8 发布</a><div class="news-sub"><span class="tag tag-crypto">AI</span> Anthropic</div></div></div>
+<div class="news-item"><span class="news-rank">1</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/crypto-sentiment-reaches-most-lopsided-positive-ratio-for-2026-santiment" target="_blank">BTC 情绪达到 2026 年最「一边倒看涨」水平</a><div class="news-sub"><span class="tag tag-crypto">市场</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">2</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/markets/bitcoin-dip-buyers-curb-selling-but-questionable-spot-futures-volumes-highlight-weakness" target="_blank">BTC 逢低买入者减少抛售，但成交量存疑</a><div class="news-sub"><span class="tag tag-crypto">市场</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">3</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/bitcoin-is-at-pivotal-level-and-faces-threat-to-65k-analyst" target="_blank">分析师：BTC 处于关键水平，存在跌至 $65K 风险</a><div class="news-sub"><span class="tag tag-defi">分析</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">4</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/senator-lummis-says-china-will-beat-the-us-to-the-punch-if-clarity-is-not-passed" target="_blank">参议员 Lummis：若 CLARITY 法案失败，中国将主导新金融秩序</a><div class="news-sub"><span class="tag tag-exchange">监管</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">5</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/circle-freezes-126m-of-usdc-linked-to-privacy-protocol-zama" target="_blank">Circle 冻结与隐私协议 Zama 关联的 1260 万 USDC</a><div class="news-sub"><span class="tag tag-defi">DeFi</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">6</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/sec-charges-texas-man-with-123m-crypto-fraud-fake-ai-trading-bots" target="_blank">SEC 起诉德州男子利用虚假 AI 交易机器人诈骗 1230 万美元</a><div class="news-sub"><span class="tag tag-exchange">监管</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">7</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/what-happened-in-crypto-today" target="_blank">今日加密市场要闻速览</a><div class="news-sub"><span class="tag tag-crypto">综合</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">8</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/spot-bitcoin-etfs-see-record-10-day-outflow-streak-analyst-calls-it-contrarian-indicator" target="_blank">现货 BTC ETF 创纪录连续 10 天资金流出</a><div class="news-sub"><span class="tag tag-exchange">ETF</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">9</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/bitcoin-treasury-space-still-has-fair-share-of-carnival-barkers-bstr-founder" target="_blank">BSTR 创始人：BTC 储备领域仍有大量投机者</a><div class="news-sub"><span class="tag tag-crypto">行业</span> Cointelegraph</div></div></div>
+<div class="news-item"><span class="news-rank">10</span><div class="news-body"><a class="news-title" href="https://cointelegraph.com/news/us-has-seized-nearly-1-billion-in-iranian-crypto-treasury-secretary-says" target="_blank">美财政部：已查获近 10 亿美元伊朗加密资产</a><div class="news-sub"><span class="tag tag-exchange">监管</span> Cointelegraph</div></div></div>
 </div>
 
 <div class="sec"><span class="icon">📰</span> Hacker News 热门（中文）</div>
@@ -93,21 +106,20 @@
     </div>
   </div>
   <div id="hn-list">
-  <div class="news-item" data-score="752" data-comments="562" data-time="1779986954"><span class="news-rank">1</span><div class="news-body"><a class="news-title" href="https://www.anthropic.com/news/claude-opus-4-8" target="_blank">Claude Opus 4.8 发布</a><div class="news-sub"><span class="tag tag-hot">热</span> 752 分 · 562 评论</div></div><div class="heat">752</div></div>
-  <div class="news-item" data-score="634" data-comments="347" data-time="1779996249"><span class="news-rank">2</span><div class="news-body"><a class="news-title" href="https://mybricklog.com/blog/bricks-minifigs-corporate-stole-old-mans-200000-lego-collection" target="_blank">Bricks and Minifigs 偷走了一名男子价值 20 万美元的乐高收藏</a><div class="news-sub">634 分 · 347 评论</div></div><div class="heat">634</div></div>
-  <div class="news-item" data-score="241" data-comments="111" data-time="1780023660"><span class="news-rank">3</span><div class="news-body"><a class="news-title" href="https://www.bbc.com/future/article/20260513-your-car-is-spying-on-you-its-about-to-get-worse" target="_blank">汽车正在收集大量关于你的数据，情况还会更糟</a><div class="news-sub">241 分 · 111 评论</div></div><div class="heat">241</div></div>
-  <div class="news-item" data-score="199" data-comments="28" data-time="1779999921"><span class="news-rank">4</span><div class="news-body"><a class="news-title" href="https://nick.winans.io/blog/nice-nano/" target="_blank">我在宿舍里做出了百万美元的产品（2025）</a><div class="news-sub">199 分 · 28 评论</div></div><div class="heat">199</div></div>
-  <div class="news-item" data-score="179" data-comments="90" data-time="1780004754"><span class="news-rank">5</span><div class="news-body"><a class="news-title" href="https://www.tomshardware.com/tech-industry/cyber-security/microsofts-github-bans-security-researcher-who-posted-zero-day-windows-exploits-because-company-ruined-their-life-expert-claims-action-is-vindictive-and-promises-further-retaliation" target="_blank">GitHub 封禁了发布 Windows 零日漏洞的安全研究员</a><div class="news-sub">179 分 · 90 评论</div></div><div class="heat">179</div></div>
-  <div class="news-item" data-score="159" data-comments="82" data-time="1780025535"><span class="news-rank">6</span><div class="news-body"><a class="news-title" href="https://arstechnica.com/space/2026/05/blue-origins-new-glenn-rocket-just-exploded-during-a-static-fire-test/" target="_blank">蓝色起源 New Glenn 火箭在静态点火测试中爆炸</a><div class="news-sub">159 分 · 82 评论</div></div><div class="heat">159</div></div>
-  <div class="news-item" data-score="146" data-comments="72" data-time="1779813718"><span class="news-rank">7</span><div class="news-body"><a class="news-title" href="https://taoofmac.com/space/blog/2026/05/26/1730" target="_blank">使用 OpenWRT 实现室内 Wi-Fi 漫游</a><div class="news-sub">146 分 · 72 评论</div></div><div class="heat">146</div></div>
-  <div class="news-item" data-score="146" data-comments="70" data-time="1779973320"><span class="news-rank">8</span><div class="news-body"><a class="news-title" href="https://llmgame.scalex.dev" target="_blank">Show HN：Continue? Y/N —— AI 代理权限疲劳的 60 秒小游戏</a><div class="news-sub">146 分 · 70 评论</div></div><div class="heat">146</div></div>
-  <div class="news-item" data-score="138" data-comments="23" data-time="1779806180"><span class="news-rank">9</span><div class="news-body"><a class="news-title" href="https://coalton-lang.github.io/" target="_blank">Coalton：融合 Haskell 和 OCaml 理念的高效静态类型 Lisp</a><div class="news-sub">138 分 · 23 评论</div></div><div class="heat">138</div></div>
-  <div class="news-item" data-score="97" data-comments="69" data-time="1779991784"><span class="news-rank">10</span><div class="news-body"><a class="news-title" href="https://www.anthropic.com/news/series-h" target="_blank">Anthropic 以 9650 亿美元估值完成 650 亿美元 H 轮融资</a><div class="news-sub"><span class="tag tag-hot">热</span> 97 分 · 69 评论</div></div><div class="heat">97</div></div>
-  <div class="news-item" data-score="89" data-comments="27" data-time="1779716705"><span class="news-rank">11</span><div class="news-body"><a class="news-title" href="https://www.carryology.com/insights/carry-culture/the-tale-of-the-worlds-most-unlikely-school-bag/" target="_blank">世界上最不可能的书包</a><div class="news-sub">89 分 · 27 评论</div></div><div class="heat">89</div></div>
-  <div class="news-item" data-score="85" data-comments="27" data-time="1780011767"><span class="news-rank">12</span><div class="news-body"><a class="news-title" href="https://sfstandard.com/2026/05/28/sf-startup-secretly-testing-robots-airbnbs-trashing-lawsuit-claims/" target="_blank">旧金山初创公司在 Airbnb 里秘密测试机器人并搞乱房子</a><div class="news-sub">85 分 · 27 评论</div></div><div class="heat">85</div></div>
-  <div class="news-item" data-score="78" data-comments="73" data-time="1779750674"><span class="news-rank">13</span><div class="news-body"><a class="news-title" href="https://arstechnica.com/tech-policy/2026/05/uss-big-bet-on-quantum-computing-may-not-be-entirely-legal/" target="_blank">美国量子计算大投资可能并不完全合法</a><div class="news-sub">78 分 · 73 评论</div></div><div class="heat">78</div></div>
-  <div class="news-item" data-score="51" data-comments="28" data-time="1780013375"><span class="news-rank">14</span><div class="news-body"><a class="news-title" href="https://minimaxir.com/2026/05/openrouter-hy3/" target="_blank">神秘的 Hy3 LLM 以巨大优势登顶 OpenRouter 模型排行榜</a><div class="news-sub">51 分 · 28 评论</div></div><div class="heat">51</div></div>
-  <div class="news-item" data-score="42" data-comments="12" data-time="1779659575"><span class="news-rank">15</span><div class="news-body"><a class="news-title" href="https://www.noaa.gov/jetstream/clouds/ten-basic-clouds" target="_blank">十种基本云型</a><div class="news-sub">42 分 · 12 评论</div></div><div class="heat">42</div></div>
+<div class="news-item" data-score="814" data-comments="286" data-time="1780183573"><span class="news-rank">1</span><div class="news-body"><a class="news-title" href="https://consumerrights.wiki/w/Microsoft_Office_2019_and_2021_for_Mac_view-only_conversion_(2026)" target="_blank">微软 Office 2019/2021 Mac 版被改为只读模式</a><div class="news-sub"><span class="tag tag-hot">热</span> 814 分 · 286 评论</div></div><div class="heat">814</div></div>
+<div class="news-item" data-score="531" data-comments="312" data-time="1780173657"><span class="news-rank">2</span><div class="news-body"><a class="news-title" href="https://www.brethorsting.com/blog/2026/05/domain-expertise-has-always-been-the-real-moat/" target="_blank">领域专业知识才是真正的护城河</a><div class="news-sub"><span class="tag tag-hot">热</span> 531 分 · 312 评论</div></div><div class="heat">531</div></div>
+<div class="news-item" data-score="308" data-comments="78" data-time="1780022983"><span class="news-rank">3</span><div class="news-body"><a class="news-title" href="https://github.com/Hawzen/I-found-a-seashell-in-the-middle-of-the-desert" target="_blank">我在沙漠中央发现了一枚贝壳</a><div class="news-sub"><span class="tag tag-hot">热</span> 308 分 · 78 评论</div></div><div class="heat">308</div></div>
+<div class="news-item" data-score="276" data-comments="142" data-time="1780158538"><span class="news-rank">4</span><div class="news-body"><a class="news-title" href="https://newsroom.accenture.com/news/2026/accenture-to-acquire-ookla" target="_blank">埃森哲将收购 Ookla（Speedtest）</a><div class="news-sub"><span class="tag tag-hot">热</span> 276 分 · 142 评论</div></div><div class="heat">276</div></div>
+<div class="news-item" data-score="212" data-comments="18" data-time="1780178798"><span class="news-rank">5</span><div class="news-body"><a class="news-title" href="https://shantellsans.com/process" target="_blank">Shantell Sans：一个有趣的开源字体项目</a><div class="news-sub"><span class="tag tag-hot">热</span> 212 分 · 18 评论</div></div><div class="heat">212</div></div>
+<div class="news-item" data-score="169" data-comments="59" data-time="1780177578"><span class="news-rank">6</span><div class="news-body"><a class="news-title" href="https://av2.aomedia.org" target="_blank">AV2 视频标准正式发布（v1.0 最终规范）</a><div class="news-sub">169 分 · 59 评论</div></div><div class="heat">169</div></div>
+<div class="news-item" data-score="101" data-comments="14" data-time="1779961360"><span class="news-rank">7</span><div class="news-body"><a class="news-title" href="https://blog.racket-lang.org/2026/05/racket-v9-2.html" target="_blank">Racket v9.2 编程语言发布</a><div class="news-sub">101 分 · 14 评论</div></div><div class="heat">101</div></div>
+<div class="news-item" data-score="70" data-comments="1" data-time="1780024939"><span class="news-rank">8</span><div class="news-body"><a class="news-title" href="https://cryptography101.ca/wp-content/uploads/lattice-based-cryptography.pdf" target="_blank">格基密码学入门指南</a><div class="news-sub">70 分 · 1 评论</div></div><div class="heat">70</div></div>
+<div class="news-item" data-score="63" data-comments="16" data-time="1780211390"><span class="news-rank">9</span><div class="news-body"><a class="news-title" href="https://specification.website/" target="_blank">网站规范文档</a><div class="news-sub">63 分 · 16 评论</div></div><div class="heat">63</div></div>
+<div class="news-item" data-score="30" data-comments="2" data-time="1780202534"><span class="news-rank">10</span><div class="news-body"><a class="news-title" href="http://oldvcr.blogspot.com/2026/05/ahoy-decmate-ii-little-pdp-8-that-could.html" target="_blank">DECmate II：小而能干的 PDP-8 复兴</a><div class="news-sub">30 分 · 2 评论</div></div><div class="heat">30</div></div>
+<div class="news-item" data-score="28" data-comments="10" data-time="1779995519"><span class="news-rank">11</span><div class="news-body"><a class="news-title" href="https://journals.biologists.com/jeb/article/229/10/jeb251935/371741/Associative-learning-switches-DEET-valence-from" target="_blank">研究：关联学习使蚊子对驱蚊剂 DEET 从厌恶变为喜好</a><div class="news-sub">28 分 · 10 评论</div></div><div class="heat">28</div></div>
+<div class="news-item" data-score="21" data-comments="0" data-time="1780208039"><span class="news-rank">12</span><div class="news-body"><a class="news-title" href="https://theodore.net/projects/AvianVisitors/" target="_blank">鸟类访客：互动艺术项目</a><div class="news-sub">21 分 · 0 评论</div></div><div class="heat">21</div></div>
+<div class="news-item" data-score="20" data-comments="0" data-time="1780205418"><span class="news-rank">13</span><div class="news-body"><a class="news-title" href="https://arxiv.org/abs/1709.08492" target="_blank">图解微分几何入门</a><div class="news-sub">20 分 · 0 评论</div></div><div class="heat">20</div></div>
+<div class="news-item" data-score="6" data-comments="1" data-time="1780173053"><span class="news-rank">14</span><div class="news-body"><a class="news-title" href="https://github.com/marekkowalczyk/breathe-cli" target="_blank">Breathe CLI：macOS 终端谐振呼吸训练工具</a><div class="news-sub">6 分 · 1 评论</div></div><div class="heat">6</div></div>
   </div>
 </div>
 
