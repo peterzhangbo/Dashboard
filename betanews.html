@@ -128,6 +128,7 @@
 var currentSort=localStorage.getItem('hn-sort')||'score';
 function sortHN(key){currentSort=key;localStorage.setItem('hn-sort',key);document.querySelectorAll('.sort-btn').forEach(function(b){b.classList.toggle('active',b.textContent==={score:'热度',comments:'评论',time:'最新'}[key])});var list=document.getElementById('hn-list');var items=Array.from(list.querySelectorAll('.news-item'));items.sort(function(a,b){var va=parseInt(a.dataset[key])||0;var vb=parseInt(b.dataset[key])||0;return vb-va});items.forEach(function(item,i){item.querySelector('.news-rank').textContent=i+1;list.appendChild(item)})}
 sortHN(currentSort);
+setTimeout(function(){location.reload()},69*60*1000);
 </script>
 
 </body>
