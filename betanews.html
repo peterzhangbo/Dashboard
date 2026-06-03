@@ -95,24 +95,9 @@ a{color:inherit;text-decoration:none}
 .snap-item{display:flex;padding:8px 12px;font-size:12px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border)}
 .snap-item:last-child{border-bottom:none}.snap-item:hover{background:#f8fafc}
 .snap-item .s-ts{font-family:var(--mono);font-weight:500}
-.snap-viewer{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
-.snap-viewer.open{display:block}
-.snap-viewer-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.snap-viewer-hdr h3{font-size:14px;font-weight:700}
-.snap-viewer-hdr button{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:4px;background:var(--card);cursor:pointer;color:var(--t2)}
-.snap-viewer-hdr button:hover{border-color:var(--accent);color:var(--accent)}
-.snap-kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:12px}
-.snap-kv-item{padding:8px;border:1px solid var(--border);border-radius:4px}
-.snap-kv-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px}
-.snap-kv-val{font-family:var(--mono);font-size:14px;font-weight:600;margin-top:2px}
-.snap-hn-list{max-height:300px;overflow-y:auto}
-.snap-hn-item{padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;display:flex;gap:8px}
-.snap-hn-item:last-child{border-bottom:none}
-.snap-hn-rank{font-family:var(--mono);color:var(--t3);min-width:16px;font-size:11px}
-.snap-hn-title{flex:1}.snap-hn-score{font-family:var(--mono);color:var(--accent);font-size:11px;min-width:40px;text-align:right}
 .hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .hdr h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
-@media(max-width:900px){.top-bar{grid-template-columns:1fr}.ex-dual{grid-template-columns:1fr}.ex-grid{grid-template-columns:1fr 2fr}}
+@media(max-width:900px){.top-bar{grid-template-columns:1fr}.ex-dual{grid-template-columns:1fr}.ex-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){.ex-grid{grid-template-columns:1fr}.btc-price{font-size:22px}}
 </style>
 </head>
@@ -122,7 +107,7 @@ a{color:inherit;text-decoration:none}
   <h1>科技与加密货币仪表盘</h1>
   <div class="meta">
     <span class="dot"></span>
-    <span class="ts-btn" onclick="toggleSnapDD()">更新于 2026-06-03 18:42 UTC</span>
+    <span class="ts-btn" onclick="toggleSnapDD()">更新于 2026-06-03 18:54 UTC</span>
     <div class="snap-dd" id="snap-dd">
       <div class="snap-dd-title">历史快照</div>
       <div id="snap-list"><div style="padding:12px;color:var(--t3);font-size:11px">点击加载...</div></div>
@@ -134,31 +119,21 @@ a{color:inherit;text-decoration:none}
   <div class="nl-card" id="nl-card">
     <div class="nl-title">12h 内上线</div>
     <div id="nl-list">
-      <div class="nl-item" data-ts="1780470000"><span class="nl-pair"><a href="https://www.okx.com/trade-swap/adbe-usdt-swap" target="_blank">ADBEUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
-      <div class="nl-item" data-ts="1780470000"><span class="nl-pair"><a href="https://www.okx.com/trade-swap/asml-usdt-swap" target="_blank">ASMLUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
-      <div class="nl-item" data-ts="1780470000"><span class="nl-pair"><a href="https://www.okx.com/trade-swap/ewt-usdt-swap" target="_blank">EWTUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
-      <div class="nl-item" data-ts="1780455601"><span class="nl-pair"><a href="https://www.binance.com/en/trade/USDT_AED" target="_blank">USDT/AED</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$12K</span><span class="nl-right"><span class="nl-ex">Binance</span><span class="nl-type">现货</span><span class="nl-time">06-03 03:00</span></span></div>
+<div class="nl-item" data-ts="1780512874"><span class="nl-pair"><a href="https://www.binance.com/en/trade/USDSOLD_USDT" target="_blank">USDSOLDUSDT</a></span><span class="nl-chg up">+0.05%</span><span class="nl-vol">$218.77</span><span class="nl-right"><span class="nl-ex">Binance</span><span class="nl-type">现货</span><span class="nl-time">06-03 18:54</span></span></div>
+
     </div>
   </div>
   <div class="btc-card" id="btc-card">
     <div class="btc-icon"><svg viewBox="0 0 24 24"><path d="M14.24 10.56c-.31 1.24-2.24.61-2.84.44l.55-2.18c.62.18 2.61.44 2.29 1.74zm-3.11 1.56l-.6 2.41c.74.19 3.03.92 3.37-.44.36-1.42-2.03-1.79-2.77-1.97zm10.57 2.3c-1.34 5.36-6.76 8.62-12.12 7.28S.96 14.94 2.3 9.58 9.06.96 14.42 2.3s8.62 6.76 7.28 12.12zm-5.47-5.58c.08-1.78-1.08-2.47-2.93-3.05l.6-2.39-1.46-.37-.58 2.33c-.38-.1-.78-.18-1.16-.28l.58-2.32-1.46-.37-.6 2.39c-.32-.07-.63-.14-.93-.22l-2.01-.51-.39 1.54s1.08.25 1.06.26c.59.15.7.55.68.87l-.68 2.72c.04.01.1.03.17.05l-.17-.04-1 3.84c-.07.18-.26.45-.67.35.02.02-1.06-.27-1.06-.27l-.73 1.68 1.89.48c.35.09.7.18 1.04.27l-.61 2.42 1.46.37.6-2.39c.4.11.78.21 1.16.31l-.6 2.37 1.46.37.61-2.41c2.35.45 4.11.27 4.86-1.86.6-1.71-.03-2.7-1.26-3.35.9-.21 1.58-.8 1.76-2.03z"/></svg></div>
     <div>
-      <div class="btc-price">$66,048</div>
-      <div class="btc-chg down">▼ 2.20%</div>
+      <div class="btc-price">$66,076</div>
+      <div class="btc-chg down">▼ 1.64%</div>
     </div>
     <div class="btc-meta">
       <div>市值：$1.31万亿</div>
-      <div>24h：▼ 2.20%</div>
+      <div>24h：▼ 1.64%</div>
     </div>
   </div>
-</div>
-
-<div class="snap-viewer" id="snap-viewer">
-  <div class="snap-viewer-hdr">
-    <h3 id="snap-viewer-title">快照详情</h3>
-    <button onclick="closeSnapViewer()">关闭</button>
-  </div>
-  <div id="snap-viewer-body"></div>
 </div>
 
 <div class="tabs-wrap">
@@ -176,13 +151,13 @@ a{color:inherit;text-decoration:none}
   <div class="tab-panel active" id="tab-listing">
     <div class="news-list">
 <div class="news-row"><span class="news-n">1</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884949" target="_blank">Bitget 现货杠杆新增 BILL/USDT！</a><div class="news-meta"><span class="tag tag-defi">Bitget 现货</span> 06-03 11:00</div></div></div>
-<div class="news-row"><span class="news-n">2</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/d77e2d77ea21405d9ef2cd7c6974ea5f" target="_blank">Binance Futures Will Launch Multiple USDⓈ-Margined TradFi Perpetual Contracts (2026-06-03)</a><div class="news-meta"><span class="tag tag-ex">Binance 合约</span> 06-03 06:45</div></div></div>
-<div class="news-row"><span class="news-n">3</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/66d54f75b3a041ff991ddd179ab6ed39" target="_blank">Binance Adds USDT/AED Spot Trading Pair</a><div class="news-meta"><span class="tag tag-ex">Binance 现货</span> 06-03 03:00</div></div></div>
-<div class="news-row"><span class="news-n">4</span><div class="news-body"><a class="news-t" href="https://announcements.bybit.com/en-US/article/hype-token-splash-grab-a-share-of-the-100-000-usdt-prize-pool--bltdd6dc985974108f3/" target="_blank">HYPE Token Splash— Grab a share of the 100,000 USDT prize  pool .</a><div class="news-meta"><span class="tag tag-pol">Bybit 现货</span> 06-02 11:10</div></div></div>
-<div class="news-row"><span class="news-n">5</span><div class="news-body"><a class="news-t" href="https://announcements.bybit.com/en-US/article/new-listing-dellusdt-perpetual-contract-with-up-to-10x-leverage-bltff481d91a15992f7/" target="_blank">New listing: DELLUSDT Perpetual Contract, with up to 10x leverage</a><div class="news-meta"><span class="tag tag-pol">Bybit 合约</span> 06-02 08:53</div></div></div>
-<div class="news-row"><span class="news-n">6</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884829" target="_blank">Bitget 上线 ANTHROPICUSDT 【IPO盘前永续合约】 | 提前押注 Anthropic IPO，抢占AI万亿赛道定价权！</a><div class="news-meta"><span class="tag tag-defi">Bitget 合约</span> 06-02 07:36</div></div></div>
-<div class="news-row"><span class="news-n">7</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884801" target="_blank">Bitget 关于即将上线 SAMSUNGUSDT、SKHYNIXUSDT、HYUNDAIUSDT的公告</a><div class="news-meta"><span class="tag tag-defi">Bitget 现货</span> 06-02 04:44</div></div></div>
-<div class="news-row"><span class="news-n">8</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/2b9ff1e1acf8433793bc40c59a0cb852" target="_blank">Binance Futures Will Launch ANTHROPICUSDT USDⓈ-Margined Perpetual Contract Pre-IPO Trading (2026-06-02)</a><div class="news-meta"><span class="tag tag-ex">Binance 合约</span> 06-02 03:01</div></div></div>
+<div class="news-row"><span class="news-n">2</span><div class="news-body"><a class="news-t" href="https://www.okx.com/help/okx-to-list-perpetual-futures-for-adbe-asml-and-ewt-equities" target="_blank">OKX to list perpetual futures for ADBE, ASML and EWT equities</a><div class="news-meta"><span class="tag tag-crypto">OKX 合约</span> 06-03 07:00</div></div></div>
+<div class="news-row"><span class="news-n">3</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/d77e2d77ea21405d9ef2cd7c6974ea5f" target="_blank">Binance Futures Will Launch Multiple USDⓈ-Margined TradFi Perpetual Contracts (2026-06-03)</a><div class="news-meta"><span class="tag tag-ex">Binance 合约</span> 06-03 06:45</div></div></div>
+<div class="news-row"><span class="news-n">4</span><div class="news-body"><a class="news-t" href="https://www.okx.com/help/okx-to-list-slxusd-expiry-perp-x-perp" target="_blank">OKX to list SLXUSD Expiry Perp (X-Perp)</a><div class="news-meta"><span class="tag tag-crypto">OKX 合约</span> 06-03 06:30</div></div></div>
+<div class="news-row"><span class="news-n">5</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/66d54f75b3a041ff991ddd179ab6ed39" target="_blank">Binance Adds USDT/AED Spot Trading Pair</a><div class="news-meta"><span class="tag tag-ex">Binance 现货</span> 06-03 03:00</div></div></div>
+<div class="news-row"><span class="news-n">6</span><div class="news-body"><a class="news-t" href="https://announcements.bybit.com/en-US/article/hype-token-splash-grab-a-share-of-the-100-000-usdt-prize-pool--bltdd6dc985974108f3/" target="_blank">HYPE Token Splash— Grab a share of the 100,000 USDT prize  pool .</a><div class="news-meta"><span class="tag tag-pol">Bybit 现货</span> 06-02 11:10</div></div></div>
+<div class="news-row"><span class="news-n">7</span><div class="news-body"><a class="news-t" href="https://www.okx.com/help/okx-to-list-perpetual-futures-for-hpe-asts-and-now-equities" target="_blank">OKX to list perpetual futures for HPE, ASTS and NOW equities</a><div class="news-meta"><span class="tag tag-crypto">OKX 合约</span> 06-02 09:05</div></div></div>
+<div class="news-row"><span class="news-n">8</span><div class="news-body"><a class="news-t" href="https://announcements.bybit.com/en-US/article/new-listing-dellusdt-perpetual-contract-with-up-to-10x-leverage-bltff481d91a15992f7/" target="_blank">New listing: DELLUSDT Perpetual Contract, with up to 10x leverage</a><div class="news-meta"><span class="tag tag-pol">Bybit 合约</span> 06-02 08:53</div></div></div>
     </div>
   </div>
 
@@ -209,48 +184,48 @@ a{color:inherit;text-decoration:none}
       <div class="ex-side"><div class="ex-side-label">现货</div>
         <div class="ex-grid">
           <div class="ex-box"><div class="ex-box-name">Binance</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/OPN/_USDT" target="_blank">OPN/USDT</a></div><div class="ex-item-data">$1.27M <span class="up">+1.19%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/WLD/_USDT" target="_blank">WLD/USDT</a></div><div class="ex-item-data">$926.94K <span class="up">+0.54%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/RLUSD/_USDT" target="_blank">RLUSD/USDT</a></div><div class="ex-item-data">$605.00K <span class="up">+0.00%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/STO_USDT" target="_blank">STOUSDT</a></div><div class="ex-item-data">$6.67M <span class="up">+15.87%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/OPN_USDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$6.09M <span class="up">+5.73%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/ZEC_USDT" target="_blank">ZECUSDT</a></div><div class="ex-item-data">$5.15M <span class="up">+0.85%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/irys/-usdt" target="_blank">IRYS/USDT</a></div><div class="ex-item-data">$4.74M <span class="up">+0.00%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/wld/-usdt" target="_blank">WLD/USDT</a></div><div class="ex-item-data">$4.48M <span class="down">-0.46%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/trx/-usdt" target="_blank">TRX/USDT</a></div><div class="ex-item-data">$827.20K <span class="down">-0.00%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/irys-usdt" target="_blank">IRYS-USDT</a></div><div class="ex-item-data">$4.74M <span class="down">-0.09%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/wld-usdt" target="_blank">WLD-USDT</a></div><div class="ex-item-data">$4.48M <span class="down">-0.02%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/trx-usdt" target="_blank">TRX-USDT</a></div><div class="ex-item-data">$827.20K <span class="down">-0.16%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/MYX/USDT" target="_blank">MYX/USDT</a></div><div class="ex-item-data">$59.36K <span class="down">-2.68%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/SKYAI/USDT" target="_blank">SKYAI/USDT</a></div><div class="ex-item-data">$54.17K <span class="up">+0.33%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LAB/USDT" target="_blank">LAB/USDT</a></div><div class="ex-item-data">$27.03K <span class="down">-2.18%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data">$340.20K <span class="up">+2.38%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data">$288.90K <span class="down">-8.91%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/SKYAIUSDT" target="_blank">SKYAIUSDT</a></div><div class="ex-item-data">$246.64K <span class="down">-1.06%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bybit</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/OPN//USDT" target="_blank">OPN/USDT</a></div><div class="ex-item-data">$428.69K <span class="up">+1.15%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/H//USDT" target="_blank">H/USDT</a></div><div class="ex-item-data">$213.51K <span class="up">+0.76%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/WLD//USDT" target="_blank">WLD/USDT</a></div><div class="ex-item-data">$157.01K <span class="up">+0.46%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/ENA/USDT" target="_blank">ENAUSDT</a></div><div class="ex-item-data">$2.39M <span class="down">-3.38%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/OPN/USDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$2.11M <span class="up">+5.74%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/WLD/USDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data">$1.21M <span class="down">-0.31%</span></div></div>
           </div>
         </div>
       </div>
       <div class="ex-side"><div class="ex-side-label">永续合约</div>
         <div class="ex-grid">
           <div class="ex-box"><div class="ex-box-name">Binance</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$11.63M <span class="up">+1.56%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/CLUSDT" target="_blank">CLUSDT</a></div><div class="ex-item-data">$5.80M <span class="down">-0.16%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data">$4.83M <span class="down">-2.22%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$67.46M <span class="up">+5.94%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/MRVLUSDT" target="_blank">MRVLUSDT</a></div><div class="ex-item-data">$33.78M <span class="down">-1.37%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/CLUSDT" target="_blank">CLUSDT</a></div><div class="ex-item-data">$32.72M <span class="down">-0.10%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opnusdtswap-usdt-swap" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$29.58M <span class="down">-1.09%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/xplusdtswap-usdt-swap" target="_blank">XPLUSDT</a></div><div class="ex-item-data">$4.20M <span class="down">-0.07%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/edenusdtswap-usdt-swap" target="_blank">EDENUSDT</a></div><div class="ex-item-data">$3.94M <span class="up">+0.50%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opnusdtswap-usdt-swap" target="_blank">OPNUSDTSWAPUSDT</a></div><div class="ex-item-data">$29.58M <span class="down">-5.41%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/xrpusdtswap-usdt-swap" target="_blank">XRPUSDTSWAPUSDT</a></div><div class="ex-item-data">$9.79M <span class="up">+0.16%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/enausdtswap-usdt-swap" target="_blank">ENAUSDTSWAPUSDT</a></div><div class="ex-item-data">$9.70M <span class="up">+3.52%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data">$1.18M <span class="up">+0.46%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$598.13K <span class="up">+1.19%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data">$557.92K <span class="down">-2.08%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data">$6.50M <span class="down">-0.17%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$4.25M <span class="up">+5.78%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/ZECUSDT" target="_blank">ZECUSDT</a></div><div class="ex-item-data">$3.92M <span class="up">+0.83%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bybit</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/1000PEPEUSDT" target="_blank">1000PEPEUSDT</a></div><div class="ex-item-data">$1.75M <span class="up">+0.35%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$1.65M <span class="up">+0.98%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data">$1.41M <span class="down">-2.28%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$9.93M <span class="up">+5.53%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data">$9.54M <span class="down">-0.42%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data">$9.15M <span class="up">+2.80%</span></div></div>
           </div>
         </div>
       </div>
@@ -261,48 +236,48 @@ a{color:inherit;text-decoration:none}
       <div class="ex-side"><div class="ex-side-label">现货</div>
         <div class="ex-grid">
           <div class="ex-box"><div class="ex-box-name">Binance</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/OPN/_USDT" target="_blank">OPN/USDT</a></div><div class="ex-item-data"><span class="up">+1.19%</span> $1.27M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/TON/_USDT" target="_blank">TON/USDT</a></div><div class="ex-item-data"><span class="up">+0.95%</span> $159.53K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/VIC/_USDT" target="_blank">VIC/USDT</a></div><div class="ex-item-data"><span class="up">+0.82%</span> $7.72K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/STO_USDT" target="_blank">STOUSDT</a></div><div class="ex-item-data"><span class="up">+15.87%</span> $6.67M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/OPN_USDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+5.73%</span> $6.09M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/DEXE_USDT" target="_blank">DEXEUSDT</a></div><div class="ex-item-data"><span class="up">+4.43%</span> $532.97K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/ena/-usdt" target="_blank">ENA/USDT</a></div><div class="ex-item-data"><span class="up">+1.76%</span> $551.67K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/jto/-usdt" target="_blank">JTO/USDT</a></div><div class="ex-item-data"><span class="up">+1.63%</span> $497.85K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/grass/-usdt" target="_blank">GRASS/USDT</a></div><div class="ex-item-data"><span class="up">+0.77%</span> $153.44K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/ena-usdt" target="_blank">ENA-USDT</a></div><div class="ex-item-data"><span class="up">+3.34%</span> $551.67K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/jto-usdt" target="_blank">JTO-USDT</a></div><div class="ex-item-data"><span class="up">+2.30%</span> $497.85K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/core-usdt" target="_blank">CORE-USDT</a></div><div class="ex-item-data"><span class="up">+1.97%</span> $115.20K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/SKYAI/USDT" target="_blank">SKYAI/USDT</a></div><div class="ex-item-data"><span class="up">+0.33%</span> $54.17K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LAB/USDT" target="_blank">LAB/USDT</a></div><div class="ex-item-data"><span class="down">-2.18%</span> $27.03K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/MYX/USDT" target="_blank">MYX/USDT</a></div><div class="ex-item-data"><span class="down">-2.68%</span> $59.36K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="up">+2.38%</span> $340.20K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/SKYAIUSDT" target="_blank">SKYAIUSDT</a></div><div class="ex-item-data"><span class="down">-1.06%</span> $246.64K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-8.91%</span> $288.90K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bybit</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/OPN//USDT" target="_blank">OPN/USDT</a></div><div class="ex-item-data"><span class="up">+1.15%</span> $428.69K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/TON//USDT" target="_blank">TON/USDT</a></div><div class="ex-item-data"><span class="up">+0.95%</span> $51.84K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/H//USDT" target="_blank">H/USDT</a></div><div class="ex-item-data"><span class="up">+0.76%</span> $213.51K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/OPN/USDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+5.74%</span> $2.11M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/LIT/USDT" target="_blank">LITUSDT</a></div><div class="ex-item-data"><span class="up">+2.76%</span> $556.83K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/VVV/USDT" target="_blank">VVVUSDT</a></div><div class="ex-item-data"><span class="up">+2.69%</span> $157.66K</div></div>
           </div>
         </div>
       </div>
       <div class="ex-side"><div class="ex-side-label">永续合约</div>
         <div class="ex-grid">
           <div class="ex-box"><div class="ex-box-name">Binance</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/CLOUSDT" target="_blank">CLOUSDT</a></div><div class="ex-item-data"><span class="up">+1.82%</span> $313.35K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+1.56%</span> $11.63M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/TONUSDT" target="_blank">TONUSDT</a></div><div class="ex-item-data"><span class="up">+0.97%</span> $1.09M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/CLOUSDT" target="_blank">CLOUSDT</a></div><div class="ex-item-data"><span class="up">+9.99%</span> $3.60M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/MAGMAUSDT" target="_blank">MAGMAUSDT</a></div><div class="ex-item-data"><span class="up">+6.56%</span> $13.45M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+5.94%</span> $67.46M</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/biousdtswap-usdt-swap" target="_blank">BIOUSDT</a></div><div class="ex-item-data"><span class="up">+0.85%</span> $1.04M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/edenusdtswap-usdt-swap" target="_blank">EDENUSDT</a></div><div class="ex-item-data"><span class="up">+0.50%</span> $3.94M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/basedusdtswap-usdt-swap" target="_blank">BASEDUSDT</a></div><div class="ex-item-data"><span class="up">+0.49%</span> $2.75M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/gpsusdtswap-usdt-swap" target="_blank">GPSUSDTSWAPUSDT</a></div><div class="ex-item-data"><span class="up">+5.35%</span> $1.03M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/enausdtswap-usdt-swap" target="_blank">ENAUSDTSWAPUSDT</a></div><div class="ex-item-data"><span class="up">+3.52%</span> $9.70M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/coreusdtswap-usdt-swap" target="_blank">COREUSDTSWAPUSDT</a></div><div class="ex-item-data"><span class="up">+1.97%</span> $485.47K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+1.19%</span> $598.13K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/TONUSDT" target="_blank">TONUSDT</a></div><div class="ex-item-data"><span class="up">+1.00%</span> $111.14K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/HUSDT" target="_blank">HUSDT</a></div><div class="ex-item-data"><span class="up">+0.80%</span> $97.01K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+5.78%</span> $4.25M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/MAGMAUSDT" target="_blank">MAGMAUSDT</a></div><div class="ex-item-data"><span class="up">+5.61%</span> $1.40M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/USUSDT" target="_blank">USUSDT</a></div><div class="ex-item-data"><span class="up">+5.48%</span> $66.07K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bybit</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/CLOUSDT" target="_blank">CLOUSDT</a></div><div class="ex-item-data"><span class="up">+1.68%</span> $84.22K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/TONUSDT" target="_blank">TONUSDT</a></div><div class="ex-item-data"><span class="up">+1.02%</span> $830.99K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+0.98%</span> $1.65M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/CLOUSDT" target="_blank">CLOUSDT</a></div><div class="ex-item-data"><span class="up">+9.79%</span> $919.18K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/USUSDT" target="_blank">USUSDT</a></div><div class="ex-item-data"><span class="up">+5.92%</span> $258.88K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/MAGMAUSDT" target="_blank">MAGMAUSDT</a></div><div class="ex-item-data"><span class="up">+5.90%</span> $3.27M</div></div>
           </div>
         </div>
       </div>
@@ -313,48 +288,48 @@ a{color:inherit;text-decoration:none}
       <div class="ex-side"><div class="ex-side-label">现货</div>
         <div class="ex-grid">
           <div class="ex-box"><div class="ex-box-name">Binance</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/UTK/_USDT" target="_blank">UTK/USDT</a></div><div class="ex-item-data"><span class="down">-4.10%</span> $224.53K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/PORTAL/_USDT" target="_blank">PORTAL/USDT</a></div><div class="ex-item-data"><span class="down">-2.42%</span> $76.30K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/ENA/_USDT" target="_blank">ENA/USDT</a></div><div class="ex-item-data"><span class="down">-1.67%</span> $415.02K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/PORTAL_USDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="down">-7.10%</span> $724.91K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/GPS_USDT" target="_blank">GPSUSDT</a></div><div class="ex-item-data"><span class="down">-4.76%</span> $1.19M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/UTK_USDT" target="_blank">UTKUSDT</a></div><div class="ex-item-data"><span class="down">-4.10%</span> $224.53K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/ton/-usdt" target="_blank">TON/USDT</a></div><div class="ex-item-data"><span class="down">-0.99%</span> $501.93K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/mon/-usdt" target="_blank">MON/USDT</a></div><div class="ex-item-data"><span class="down">-0.58%</span> $64.45K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/virtual/-usdt" target="_blank">VIRTUAL/USDT</a></div><div class="ex-item-data"><span class="down">-0.54%</span> $65.84K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/zro-usdt" target="_blank">ZRO-USDT</a></div><div class="ex-item-data"><span class="down">-2.72%</span> $115.70K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/lit-usdt" target="_blank">LIT-USDT</a></div><div class="ex-item-data"><span class="down">-2.66%</span> $767.80K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/space-usdt" target="_blank">SPACE-USDT</a></div><div class="ex-item-data"><span class="down">-2.51%</span> $21.33K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/MYX/USDT" target="_blank">MYX/USDT</a></div><div class="ex-item-data"><span class="down">-2.68%</span> $59.36K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LAB/USDT" target="_blank">LAB/USDT</a></div><div class="ex-item-data"><span class="down">-2.18%</span> $27.03K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/SKYAI/USDT" target="_blank">SKYAI/USDT</a></div><div class="ex-item-data"><span class="up">+0.33%</span> $54.17K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-8.91%</span> $288.90K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/SKYAIUSDT" target="_blank">SKYAIUSDT</a></div><div class="ex-item-data"><span class="down">-1.06%</span> $246.64K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="up">+2.38%</span> $340.20K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bybit</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/PORTAL//USDT" target="_blank">PORTAL/USDT</a></div><div class="ex-item-data"><span class="down">-2.35%</span> $4.74K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/ENA//USDT" target="_blank">ENA/USDT</a></div><div class="ex-item-data"><span class="down">-1.77%</span> $37.84K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/PIEVERSE//USDT" target="_blank">PIEVERSE/USDT</a></div><div class="ex-item-data"><span class="down">-1.57%</span> $25.41K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/PORTAL/USDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="down">-7.44%</span> $56.11K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/ENA/USDT" target="_blank">ENAUSDT</a></div><div class="ex-item-data"><span class="down">-3.38%</span> $2.39M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/PIEVERSE/USDT" target="_blank">PIEVERSEUSDT</a></div><div class="ex-item-data"><span class="down">-2.98%</span> $112.46K</div></div>
           </div>
         </div>
       </div>
       <div class="ex-side"><div class="ex-side-label">永续合约</div>
         <div class="ex-grid">
           <div class="ex-box"><div class="ex-box-name">Binance</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-2.95%</span> $478.62K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="down">-2.47%</span> $441.21K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="down">-2.22%</span> $4.83M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-8.82%</span> $2.55M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="down">-7.18%</span> $3.17M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/AIAUSDT" target="_blank">AIAUSDT</a></div><div class="ex-item-data"><span class="down">-4.31%</span> $1.37M</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opnusdtswap-usdt-swap" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="down">-1.09%</span> $29.58M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/husdtswap-usdt-swap" target="_blank">HUSDT</a></div><div class="ex-item-data"><span class="down">-0.82%</span> $3.94M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/merlusdtswap-usdt-swap" target="_blank">MERLUSDT</a></div><div class="ex-item-data"><span class="down">-0.79%</span> $91.70K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opnusdtswap-usdt-swap" target="_blank">OPNUSDTSWAPUSDT</a></div><div class="ex-item-data"><span class="down">-5.41%</span> $29.58M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/spaceusdtswap-usdt-swap" target="_blank">SPACEUSDTSWAPUSDT</a></div><div class="ex-item-data"><span class="down">-2.42%</span> $263.07K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/allousdtswap-usdt-swap" target="_blank">ALLOUSDTSWAPUSDT</a></div><div class="ex-item-data"><span class="down">-2.03%</span> $2.46M</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/MAGMAUSDT" target="_blank">MAGMAUSDT</a></div><div class="ex-item-data"><span class="down">-3.73%</span> $127.63K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-2.62%</span> $132.97K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="down">-2.08%</span> $557.92K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-8.70%</span> $588.27K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/ENAUSDT" target="_blank">ENAUSDT</a></div><div class="ex-item-data"><span class="down">-3.44%</span> $1.84M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/PIEVERSEUSDT" target="_blank">PIEVERSEUSDT</a></div><div class="ex-item-data"><span class="down">-2.92%</span> $61.06K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bybit</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-2.95%</span> $134.03K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/MAGMAUSDT" target="_blank">MAGMAUSDT</a></div><div class="ex-item-data"><span class="down">-2.89%</span> $411.41K</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="down">-2.55%</span> $104.83K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/MYXUSDT" target="_blank">MYXUSDT</a></div><div class="ex-item-data"><span class="down">-8.91%</span> $776.55K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="down">-7.08%</span> $1.11M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/ENAUSDT" target="_blank">ENAUSDT</a></div><div class="ex-item-data"><span class="down">-3.41%</span> $6.12M</div></div>
           </div>
         </div>
       </div>
@@ -370,7 +345,6 @@ a{color:inherit;text-decoration:none}
     <h4>候选筛选</h4><ul><li>按24h ticker成交额排序，取前200名（Bitget现货100）</li><li>排除BTC、ETH、SOL等大市值币及USDC等稳定币</li></ul>
     <h4>1h K线</h4><ul><li>获取最近2根1H K线，计算1h涨跌幅和1h成交额</li><li>K线为0的交易对排除</li></ul>
     <h4>三种榜单</h4><ul><li>成交额/涨幅/跌幅各取每所每市场Top3</li><li>频率统计独立，不跨榜累计</li></ul>
-    <h4>频率统计</h4><ul><li>滑动窗口24次，≥4次才显示(X/24)</li></ul>
     <h4>更新频率</h4><p>每小时自动更新，页面69分钟后自动刷新。</p>
   </div>
 </div>
@@ -448,38 +422,36 @@ function parseSnapData(txt){
     var item=document.createElement('div');
     item.className='snap-item';
     item.innerHTML='<span class="s-ts">'+tsStr+'</span>';
-    item.onclick=function(){showSnap(s,idx)};
+    item.onclick=function(){openSnapInNewTab(s)};
     list.appendChild(item);
   });
 }
-function showSnap(s,idx){
+function openSnapInNewTab(s){
   document.getElementById('snap-dd').classList.remove('open');
-  var v=document.getElementById('snap-viewer');
-  v.classList.add('open');
   var d=new Date(s.ts);
-  document.getElementById('snap-viewer-title').textContent='快照：'+d.toLocaleString('zh-CN');
-  var body='';
+  var body='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>快照 '+d.toLocaleString('zh-CN')+'</title><style>body{font-family:Inter,sans-serif;padding:20px;max-width:800px;margin:0 auto;color:#0f172a}h2{margin-bottom:12px}.kv{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}.kv div{padding:10px;border:1px solid #e2e8f0;border-radius:6px}.kv .l{font-size:11px;color:#64748b;text-transform:uppercase}.kv .v{font-size:18px;font-weight:700;margin-top:4px}.up{color:#22c55e}.down{color:#ef4444}table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;padding:6px 8px;border-bottom:2px solid #e2e8f0;font-size:11px;color:#64748b}td{padding:6px 8px;border-bottom:1px solid #e2e8f0}a{color:#003366;text-decoration:none}a:hover{text-decoration:underline}</style></head><body>';
+  body+='<h2>快照：'+d.toLocaleString('zh-CN')+'</h2>';
   if(s.btc){
-    body+='<div class="snap-kv">';
-    body+='<div class="snap-kv-item"><div class="snap-kv-label">BTC 价格</div><div class="snap-kv-val">$'+Number(s.btc.price).toLocaleString()+'</div></div>';
-    body+='<div class="snap-kv-item"><div class="snap-kv-label">24h 涨跌</div><div class="snap-kv-val '+(s.btc.change>=0?'up':'down')+'">'+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%</div></div>';
-    body+='<div class="snap-kv-item"><div class="snap-kv-label">市值</div><div class="snap-kv-val">$'+(s.btc.mcap/1e12).toFixed(2)+'万亿</div></div>';
-    body+='</div>';
+    var cls=s.btc.change>=0?'up':'down';
+    body+='<div class="kv"><div><div class="l">BTC 价格</div><div class="v">$'+Number(s.btc.price).toLocaleString()+'</div></div>';
+    body+='<div><div class="l">24h 涨跌</div><div class="v '+cls+'">'+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%</div></div>';
+    body+='<div><div class="l">市值</div><div class="v">$'+(s.btc.mcap/1e12).toFixed(2)+'万亿</div></div></div>';
   }
   if(s.hn&&s.hn.length>0){
-    body+='<div style="font-size:12px;font-weight:600;color:var(--t2);margin:10px 0 6px">Hacker News 热门</div><div class="snap-hn-list">';
-    s.hn.forEach(function(h,i){body+='<div class="snap-hn-item"><span class="snap-hn-rank">'+(i+1)+'</span><span class="snap-hn-title">'+h.t+'</span><span class="snap-hn-score">'+h.s+'分 · '+h.c+'评</span></div>'});
-    body+='</div>';
+    body+='<h3>Hacker News 热门</h3><table><tr><th>#</th><th>标题</th><th>分数</th><th>评论</th></tr>';
+    s.hn.forEach(function(h,i){body+='<tr><td>'+(i+1)+'</td><td>'+h.t+'</td><td>'+h.s+'</td><td>'+h.c+'</td></tr>'});
+    body+='</table>';
   }
   if(s.crypto&&s.crypto.length>0){
-    body+='<div style="font-size:12px;font-weight:600;color:var(--t2);margin:10px 0 6px">Web3 / 加密热点</div><div class="snap-hn-list">';
-    s.crypto.forEach(function(c,i){body+='<div class="snap-hn-item"><span class="snap-hn-rank">'+(i+1)+'</span><span class="snap-hn-title">'+c.t+'</span></div>'});
-    body+='</div>';
+    body+='<h3>Web3 / 加密热点</h3><table><tr><th>#</th><th>标题</th><th>分类</th></tr>';
+    s.crypto.forEach(function(c,i){body+='<tr><td>'+(i+1)+'</td><td>'+c.t+'</td><td>'+(c.tag||'')+'</td></tr>'});
+    body+='</table>';
   }
-  document.getElementById('snap-viewer-body').innerHTML=body;
-  v.scrollIntoView({behavior:'smooth',block:'start'});
+  body+='</body></html>';
+  var w=window.open('','_blank');
+  w.document.write(body);
+  w.document.close();
 }
-function closeSnapViewer(){document.getElementById('snap-viewer').classList.remove('open')}
 document.addEventListener('click',function(e){
   if(!e.target.closest('.meta')) document.getElementById('snap-dd').classList.remove('open');
   if(e.target===document.getElementById('ex-help-modal')) closeExHelp();
