@@ -15,12 +15,15 @@ a{color:inherit;text-decoration:none}
 .top-bar{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .nl-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px}
 .nl-title{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.nl-item{display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border)}
+.nl-item{display:flex;align-items:center;gap:6px;font-size:12px;padding:5px 8px;border-bottom:1px solid var(--border)}
 .nl-item:last-child{border-bottom:none}
-.nl-ex{font-weight:700;color:var(--accent);font-size:10px;text-transform:uppercase;min-width:48px}
-.nl-pair{font-family:var(--mono);font-weight:600;font-size:12px}
-.nl-type{font-size:10px;color:var(--t3);margin-left:auto;white-space:nowrap}
-.nl-time{font-family:var(--mono);font-size:10px;color:var(--t3);min-width:40px;text-align:right}
+.nl-ex{font-weight:700;color:var(--accent);font-size:10px;text-transform:uppercase;min-width:48px;text-align:right}
+.nl-pair{font-family:var(--mono);font-weight:600;font-size:12px;min-width:120px}
+.nl-chg{font-family:var(--mono);font-size:11px;font-weight:600;min-width:55px}
+.nl-vol{font-family:var(--mono);font-size:11px;color:var(--t2);min-width:50px}
+.nl-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.nl-type{font-size:10px;color:var(--t3);text-align:right;min-width:28px}
+.nl-time{font-family:var(--mono);font-size:10px;color:var(--t3);min-width:60px;text-align:right}
 .btc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:flex;align-items:center;gap:14px}
 .btc-icon{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f7931a,#e8860a);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .btc-icon svg{width:22px;height:22px;fill:#fff}
@@ -142,26 +145,24 @@ a{color:inherit;text-decoration:none}
 <!-- New Listings + BTC -->
 <div class="top-bar">
   <div class="nl-card" id="nl-card">
-    <div class="nl-title">12h 内上线</div>
+    <div class="nl-title">12h 内新增交易对（差集检测）</div>
     <div id="nl-list">
-      <div class="nl-item" data-ts="1780484400"><span class="nl-ex">Bitget</span><span class="nl-pair">BILL/USDT</span><span class="nl-type">现货杠杆</span><span class="nl-time">06-03 11:00</span></div>
-      <div class="nl-item" data-ts="1780469106"><span class="nl-ex">Binance</span><span class="nl-pair">TradFi 永续合约</span><span class="nl-type">合约</span><span class="nl-time">06-03 06:45</span></div>
-      <div class="nl-item" data-ts="1780455601"><span class="nl-ex">Binance</span><span class="nl-pair">USDT/AED</span><span class="nl-type">现货</span><span class="nl-time">06-03 03:00</span></div>
-    </div>
-  </div>
-      <div class="nl-item" data-ts="1780470000"><span class="nl-ex">OKX</span><span class="nl-pair">ADBE/ASML/EWT</span><span class="nl-type">永续合约</span><span class="nl-time">06-03 07:00</span></div>
-      <div class="nl-item" data-ts="1780468200"><span class="nl-ex">OKX</span><span class="nl-pair">SLXUSD X-Perp</span><span class="nl-type">永续合约</span><span class="nl-time">06-03 06:30</span></div>
+      <div class="nl-item" data-ts="1780470000"><span class="nl-pair">ADBE-USDT-SWAP</span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
+      <div class="nl-item" data-ts="1780470000"><span class="nl-pair">ASML-USDT-SWAP</span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
+      <div class="nl-item" data-ts="1780470000"><span class="nl-pair">EWT-USDT-SWAP</span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
+      <div class="nl-item" data-ts="1780468200"><span class="nl-pair">SLXUSD-SWAP</span><span class="nl-chg down">-1.20%</span><span class="nl-vol">$580K</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 06:30</span></span></div>
+      <div class="nl-item" data-ts="1780455601"><span class="nl-pair">USDT/AED</span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$12K</span><span class="nl-right"><span class="nl-ex">Binance</span><span class="nl-type">现货</span><span class="nl-time">06-03 03:00</span></span></div>
     </div>
   </div>
   <div class="btc-card" id="btc-card">
     <div class="btc-icon"><svg viewBox="0 0 24 24"><path d="M14.24 10.56c-.31 1.24-2.24.61-2.84.44l.55-2.18c.62.18 2.61.44 2.29 1.74zm-3.11 1.56l-.6 2.41c.74.19 3.03.92 3.37-.44.36-1.42-2.03-1.79-2.77-1.97zm10.57 2.3c-1.34 5.36-6.76 8.62-12.12 7.28S.96 14.94 2.3 9.58 9.06.96 14.42 2.3s8.62 6.76 7.28 12.12zm-5.47-5.58c.08-1.78-1.08-2.47-2.93-3.05l.6-2.39-1.46-.37-.58 2.33c-.38-.1-.78-.18-1.16-.28l.58-2.32-1.46-.37-.6 2.39c-.32-.07-.63-.14-.93-.22l-2.01-.51-.39 1.54s1.08.25 1.06.26c.59.15.7.55.68.87l-.68 2.72c.04.01.1.03.17.05l-.17-.04-1 3.84c-.07.18-.26.45-.67.35.02.02-1.06-.27-1.06-.27l-.73 1.68 1.89.48c.35.09.7.18 1.04.27l-.61 2.42 1.46.37.6-2.39c.4.11.78.21 1.16.31l-.6 2.37 1.46.37.61-2.41c2.35.45 4.11.27 4.86-1.86.6-1.71-.03-2.7-1.26-3.35.9-.21 1.58-.8 1.76-2.03z"/></svg></div>
     <div>
       <div class="btc-price">$66,048</div>
-      <div class="btc-chg down">&#x25BC; 1.91%</div>
+      <div class="btc-chg down">&#x25BC; 2.20%</div>
     </div>
     <div class="btc-meta">
       <div>市值：$1.31万亿</div>
-      <div>24h：&#x25BC; 1.91%</div>
+      <div>24h：&#x25BC; 2.20%</div>
     </div>
   </div>
 </div>
