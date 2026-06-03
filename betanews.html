@@ -93,10 +93,9 @@ a{color:inherit;text-decoration:none}
 .snap-dd{position:absolute;top:100%;right:0;margin-top:6px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:100;min-width:260px;max-height:360px;overflow-y:auto;display:none}
 .snap-dd.open{display:block}
 .snap-dd-title{font-size:11px;font-weight:600;color:var(--t2);padding:10px 12px 6px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
-.snap-item{display:flex;justify-content:space-between;padding:8px 12px;font-size:12px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border)}
+.snap-item{display:flex;padding:8px 12px;font-size:12px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border)}
 .snap-item:last-child{border-bottom:none}.snap-item:hover{background:#f8fafc}
 .snap-item .s-ts{font-family:var(--mono);font-weight:500}
-.snap-item .s-btc{font-family:var(--mono);color:var(--t2);font-size:11px}
 .snap-viewer{display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
 .snap-viewer.open{display:block}
 .snap-viewer-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -145,23 +144,13 @@ a{color:inherit;text-decoration:none}
   <div class="nl-card" id="nl-card">
     <div class="nl-title">12h 内上线</div>
     <div id="nl-list">
-      <div class="nl-item" data-ts="1780484400000"><span class="nl-ex">Bitget</span><span class="nl-pair">Bitget 现货杠杆新增 BILL/U</span><span class="nl-type">现货</span><span class="nl-time">06-03 11:00</span></div>
-      <div class="nl-item" data-ts="1780469106439"><span class="nl-ex">Binance</span><span class="nl-pair">Binance Futures Will</span><span class="nl-type">合约</span><span class="nl-time">06-03 06:45</span></div>
-      <div class="nl-item" data-ts="1780455601465"><span class="nl-ex">Binance</span><span class="nl-pair">Binance Adds USDT/AE</span><span class="nl-type">现货</span><span class="nl-time">06-03 03:00</span></div>
-      <div class="nl-item" data-ts="1780398608000"><span class="nl-ex">Bybit</span><span class="nl-pair">HYPE Token Splash— G</span><span class="nl-type">现货</span><span class="nl-time">06-02 11:10</span></div>
-      <div class="nl-item" data-ts="1780390430000"><span class="nl-ex">Bybit</span><span class="nl-pair">New listing: DELLUSD</span><span class="nl-type">合约</span><span class="nl-time">06-02 08:53</span></div>
-      <div class="nl-item" data-ts="1780385760000"><span class="nl-ex">Bitget</span><span class="nl-pair">Bitget 上线 ANTHROPICU</span><span class="nl-type">合约</span><span class="nl-time">06-02 07:36</span></div>
-      <div class="nl-item" data-ts="1780375448000"><span class="nl-ex">Bitget</span><span class="nl-pair">Bitget 关于即将上线 SAMSUN</span><span class="nl-type">现货</span><span class="nl-time">06-02 04:44</span></div>
-      <div class="nl-item" data-ts="1780369288377"><span class="nl-ex">Binance</span><span class="nl-pair">Binance Futures Will</span><span class="nl-type">合约</span><span class="nl-time">06-02 03:01</span></div>
-      <div class="nl-item" data-ts="1780323321180"><span class="nl-ex">Binance</span><span class="nl-pair">Binance Futures Will</span><span class="nl-type">合约</span><span class="nl-time">06-01 14:15</span></div>
-      <div class="nl-item" data-ts="1780317430734"><span class="nl-ex">Bitget</span><span class="nl-pair">UNITASUSDT 现已上线合约交易和</span><span class="nl-type">合约</span><span class="nl-time">06-01 12:37</span></div>
-      <div class="nl-item" data-ts="1780312323000"><span class="nl-ex">Bitget</span><span class="nl-pair">Bitget 关于上线 EHUSDT、E</span><span class="nl-type">合约</span><span class="nl-time">06-01 11:12</span></div>
-      <div class="nl-item" data-ts="1780301862000"><span class="nl-ex">Bybit</span><span class="nl-pair">New listing: SLXUSDT</span><span class="nl-type">合约</span><span class="nl-time">06-01 08:17</span></div>
-      <div class="nl-item" data-ts="1780294508711"><span class="nl-ex">Binance</span><span class="nl-pair">Binance Futures Will</span><span class="nl-type">合约</span><span class="nl-time">06-01 06:15</span></div>
-      <div class="nl-item" data-ts="1779958400000"><span class="nl-ex">Bybit</span><span class="nl-pair">New listing: WDCUSDT</span><span class="nl-type">合约</span><span class="nl-time">05-28 08:53</span></div>
-      <div class="nl-item" data-ts="1779958391000"><span class="nl-ex">Bybit</span><span class="nl-pair">New listing: AMDSTOC</span><span class="nl-type">合约</span><span class="nl-time">05-28 08:53</span></div>
-      <div class="nl-item" data-ts="1780470000"><span class="nl-ex">OKX</span><span class="nl-pair">OKX to list perpetua</span><span class="nl-type">合约</span><span class="nl-time">06-03 07:00</span></div>
-      <div class="nl-item" data-ts="1780468200"><span class="nl-ex">OKX</span><span class="nl-pair">OKX to list SLXUSD E</span><span class="nl-type">合约</span><span class="nl-time">06-03 06:30</span></div>
+      <div class="nl-item" data-ts="1780484400"><span class="nl-ex">Bitget</span><span class="nl-pair">BILL/USDT</span><span class="nl-type">现货杠杆</span><span class="nl-time">06-03 11:00</span></div>
+      <div class="nl-item" data-ts="1780469106"><span class="nl-ex">Binance</span><span class="nl-pair">TradFi 永续合约</span><span class="nl-type">合约</span><span class="nl-time">06-03 06:45</span></div>
+      <div class="nl-item" data-ts="1780455601"><span class="nl-ex">Binance</span><span class="nl-pair">USDT/AED</span><span class="nl-type">现货</span><span class="nl-time">06-03 03:00</span></div>
+    </div>
+  </div>
+      <div class="nl-item" data-ts="1780470000"><span class="nl-ex">OKX</span><span class="nl-pair">ADBE/ASML/EWT</span><span class="nl-type">永续合约</span><span class="nl-time">06-03 07:00</span></div>
+      <div class="nl-item" data-ts="1780468200"><span class="nl-ex">OKX</span><span class="nl-pair">SLXUSD X-Perp</span><span class="nl-type">永续合约</span><span class="nl-time">06-03 06:30</span></div>
     </div>
   </div>
   <div class="btc-card" id="btc-card">
@@ -468,40 +457,38 @@ function toggleSnapDD(){
   if(dd.classList.contains('open')&&snapshots.length===0) loadSnaps();
 }
 function loadSnaps(){
-  // Try GitHub API (supports CORS), fallback to raw
-  var apiUrl='https://api.github.com/repos/peterzhangbo/Dashboard/contents/dashboard-snapshots.jsonl';
-  fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3.raw'}})
+  // jsdelivr CDN (most reliable for CORS)
+  fetch('https://cdn.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl')
     .then(function(r){if(!r.ok) throw new Error(r.status); return r.text()})
     .then(parseSnapData)
     .catch(function(){
-      // fallback to jsdelivr CDN
-      fetch('https://cdn.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl')
-        .then(function(r){return r.text()})
+      // fallback to GitHub API
+      fetch('https://api.github.com/repos/peterzhangbo/Dashboard/contents/dashboard-snapshots.jsonl',{headers:{'Accept':'application/vnd.github.v3.raw'}})
+        .then(function(r){if(!r.ok) throw new Error(r.status); return r.text()})
         .then(parseSnapData)
         .catch(function(){document.getElementById('snap-list').innerHTML='<div style="padding:12px;color:var(--t3);font-size:11px">加载失败</div>'});
     });
 }
 function parseSnapData(txt){
-      var lines=txt.trim().split('\n');
-      snapshots=[];
-      lines.forEach(function(line){
-        try{snapshots.push(JSON.parse(line))}catch(e){}
-      });
-      snapshots.reverse();
-      var list=document.getElementById('snap-list');
-      if(snapshots.length===0){list.innerHTML='<div style="padding:12px;color:var(--t3);font-size:11px">暂无快照</div>';return}
-      list.innerHTML='';
-      snapshots.forEach(function(s,idx){
-        var d=new Date(s.ts);
-        var ts=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-        var btc=s.btc?'$'+Number(s.btc.price).toLocaleString():'—';
-        var chg=s.btc?(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%':'';
-        var item=document.createElement('div');
-        item.className='snap-item';
-        item.innerHTML='<span class="s-ts">'+ts+'</span><span class="s-btc">'+btc+' <span style="color:'+(s.btc&&s.btc.change>=0?'var(--green)':'var(--red)')+'">'+chg+'</span></span>';
-        item.onclick=function(){showSnap(s,idx)};
-        list.appendChild(item);
-      });
+  var lines=txt.trim().split('\n');
+  snapshots=[];
+  lines.forEach(function(line){
+    try{var obj=JSON.parse(line);if(obj.ts)snapshots.push(obj)}catch(e){}
+  });
+  snapshots.reverse();
+  var list=document.getElementById('snap-list');
+  if(snapshots.length===0){list.innerHTML='<div style="padding:12px;color:var(--t3);font-size:11px">暂无快照</div>';return}
+  list.innerHTML='';
+  snapshots.forEach(function(s,idx){
+    var d=new Date(s.ts);
+    var tsStr=d.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    var item=document.createElement('div');
+    item.className='snap-item';
+    item.innerHTML='<span class="s-ts">'+tsStr+'</span>';
+    item.onclick=function(){showSnap(s,idx)};
+    list.appendChild(item);
+  });
+}
 }
 function showSnap(s,idx){
   document.getElementById('snap-dd').classList.remove('open');
