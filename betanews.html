@@ -75,6 +75,16 @@ a{color:inherit;text-decoration:none}
 .up{color:var(--green);font-weight:600}.down{color:var(--red);font-weight:600}
 
 .footer{text-align:center;margin-top:16px;font-size:10px;color:var(--t3);letter-spacing:.3px}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:200;justify-content:center;align-items:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--card);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,.2);max-width:560px;width:90%;max-height:80vh;overflow-y:auto;padding:24px}
+.modal-box h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.modal-box h4{font-size:12px;font-weight:700;color:var(--accent);margin:14px 0 4px;text-transform:uppercase;letter-spacing:.3px}
+.modal-box p,.modal-box li{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:6px}
+.modal-box ul{padding-left:16px;margin-bottom:8px}
+.modal-box code{font-family:var(--mono);font-size:11px;background:#f1f5f9;padding:1px 4px;border-radius:3px}
+.modal-close{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--t3);line-height:1;padding:4px}
+.modal-close:hover{color:var(--t1)}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .meta{font-size:11px;color:var(--t2);display:flex;gap:8px;align-items:center;position:relative}
@@ -225,6 +235,7 @@ a{color:inherit;text-decoration:none}
     <button class="ex-tab-btn active" data-etab="vol" onclick="switchExTab('vol')">1h 成交额</button>
     <button class="ex-tab-btn" data-etab="gain" onclick="switchExTab('gain')">1h 涨幅</button>
     <button class="ex-tab-btn" data-etab="loss" onclick="switchExTab('loss')">1h 跌幅</button>
+    <span style="margin-left:auto;padding-right:8px;cursor:pointer;color:var(--t3)" onclick="openExHelp()" title="统计说明"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></span>
   </div>
 
   <div class="ex-panel active" id="etab-vol">
@@ -385,6 +396,54 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- Help Modal -->
+<div class="modal-overlay" id="ex-help-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeExHelp()">&times;</button>
+    <h3>交易所监控 · 统计方法说明</h3>
+
+    <h4>数据范围</h4>
+    <ul>
+      <li>覆盖四大交易所：<b>Binance</b>、<b>OKX</b>、<b>Bitget</b>、<b>Bybit</b></li>
+      <li>每所分别统计<b>现货</b>和<b>永续合约</b>两个市场</li>
+    </ul>
+
+    <h4>候选筛选</h4>
+    <ul>
+      <li>第一步：拉取各交易所全部交易对的 24h ticker 数据，按 24h 成交额降序排列</li>
+      <li>第二步：取前 200 名（Bitget 现货为 top100）作为候选池</li>
+      <li>排除以下币种：BTC、ETH、SOL、BNB、XRP、ADA、DOGE 等大市值币，以及 USDC、BUSD、FDUSD、TUSD 等稳定币</li>
+    </ul>
+
+    <h4>1h K线数据采集</h4>
+    <ul>
+      <li>对候选池中每个交易对，调用交易所 K线接口获取最近 2 根 <code>1H</code> K线</li>
+      <li>接口：<code>/api/v3/klines?interval=1h&limit=2</code>（Binance）等各所等价端点</li>
+      <li>1h 成交额 = 当前小时 K线的 quote 计价成交量（USDT），若为 0 则用 base 成交量 × 收盘价</li>
+      <li>1h 涨跌幅 = (当前收盘价 − 上一根收盘价) / 上一根收盘价 × 100%</li>
+      <li>K线数据为 0 的交易对直接排除，不参与排名</li>
+    </ul>
+
+    <h4>三种榜单</h4>
+    <ul>
+      <li><b>1h 成交额 Top 3</b>：按 1h 成交额降序，取每所每市场前三</li>
+      <li><b>1h 涨幅 Top 3</b>：按 1h 涨跌幅降序（涨最多）</li>
+      <li><b>1h 跌幅 Top 3</b>：按 1h 涨跌幅升序（跌最多）</li>
+      <li>三种榜单的频率统计互相独立，不跨榜单累计</li>
+    </ul>
+
+    <h4>频率统计</h4>
+    <ul>
+      <li>每小时定时任务运行时，记录每个榜单上出现的交易对</li>
+      <li>滑动窗口保留最近 24 次统计</li>
+      <li>当某交易对在单个榜单中累计出现 ≥ 4 次时，在币名后显示 <code>(X/24)</code></li>
+    </ul>
+
+    <h4>更新频率</h4>
+    <p>每小时自动更新一次，由定时任务驱动。页面打开 69 分钟后自动刷新以获取最新数据。</p>
+  </div>
+</div>
+
 <div class="footer">数据来源：Binance · OKX · Bitget · Bybit · Cointelegraph · Hacker News | 每小时自动更新</div>
 
 <script>
@@ -398,6 +457,8 @@ function switchExTab(id){
   document.querySelectorAll('.ex-tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.etab===id)});
   document.querySelectorAll('.ex-panel').forEach(function(p){p.classList.toggle('active',p.id==='etab-'+id)});
 }
+function openExHelp(){document.getElementById('ex-help-modal').classList.add('open')}
+function closeExHelp(){document.getElementById('ex-help-modal').classList.remove('open')}
 function sortHN(key){
   hnSort=key;
   var labels={score:'最热',time:'最新',comments:'评论'};
@@ -511,6 +572,7 @@ function closeSnapViewer(){
 // Close dropdown on outside click
 document.addEventListener('click',function(e){
   if(!e.target.closest('.meta')) document.getElementById('snap-dd').classList.remove('open');
+  if(e.target===document.getElementById('ex-help-modal')) closeExHelp();
 });
 </script>
 </body>
