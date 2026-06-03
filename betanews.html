@@ -434,9 +434,20 @@ function toggleSnapDD(){
   if(dd.classList.contains('open')&&snapshots.length===0) loadSnaps();
 }
 function loadSnaps(){
-  fetch('https://raw.githubusercontent.com/peterzhangbo/Dashboard/main/dashboard-snapshots.jsonl')
-    .then(function(r){return r.text()})
-    .then(function(txt){
+  // Try GitHub API (supports CORS), fallback to raw
+  var apiUrl='https://api.github.com/repos/peterzhangbo/Dashboard/contents/dashboard-snapshots.jsonl';
+  fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3.raw'}})
+    .then(function(r){if(!r.ok) throw new Error(r.status); return r.text()})
+    .then(parseSnapData)
+    .catch(function(){
+      // fallback to jsdelivr CDN
+      fetch('https://cdn.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl')
+        .then(function(r){return r.text()})
+        .then(parseSnapData)
+        .catch(function(){document.getElementById('snap-list').innerHTML='<div style="padding:12px;color:var(--t3);font-size:11px">加载失败</div>'});
+    });
+}
+function parseSnapData(txt){
       var lines=txt.trim().split('\n');
       snapshots=[];
       lines.forEach(function(line){
@@ -457,8 +468,6 @@ function loadSnaps(){
         item.onclick=function(){showSnap(s,idx)};
         list.appendChild(item);
       });
-    })
-    .catch(function(){document.getElementById('snap-list').innerHTML='<div style="padding:12px;color:var(--t3);font-size:11px">加载失败</div>'});
 }
 function showSnap(s,idx){
   document.getElementById('snap-dd').classList.remove('open');
