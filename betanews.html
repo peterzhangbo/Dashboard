@@ -32,8 +32,6 @@ a{color:inherit;text-decoration:none}
 .btc-chg{font-family:var(--mono);font-size:13px;font-weight:600;margin-top:1px}
 .btc-chg.up{color:var(--green)}.btc-chg.down{color:var(--red)}
 .btc-meta{margin-left:auto;text-align:right;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.7}
-
-/* Tabs */
 .tabs-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:16px}
 .tab-bar{display:flex;border-bottom:1px solid var(--border);padding:0 4px;align-items:center}
 .tab-btn{padding:10px 16px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--sans);white-space:nowrap}
@@ -57,8 +55,6 @@ a{color:inherit;text-decoration:none}
 .tag-hot{background:var(--red-bg);color:var(--red)}.tag-defi{background:#eff6ff;color:var(--blue)}
 .tag-ex{background:#fff7ed;color:var(--orange)}.tag-crypto{background:var(--green-bg);color:var(--green)}
 .tag-pol{background:#f5f3ff;color:var(--purple)}.tag-sec{background:var(--red-bg);color:var(--red)}
-
-/* Exchange monitoring */
 .ex-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:16px}
 .ex-tab-bar{display:flex;border-bottom:1px solid var(--border);padding:0 4px}
 .ex-tab-btn{padding:10px 16px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--sans);white-space:nowrap}
@@ -77,7 +73,6 @@ a{color:inherit;text-decoration:none}
 .ex-item-pair a:hover{color:var(--accent-l);text-decoration:underline}
 .ex-item-data{font-family:var(--mono);font-size:12px;color:var(--t2);margin-top:1px}
 .up{color:var(--green);font-weight:600}.down{color:var(--red);font-weight:600}
-
 .footer{text-align:center;margin-top:16px;font-size:10px;color:var(--t3);letter-spacing:.3px}
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:200;justify-content:center;align-items:center}
 .modal-overlay.open{display:flex}
@@ -92,7 +87,7 @@ a{color:inherit;text-decoration:none}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .meta{font-size:11px;color:var(--t2);display:flex;gap:8px;align-items:center;position:relative}
-.meta .ts-btn{cursor:pointer;border-bottom:1px dashed var(--t3);padding-bottom:1px;position:relative}
+.meta .ts-btn{cursor:pointer;border-bottom:1px dashed var(--t3);padding-bottom:1px}
 .meta .ts-btn:hover{color:var(--accent-l)}
 .snap-dd{position:absolute;top:100%;right:0;margin-top:6px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:100;min-width:260px;max-height:360px;overflow-y:auto;display:none}
 .snap-dd.open{display:block}
@@ -117,16 +112,8 @@ a{color:inherit;text-decoration:none}
 .snap-hn-title{flex:1}.snap-hn-score{font-family:var(--mono);color:var(--accent);font-size:11px;min-width:40px;text-align:right}
 .hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .hdr h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
-
-@media(max-width:900px){
-  .top-bar{grid-template-columns:1fr}
-  .ex-dual{grid-template-columns:1fr}
-  .ex-grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:500px){
-  .ex-grid{grid-template-columns:1fr}
-  .btc-price{font-size:22px}
-}
+@media(max-width:900px){.top-bar{grid-template-columns:1fr}.ex-dual{grid-template-columns:1fr}.ex-grid{grid-template-columns:1fr 2fr}}
+@media(max-width:500px){.ex-grid{grid-template-columns:1fr}.btc-price{font-size:22px}}
 </style>
 </head>
 <body>
@@ -135,15 +122,14 @@ a{color:inherit;text-decoration:none}
   <h1>科技与加密货币仪表盘</h1>
   <div class="meta">
     <span class="dot"></span>
-    <span class="ts-btn" onclick="toggleSnapDD()">更新于 2026-06-03 18:07 UTC</span>
+    <span class="ts-btn" onclick="toggleSnapDD()">更新于 2026-06-03 18:42 UTC</span>
     <div class="snap-dd" id="snap-dd">
       <div class="snap-dd-title">历史快照</div>
-      <div id="snap-list"><div style="padding:12px;color:var(--t3);font-size:11px">加载中...</div></div>
+      <div id="snap-list"><div style="padding:12px;color:var(--t3);font-size:11px">点击加载...</div></div>
     </div>
   </div>
 </div>
 
-<!-- New Listings + BTC -->
 <div class="top-bar">
   <div class="nl-card" id="nl-card">
     <div class="nl-title">12h 内上线</div>
@@ -151,7 +137,6 @@ a{color:inherit;text-decoration:none}
       <div class="nl-item" data-ts="1780470000"><span class="nl-pair"><a href="https://www.okx.com/trade-swap/adbe-usdt-swap" target="_blank">ADBEUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
       <div class="nl-item" data-ts="1780470000"><span class="nl-pair"><a href="https://www.okx.com/trade-swap/asml-usdt-swap" target="_blank">ASMLUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
       <div class="nl-item" data-ts="1780470000"><span class="nl-pair"><a href="https://www.okx.com/trade-swap/ewt-usdt-swap" target="_blank">EWTUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 07:00</span></span></div>
-      <div class="nl-item" data-ts="1780468200"><span class="nl-pair"><a href="https://www.okx.com/trade-swap/slx-usdt-swap" target="_blank">SLXUSDT</a></span><span class="nl-chg down">-1.20%</span><span class="nl-vol">$580K</span><span class="nl-right"><span class="nl-ex">OKX</span><span class="nl-type">永续</span><span class="nl-time">06-03 06:30</span></span></div>
       <div class="nl-item" data-ts="1780455601"><span class="nl-pair"><a href="https://www.binance.com/en/trade/USDT_AED" target="_blank">USDT/AED</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$12K</span><span class="nl-right"><span class="nl-ex">Binance</span><span class="nl-type">现货</span><span class="nl-time">06-03 03:00</span></span></div>
     </div>
   </div>
@@ -159,16 +144,15 @@ a{color:inherit;text-decoration:none}
     <div class="btc-icon"><svg viewBox="0 0 24 24"><path d="M14.24 10.56c-.31 1.24-2.24.61-2.84.44l.55-2.18c.62.18 2.61.44 2.29 1.74zm-3.11 1.56l-.6 2.41c.74.19 3.03.92 3.37-.44.36-1.42-2.03-1.79-2.77-1.97zm10.57 2.3c-1.34 5.36-6.76 8.62-12.12 7.28S.96 14.94 2.3 9.58 9.06.96 14.42 2.3s8.62 6.76 7.28 12.12zm-5.47-5.58c.08-1.78-1.08-2.47-2.93-3.05l.6-2.39-1.46-.37-.58 2.33c-.38-.1-.78-.18-1.16-.28l.58-2.32-1.46-.37-.6 2.39c-.32-.07-.63-.14-.93-.22l-2.01-.51-.39 1.54s1.08.25 1.06.26c.59.15.7.55.68.87l-.68 2.72c.04.01.1.03.17.05l-.17-.04-1 3.84c-.07.18-.26.45-.67.35.02.02-1.06-.27-1.06-.27l-.73 1.68 1.89.48c.35.09.7.18 1.04.27l-.61 2.42 1.46.37.6-2.39c.4.11.78.21 1.16.31l-.6 2.37 1.46.37.61-2.41c2.35.45 4.11.27 4.86-1.86.6-1.71-.03-2.7-1.26-3.35.9-.21 1.58-.8 1.76-2.03z"/></svg></div>
     <div>
       <div class="btc-price">$66,048</div>
-      <div class="btc-chg down">&#x25BC; 2.20%</div>
+      <div class="btc-chg down">▼ 2.20%</div>
     </div>
     <div class="btc-meta">
       <div>市值：$1.31万亿</div>
-      <div>24h：&#x25BC; 2.20%</div>
+      <div>24h：▼ 2.20%</div>
     </div>
   </div>
 </div>
 
-<!-- Snapshot Viewer -->
 <div class="snap-viewer" id="snap-viewer">
   <div class="snap-viewer-hdr">
     <h3 id="snap-viewer-title">快照详情</h3>
@@ -177,7 +161,6 @@ a{color:inherit;text-decoration:none}
   <div id="snap-viewer-body"></div>
 </div>
 
-<!-- News Tabs -->
 <div class="tabs-wrap">
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="listing" onclick="switchTab('listing')">新币上线</button>
@@ -190,50 +173,30 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- 新币上线 Tab（全所公告按时间倒序，8条） -->
   <div class="tab-panel active" id="tab-listing">
     <div class="news-list">
-<div class="news-row"><span class="news-n">1</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884949" target="_blank">Bitget 现货杠杆新增 BILL/USDT</a><div class="news-meta"><span class="tag tag-defi">Bitget 现货</span> 06-03 11:00</div></div></div>
-<div class="news-row"><span class="news-n">2</span><div class="news-body"><a class="news-t" href="https://www.okx.com/help/okx-to-list-perpetual-futures-for-adbe-asml-and-ewt-equities" target="_blank">OKX 上线 ADBE、ASML、EWT 股票永续合约</a><div class="news-meta"><span class="tag tag-crypto">OKX 合约</span> 06-03 07:00</div></div></div>
-<div class="news-row"><span class="news-n">3</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/d77e2d77ea21405d9ef2cd7c6974ea5f" target="_blank">Binance 上线多个 TradFi 永续合约</a><div class="news-meta"><span class="tag tag-ex">Binance 合约</span> 06-03 06:45</div></div></div>
-<div class="news-row"><span class="news-n">4</span><div class="news-body"><a class="news-t" href="https://www.okx.com/help/okx-to-list-slxusd-expiry-perp-x-perp" target="_blank">OKX 上线 SLXUSD X-合约（X-Perp）</a><div class="news-meta"><span class="tag tag-crypto">OKX 合约</span> 06-03 06:30</div></div></div>
-<div class="news-row"><span class="news-n">5</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/66d54f75b3a041ff991ddd179ab6ed39" target="_blank">Binance 新增 USDT/AED 现货交易对</a><div class="news-meta"><span class="tag tag-ex">Binance 现货</span> 06-03 03:00</div></div></div>
-<div class="news-row"><span class="news-n">6</span><div class="news-body"><a class="news-t" href="https://announcements.bybit.com/en-US/article/new-listing-dellusdt-perpetual-contract-with-up-to-10x-leverage-bltff481d91a15992f7/" target="_blank">Bybit 上线 DELLUSDT 永续合约 (10x)</a><div class="news-meta"><span class="tag tag-pol">Bybit 合约</span> 06-02 08:53</div></div></div>
-<div class="news-row"><span class="news-n">7</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884829" target="_blank">Bitget 上线 ANTHROPICUSDT IPO 盘前永续合约</a><div class="news-meta"><span class="tag tag-defi">Bitget 合约</span> 06-02 07:36</div></div></div>
-<div class="news-row"><span class="news-n">8</span><div class="news-body"><a class="news-t" href="https://www.okx.com/help/okx-to-list-perpetual-futures-for-hpe-asts-and-now-equities" target="_blank">OKX 上线 HPE、ASTS、NOW 股票永续合约</a><div class="news-meta"><span class="tag tag-crypto">OKX 合约</span> 06-02 09:05</div></div></div>
+<div class="news-row"><span class="news-n">1</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884949" target="_blank">Bitget 现货杠杆新增 BILL/USDT！</a><div class="news-meta"><span class="tag tag-defi">Bitget 现货</span> 06-03 11:00</div></div></div>
+<div class="news-row"><span class="news-n">2</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/d77e2d77ea21405d9ef2cd7c6974ea5f" target="_blank">Binance Futures Will Launch Multiple USDⓈ-Margined TradFi Perpetual Contracts (2026-06-03)</a><div class="news-meta"><span class="tag tag-ex">Binance 合约</span> 06-03 06:45</div></div></div>
+<div class="news-row"><span class="news-n">3</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/66d54f75b3a041ff991ddd179ab6ed39" target="_blank">Binance Adds USDT/AED Spot Trading Pair</a><div class="news-meta"><span class="tag tag-ex">Binance 现货</span> 06-03 03:00</div></div></div>
+<div class="news-row"><span class="news-n">4</span><div class="news-body"><a class="news-t" href="https://announcements.bybit.com/en-US/article/hype-token-splash-grab-a-share-of-the-100-000-usdt-prize-pool--bltdd6dc985974108f3/" target="_blank">HYPE Token Splash— Grab a share of the 100,000 USDT prize  pool .</a><div class="news-meta"><span class="tag tag-pol">Bybit 现货</span> 06-02 11:10</div></div></div>
+<div class="news-row"><span class="news-n">5</span><div class="news-body"><a class="news-t" href="https://announcements.bybit.com/en-US/article/new-listing-dellusdt-perpetual-contract-with-up-to-10x-leverage-bltff481d91a15992f7/" target="_blank">New listing: DELLUSDT Perpetual Contract, with up to 10x leverage</a><div class="news-meta"><span class="tag tag-pol">Bybit 合约</span> 06-02 08:53</div></div></div>
+<div class="news-row"><span class="news-n">6</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884829" target="_blank">Bitget 上线 ANTHROPICUSDT 【IPO盘前永续合约】 | 提前押注 Anthropic IPO，抢占AI万亿赛道定价权！</a><div class="news-meta"><span class="tag tag-defi">Bitget 合约</span> 06-02 07:36</div></div></div>
+<div class="news-row"><span class="news-n">7</span><div class="news-body"><a class="news-t" href="https://www.bitget.com/zh-CN/support/articles/12560603884801" target="_blank">Bitget 关于即将上线 SAMSUNGUSDT、SKHYNIXUSDT、HYUNDAIUSDT的公告</a><div class="news-meta"><span class="tag tag-defi">Bitget 现货</span> 06-02 04:44</div></div></div>
+<div class="news-row"><span class="news-n">8</span><div class="news-body"><a class="news-t" href="https://www.binance.com/en/support/announcement/2b9ff1e1acf8433793bc40c59a0cb852" target="_blank">Binance Futures Will Launch ANTHROPICUSDT USDⓈ-Margined Perpetual Contract Pre-IPO Trading (2026-06-02)</a><div class="news-meta"><span class="tag tag-ex">Binance 合约</span> 06-02 03:01</div></div></div>
     </div>
   </div>
 
-  <!-- Hacker News Tab -->
+<!-- Hacker News Tab -->
   <div class="tab-panel" id="tab-hn">
     <div class="news-list" id="hn-list">
-<div class="news-row" data-score="529" data-comments="79" data-time="1780414145"><span class="news-n">1</span><div class="news-body"><a class="news-t" href="https://blog.ammaraskar.com/github-token-stealing/" target="_blank">通过VSCode漏洞一键窃取GitHub Token</a><div class="news-meta"><span class="tag tag-sec">安全</span> 529分 · 79评论</div></div><div class="news-heat">529</div></div>
-<div class="news-row" data-score="500" data-comments="231" data-time="1780426027"><span class="news-n">2</span><div class="news-body"><a class="news-t" href="https://microsoft.ai/news/introducingmai-code-1-flash/" target="_blank">微软发布 MAI-Code-1-Flash</a><div class="news-meta"><span class="tag tag-hot">AI</span> 500分 · 231评论</div></div><div class="news-heat">500</div></div>
-<div class="news-row" data-score="376" data-comments="100" data-time="1780440933"><span class="news-n">3</span><div class="news-body"><a class="news-t" href="https://github.com/c0dejedi/nbd-vram" target="_blank">在Linux上将Nvidia显卡VRAM用作swap空间</a><div class="news-meta"><span class="tag tag-defi">科技</span> 376分 · 100评论</div></div><div class="news-heat">376</div></div>
-<div class="news-row" data-score="280" data-comments="54" data-time="1780483980"><span class="news-n">4</span><div class="news-body"><a class="news-t" href="https://blog.nns.ee/2026/06/03/katana-badusb/" target="_blank">通过扬声器入侵你的电脑——无需触碰</a><div class="news-meta"><span class="tag tag-sec">安全</span> 280分 · 54评论</div></div><div class="news-heat">280</div></div>
-<div class="news-row" data-score="154" data-comments="40" data-time="1780220745"><span class="news-n">5</span><div class="news-body"><a class="news-t" href="https://github.com/s-macke/Test-Drive-3-Maps" target="_blank">逆向工程1990年DOS游戏Test Drive III的世界地图</a><div class="news-meta"><span class="tag tag-defi">科技</span> 154分 · 40评论</div></div><div class="news-heat">154</div></div>
-<div class="news-row" data-score="132" data-comments="95" data-time="1780490527"><span class="news-n">6</span><div class="news-body"><a class="news-t" href="https://www.bbc.com/news/articles/c93x0k194yno" target="_blank">Meta员工可选择不被追踪工作状态，最长30分钟</a><div class="news-meta"><span class="tag tag-pol">政策</span> 132分 · 95评论</div></div><div class="news-heat">132</div></div>
-<div class="news-row" data-score="130" data-comments="38" data-time="1780458476"><span class="news-n">7</span><div class="news-body"><a class="news-t" href="https://research.ligo.bio/posts/unreasonable-redundancy-of-natural-protein-folds/" target="_blank">自然界蛋白质折叠的不可思议冗余性</a><div class="news-meta"><span class="tag tag-defi">科技</span> 130分 · 38评论</div></div><div class="news-heat">130</div></div>
-<div class="news-row" data-score="125" data-comments="23" data-time="1780426372"><span class="news-n">8</span><div class="news-body"><a class="news-t" href="https://handwritten.danieljanus.pl/2026-06-01-edsger.html" target="_blank">Edsger：reMarkable 2上的手写Clojure REPL</a><div class="news-meta"><span class="tag tag-defi">科技</span> 125分 · 23评论</div></div><div class="news-heat">125</div></div>
-    </div>
-  </div>
+<div class="news-row" data-score="529" data-comments="79" data-time="1780414145"><span class="news-n">1</span><div class="news-body"><a class="news-t" href="https://blog.ammaraskar.com/github-token-stealing/" target="_blank">通过VSCode漏洞一键窃取GitHub Token</a><div class="news-meta"><span class="tag tag-sec">安全</span> 529分 · 79评论</div></div>
 
-  <!-- 行业热点 Tab -->
+<!-- 行业热点 Tab -->
   <div class="tab-panel" id="tab-news">
     <div class="news-list">
-<div class="news-row"><span class="news-n">1</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/news/eu-mica-deadline-looms-for-unlicensed-crypto-exchanges" target="_blank">加密公司面临7月1日欧盟MiCA宽限期截止</a><div class="news-meta"><span class="tag tag-pol">监管</span> Cointelegraph</div></div></div>
-<div class="news-row"><span class="news-n">2</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/markets/hyperliquid-bear-turns-bullish-after-losing-over-46m-betting-on-hype-price-decline" target="_blank">Hyperliquid空头亏超4600万美元后转多</a><div class="news-meta"><span class="tag tag-hot">市场</span> Cointelegraph</div></div></div>
-<div class="news-row"><span class="news-n">3</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/markets/ethereum-drops-to-14-week-lows-can-eth-price-hold-18k-support" target="_blank">ETH跌至14周低点：能否守住1800美元支撑？</a><div class="news-meta"><span class="tag tag-hot">市场</span> Cointelegraph</div></div></div>
-<div class="news-row"><span class="news-n">4</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/news/what-happened-in-crypto-today" target="_blank">今日加密市场要闻速览</a><div class="news-meta"><span class="tag tag-crypto">综合</span> Cointelegraph</div></div></div>
-<div class="news-row"><span class="news-n">5</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/news/binance-partnership-tokenized-stock-custodian-alpaca" target="_blank">Binance披露与Alpaca代币化股票托管方的收入分成协议</a><div class="news-meta"><span class="tag tag-ex">交易所</span> Cointelegraph</div></div></div>
-<div class="news-row"><span class="news-n">6</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/news/binance-exchange-halt-nft-services-binance-wallet" target="_blank">Binance将停止交易所NFT支持，服务转移至钱包</a><div class="news-meta"><span class="tag tag-ex">交易所</span> Cointelegraph</div></div></div>
-<div class="news-row"><span class="news-n">7</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/news/fca-warns-premier-league-clubs-over-crypto-trading-sponsors-targeting-fans" target="_blank">英国监管机构警告英超俱乐部不得接受未经授权的加密赞助</a><div class="news-meta"><span class="tag tag-pol">监管</span> Cointelegraph</div></div></div>
-<div class="news-row"><span class="news-n">8</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/news/mastercard-stablecoin-settlement-usdc-pyusd-rlusd" target="_blank">Mastercard扩展支持USDC、PYUSD、RLUSD稳定币结算</a><div class="news-meta"><span class="tag tag-pol">监管</span> Cointelegraph</div></div></div>
-    </div>
-  </div>
+<div class="news-row"><span class="news-n">1</span><div class="news-body"><a class="news-t" href="https://cointelegraph.com/news/eu-mica-deadline-looms-for-unlicensed-crypto-exchanges" target="_blank">加密公司面临7月1日欧盟MiCA宽限期截止</a><div class="news-meta"><span class="tag tag-pol">监管</span> Cointelegraph</div></div>
 </div>
 
-<!-- Exchange Monitoring -->
 <div class="ex-wrap">
   <div class="ex-tab-bar">
     <button class="ex-tab-btn active" data-etab="vol" onclick="switchExTab('vol')">1h 成交额</button>
@@ -241,8 +204,7 @@ a{color:inherit;text-decoration:none}
     <button class="ex-tab-btn" data-etab="loss" onclick="switchExTab('loss')">1h 跌幅</button>
     <span style="margin-left:auto;padding-right:8px;cursor:pointer;color:var(--t3)" onclick="openExHelp()" title="统计说明"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></span>
   </div>
-
-    <div class="ex-panel active" id="etab-vol">
+  <div class="ex-panel active" id="etab-vol">
     <div class="ex-dual">
       <div class="ex-side"><div class="ex-side-label">现货</div>
         <div class="ex-grid">
@@ -276,9 +238,9 @@ a{color:inherit;text-decoration:none}
             <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data">$4.83M <span class="down">-2.22%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opn-usdt-swap" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$29.58M <span class="down">-1.09%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/xpl-usdt-swap" target="_blank">XPLUSDT</a></div><div class="ex-item-data">$4.20M <span class="down">-0.07%</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/eden-usdt-swap" target="_blank">EDENUSDT</a></div><div class="ex-item-data">$3.94M <span class="up">+0.50%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opnusdtswap-usdt-swap" target="_blank">OPNUSDT</a></div><div class="ex-item-data">$29.58M <span class="down">-1.09%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/xplusdtswap-usdt-swap" target="_blank">XPLUSDT</a></div><div class="ex-item-data">$4.20M <span class="down">-0.07%</span></div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/edenusdtswap-usdt-swap" target="_blank">EDENUSDT</a></div><div class="ex-item-data">$3.94M <span class="up">+0.50%</span></div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
             <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data">$1.18M <span class="up">+0.46%</span></div></div>
@@ -328,9 +290,9 @@ a{color:inherit;text-decoration:none}
             <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/TONUSDT" target="_blank">TONUSDT</a></div><div class="ex-item-data"><span class="up">+0.97%</span> $1.09M</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/bio-usdt-swap" target="_blank">BIOUSDT</a></div><div class="ex-item-data"><span class="up">+0.85%</span> $1.04M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/eden-usdt-swap" target="_blank">EDENUSDT</a></div><div class="ex-item-data"><span class="up">+0.50%</span> $3.94M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/based-usdt-swap" target="_blank">BASEDUSDT</a></div><div class="ex-item-data"><span class="up">+0.49%</span> $2.75M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/biousdtswap-usdt-swap" target="_blank">BIOUSDT</a></div><div class="ex-item-data"><span class="up">+0.85%</span> $1.04M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/edenusdtswap-usdt-swap" target="_blank">EDENUSDT</a></div><div class="ex-item-data"><span class="up">+0.50%</span> $3.94M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/basedusdtswap-usdt-swap" target="_blank">BASEDUSDT</a></div><div class="ex-item-data"><span class="up">+0.49%</span> $2.75M</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
             <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/OPNUSDT" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="up">+1.19%</span> $598.13K</div></div>
@@ -380,9 +342,9 @@ a{color:inherit;text-decoration:none}
             <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="down">-2.22%</span> $4.83M</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">OKX</div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opn-usdt-swap" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="down">-1.09%</span> $29.58M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/h-usdt-swap" target="_blank">HUSDT</a></div><div class="ex-item-data"><span class="down">-0.82%</span> $3.94M</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/merl-usdt-swap" target="_blank">MERLUSDT</a></div><div class="ex-item-data"><span class="down">-0.79%</span> $91.70K</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opnusdtswap-usdt-swap" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="down">-1.09%</span> $29.58M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/husdtswap-usdt-swap" target="_blank">HUSDT</a></div><div class="ex-item-data"><span class="down">-0.82%</span> $3.94M</div></div>
+            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/merlusdtswap-usdt-swap" target="_blank">MERLUSDT</a></div><div class="ex-item-data"><span class="down">-0.79%</span> $91.70K</div></div>
           </div>
           <div class="ex-box"><div class="ex-box-name">Bitget</div>
             <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/MAGMAUSDT" target="_blank">MAGMAUSDT</a></div><div class="ex-item-data"><span class="down">-3.73%</span> $127.63K</div></div>
@@ -398,11 +360,24 @@ a{color:inherit;text-decoration:none}
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" id="ex-help-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeExHelp()">&times;</button>
+    <h3>交易所监控 · 统计方法说明</h3>
+    <h4>数据范围</h4><ul><li>四大交易所：Binance、OKX、Bitget、Bybit</li><li>分别统计现货和永续合约</li></ul>
+    <h4>候选筛选</h4><ul><li>按24h ticker成交额排序，取前200名（Bitget现货100）</li><li>排除BTC、ETH、SOL等大市值币及USDC等稳定币</li></ul>
+    <h4>1h K线</h4><ul><li>获取最近2根1H K线，计算1h涨跌幅和1h成交额</li><li>K线为0的交易对排除</li></ul>
+    <h4>三种榜单</h4><ul><li>成交额/涨幅/跌幅各取每所每市场Top3</li><li>频率统计独立，不跨榜累计</li></ul>
+    <h4>频率统计</h4><ul><li>滑动窗口24次，≥4次才显示(X/24)</li></ul>
+    <h4>更新频率</h4><p>每小时自动更新，页面69分钟后自动刷新。</p>
+  </div>
+</div>
 
 <div class="footer">数据来源：Binance · OKX · Bitget · Bybit · Cointelegraph · Hacker News | 每小时自动更新</div>
 
 <script>
-var hnSort='score';
 function switchTab(id){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===id)});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+id)});
@@ -414,6 +389,7 @@ function switchExTab(id){
 }
 function openExHelp(){document.getElementById('ex-help-modal').classList.add('open')}
 function closeExHelp(){document.getElementById('ex-help-modal').classList.remove('open')}
+var hnSort='score';
 function sortHN(key){
   hnSort=key;
   var labels={score:'最热',time:'最新',comments:'评论'};
@@ -423,18 +399,15 @@ function sortHN(key){
   items.sort(function(a,b){var va=parseInt(a.dataset[key])||0,vb=parseInt(b.dataset[key])||0;return vb-va});
   items.forEach(function(item,i){item.querySelector('.news-n').textContent=i+1;list.appendChild(item)});
 }
-// 12h TTL for new listings + sort + hide when empty
 (function(){
   var now=Math.floor(Date.now()/1000);
   var list=document.getElementById('nl-list');
   var items=Array.from(list.querySelectorAll('.nl-item'));
-  // Sort by timestamp descending
   items.sort(function(a,b){return(parseInt(b.dataset.ts)||0)-(parseInt(a.dataset.ts)||0)});
   items.forEach(function(el){
     var ts=parseInt(el.dataset.ts)||0;
     if(now-ts>12*3600){el.remove()}else{list.appendChild(el)}
   });
-  // Hide card if no items remain
   if(list.children.length===0){
     document.getElementById('nl-card').style.display='none';
     document.getElementById('btc-card').style.gridColumn='1 / -1';
@@ -442,7 +415,6 @@ function sortHN(key){
 })();
 setTimeout(function(){location.reload()},69*60*1000);
 
-// Snapshot dropdown
 var snapshots=[];
 function toggleSnapDD(){
   var dd=document.getElementById('snap-dd');
@@ -450,12 +422,10 @@ function toggleSnapDD(){
   if(dd.classList.contains('open')&&snapshots.length===0) loadSnaps();
 }
 function loadSnaps(){
-  // jsdelivr CDN (most reliable for CORS)
   fetch('https://cdn.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl')
     .then(function(r){if(!r.ok) throw new Error(r.status); return r.text()})
     .then(parseSnapData)
     .catch(function(){
-      // fallback to GitHub API
       fetch('https://api.github.com/repos/peterzhangbo/Dashboard/contents/dashboard-snapshots.jsonl',{headers:{'Accept':'application/vnd.github.v3.raw'}})
         .then(function(r){if(!r.ok) throw new Error(r.status); return r.text()})
         .then(parseSnapData)
@@ -482,7 +452,6 @@ function parseSnapData(txt){
     list.appendChild(item);
   });
 }
-}
 function showSnap(s,idx){
   document.getElementById('snap-dd').classList.remove('open');
   var v=document.getElementById('snap-viewer');
@@ -490,39 +459,27 @@ function showSnap(s,idx){
   var d=new Date(s.ts);
   document.getElementById('snap-viewer-title').textContent='快照：'+d.toLocaleString('zh-CN');
   var body='';
-  // BTC
   if(s.btc){
     body+='<div class="snap-kv">';
     body+='<div class="snap-kv-item"><div class="snap-kv-label">BTC 价格</div><div class="snap-kv-val">$'+Number(s.btc.price).toLocaleString()+'</div></div>';
     body+='<div class="snap-kv-item"><div class="snap-kv-label">24h 涨跌</div><div class="snap-kv-val '+(s.btc.change>=0?'up':'down')+'">'+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%</div></div>';
-    body+='<div class="snap-kv-item"><div class="snap-kv-label">市值</div><div class="snap-kv-val">$'+(s.btc.mcap/10000).toFixed(2)+'万亿</div></div>';
+    body+='<div class="snap-kv-item"><div class="snap-kv-label">市值</div><div class="snap-kv-val">$'+(s.btc.mcap/1e12).toFixed(2)+'万亿</div></div>';
     body+='</div>';
   }
-  // HN
   if(s.hn&&s.hn.length>0){
-    body+='<div style="font-size:12px;font-weight:600;color:var(--t2);margin:10px 0 6px">Hacker News 热门</div>';
-    body+='<div class="snap-hn-list">';
-    s.hn.forEach(function(h,i){
-      body+='<div class="snap-hn-item"><span class="snap-hn-rank">'+(i+1)+'</span><span class="snap-hn-title">'+h.t+'</span><span class="snap-hn-score">'+h.s+'分 · '+h.c+'评</span></div>';
-    });
+    body+='<div style="font-size:12px;font-weight:600;color:var(--t2);margin:10px 0 6px">Hacker News 热门</div><div class="snap-hn-list">';
+    s.hn.forEach(function(h,i){body+='<div class="snap-hn-item"><span class="snap-hn-rank">'+(i+1)+'</span><span class="snap-hn-title">'+h.t+'</span><span class="snap-hn-score">'+h.s+'分 · '+h.c+'评</span></div>'});
     body+='</div>';
   }
-  // Crypto
   if(s.crypto&&s.crypto.length>0){
-    body+='<div style="font-size:12px;font-weight:600;color:var(--t2);margin:10px 0 6px">Web3 / 加密热点</div>';
-    body+='<div class="snap-hn-list">';
-    s.crypto.forEach(function(c,i){
-      body+='<div class="snap-hn-item"><span class="snap-hn-rank">'+(i+1)+'</span><span class="snap-hn-title">'+c.t+' <span class="tag tag-'+(c.tag==='监管'?'pol':c.tag==='安全'?'sec':c.tag==='开发'?'defi':'crypto')+'">'+c.tag+'</span></span></div>';
-    });
+    body+='<div style="font-size:12px;font-weight:600;color:var(--t2);margin:10px 0 6px">Web3 / 加密热点</div><div class="snap-hn-list">';
+    s.crypto.forEach(function(c,i){body+='<div class="snap-hn-item"><span class="snap-hn-rank">'+(i+1)+'</span><span class="snap-hn-title">'+c.t+'</span></div>'});
     body+='</div>';
   }
   document.getElementById('snap-viewer-body').innerHTML=body;
   v.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function closeSnapViewer(){
-  document.getElementById('snap-viewer').classList.remove('open');
-}
-// Close dropdown on outside click
+function closeSnapViewer(){document.getElementById('snap-viewer').classList.remove('open')}
 document.addEventListener('click',function(e){
   if(!e.target.closest('.meta')) document.getElementById('snap-dd').classList.remove('open');
   if(e.target===document.getElementById('ex-help-modal')) closeExHelp();
