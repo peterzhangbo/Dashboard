@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "exchange": "bn",
+    "symbol": "HYUNDAIUSDT",
+    "market": "fut",
+    "discovered": 1780563980,
+    "change": -0.65,
+    "volume": 26514.46
+  },
+  {
+    "exchange": "bn",
+    "symbol": "SAMSUNGUSDT",
+    "market": "fut",
+    "discovered": 1780563980,
+    "change": -0.38,
+    "volume": 47635.84
+  },
+  {
+    "exchange": "bn",
+    "symbol": "SKHYNIXUSDT",
+    "market": "fut",
+    "discovered": 1780563980,
+    "change": -0.62,
+    "volume": 196366.83
+  }
+]
