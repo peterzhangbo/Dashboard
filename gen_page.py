@@ -12,7 +12,7 @@ EXCLUDE = {"BTC","ETH","SOL","BNB","XRP","ADA","DOGE","AVAX","DOT","LINK","MATIC
 FIAT = {"AUD","GBP","EUR","BRL","JPY","TRY","IDR","RUB","UAH","ZAR","PLN","NGN","ARS","COP","BIDR","BVND","BKRW"}
 LEV_RE = re.compile(r'(UP|DOWN|BULL|BEAR)(USDT|BTC|ETH|BNB)$', re.IGNORECASE)
 
-def fetch_json(url, timeout=10):
+def fetch_json(url, timeout=4):
     req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read())
@@ -119,7 +119,7 @@ for ex in S:
     for s in S[ex]: tasks.append((ex, s))
 R = {}
 done = 0
-with ThreadPoolExecutor(max_workers=20) as pool:
+with ThreadPoolExecutor(max_workers=30) as pool:
     futs = {pool.submit(fk, ex, s): (ex, s) for ex, s in tasks}
     for f in as_completed(futs):
         ex, s = futs[f]; sym, p, v = f.result()
@@ -209,6 +209,56 @@ with ThreadPoolExecutor(max_workers=4) as pool:
     CT_NEWS = ct_fut.result()
 print(f"HN: {len(HN_STORIES)}, CT: {len(CT_NEWS)}", flush=True)
 
+# --- Translate titles to Chinese ---
+def translate_texts(texts):
+    """Translate a list of English texts to Chinese in one batch request."""
+    if not texts:
+        return texts
+    SEP = " ||| "
+    try:
+        import urllib.parse
+        joined = SEP.join(texts)
+        q = urllib.parse.quote(joined)
+        url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q={}".format(q)
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            data = json.loads(r.read())
+        full = "".join(seg[0] for seg in data[0] if seg[0])
+        parts = [p.strip() for p in full.split("|||")]
+        # Pad or trim to match input length
+        while len(parts) < len(texts):
+            parts.append(texts[len(parts)])
+        return parts[:len(texts)]
+    except:
+        return texts
+
+def translate_tag(tag):
+    """Translate common CT news tags."""
+    tag_map = {
+        "Latest News": "最新", "Markets": "市场", "Policy": "政策",
+        "DeFi": "DeFi", "Regulation": "监管", "Crypto": "加密",
+        "Blockchain": "区块链", "Altcoin": "山寨币", "Bitcoin": "比特币",
+        "Ethereum": "以太坊", "NFT": "NFT", "Stablecoin": "稳定币",
+        "Business": "商业", "Technology": "科技", "World News": "国际",
+    }
+    return tag_map.get(tag, tag)
+
+print("Translating titles...", flush=True)
+all_titles = [s["title"] for s in HN_STORIES] + [n["title"] for n in CT_NEWS]
+if all_titles:
+    translated = translate_texts(all_titles)
+    for i, s in enumerate(HN_STORIES):
+        s["title"] = translated[i] if i < len(translated) else s["title"]
+    offset = len(HN_STORIES)
+    for i, n in enumerate(CT_NEWS):
+        n["title"] = translated[offset + i] if offset + i < len(translated) else n["title"]
+
+# Translate CT tags
+for n in CT_NEWS:
+    n["tag"] = translate_tag(n.get("tag", ""))
+
+print("Translation done", flush=True)
+
 all_ann = []
 for a in bn_ann["data"]["catalogs"][0]["articles"][:5]:
     mkt = "合约" if "Futures" in a["title"] or "Perpetual" in a["title"] else "现货"
@@ -287,7 +337,8 @@ def build_hn_html(stories):
     return h
 
 def build_news_html(news):
-    tag_cls_map = {"Markets":"tag-ex","Latest News":"tag-crypto","Policy":"tag-pol","DeFi":"tag-defi","Regulation":"tag-sec","Crypto":"tag-crypto"}
+    tag_cls_map = {"Markets":"tag-ex","Latest News":"tag-crypto","Policy":"tag-pol","DeFi":"tag-defi","Regulation":"tag-sec","Crypto":"tag-crypto",
+                   "市场":"tag-ex","最新":"tag-crypto","政策":"tag-pol","DeFi":"tag-defi","监管":"tag-sec","加密":"tag-crypto","区块链":"tag-defi"}
     h = '<div class="tab-panel" id="tab-news">\n  <div class="news-list">\n'
     for i, n in enumerate(news):
         tag = n.get("tag", "Crypto")
