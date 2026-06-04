@@ -141,8 +141,8 @@ def rk(ex, syms, by="vol", n=3):
 
 print("Fetching announcements...", flush=True)
 bn_ann = fetch_json("https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&catalogId=48&pageNo=1&pageSize=5")
-bb_ann = fetch_json("https://api.bybit.com/v5/announcements/index?type=new_crypto&locale=en-US")
-okx_ann = fetch_json("https://www.okx.com/priapi/v1/assistant/service-center/home/featured-announcements?defi=false")
+bb_ann = fetch_json("https://api.bybit.com/v5/announcements/index?type=new_crypto&locale=zh-TW")
+okx_ann = fetch_json("https://www.okx.com/priapi/v1/assistant/service-center/home/featured-announcements?defi=false&locale=zh_CN")
 bg_ann = fetch_json("https://api.bitget.com/api/v2/public/annoucements?language=zh_CN&annType=coin_listings&limit=5")
 
 btc_d = [d for d in bn_st if d["symbol"] == "BTCUSDT"][0]
@@ -243,15 +243,14 @@ def translate_tag(tag):
     }
     return tag_map.get(tag, tag)
 
-print("Translating titles...", flush=True)
+print("Translating HN & CT titles...", flush=True)
 all_titles = [s["title"] for s in HN_STORIES] + [n["title"] for n in CT_NEWS]
 if all_titles:
     translated = translate_texts(all_titles)
     for i, s in enumerate(HN_STORIES):
         s["title"] = translated[i] if i < len(translated) else s["title"]
-    offset = len(HN_STORIES)
     for i, n in enumerate(CT_NEWS):
-        n["title"] = translated[offset + i] if offset + i < len(translated) else n["title"]
+        n["title"] = translated[len(HN_STORIES) + i] if len(HN_STORIES) + i < len(translated) else n["title"]
 
 # Translate CT tags
 for n in CT_NEWS:
@@ -261,8 +260,8 @@ print("Translation done", flush=True)
 
 all_ann = []
 for a in bn_ann["data"]["catalogs"][0]["articles"][:5]:
-    mkt = "合约" if "Futures" in a["title"] or "Perpetual" in a["title"] else "现货"
-    all_ann.append(("Binance", "https://www.binance.com/en/support/announcement/{}".format(a["code"]), a["title"], a["releaseDate"], ft_ts(a["releaseDate"]), mkt))
+    mkt = "合约" if "合约" in a["title"] or "永续" in a["title"] or "Futures" in a["title"] or "Perpetual" in a["title"] else "现货"
+    all_ann.append(("Binance", "https://www.binance.com/zh-CN/support/announcement/{}".format(a["code"]), a["title"], a["releaseDate"], ft_ts(a["releaseDate"]), mkt))
 for a in okx_ann.get("data", {}).get("announcements", [])[:5]:
     all_ann.append(("OKX", "https://www.okx.com{}".format(a["url"]), a["title"], int(a["publishTime"]) * 1000, ft_ts(a["publishTime"]), "合约"))
 for a in bg_ann.get("data", [])[:5]:
@@ -270,9 +269,20 @@ for a in bg_ann.get("data", [])[:5]:
     mkt = "合约" if "合约" in a["annTitle"] or "永续" in a["annTitle"] else "现货"
     all_ann.append(("Bitget", a["annUrl"], a["annTitle"], ts, ft_ts(ts), mkt))
 for a in bb_ann["result"]["list"][:5]:
-    mkt = "合约" if "Perpetual" in a["title"] or "leverage" in a["title"] else "现货"
+    mkt = "合约" if "合约" in a["title"] or "永续" in a["title"] or "Perpetual" in a["title"] or "leverage" in a["title"] else "现货"
     all_ann.append(("Bybit", a["url"], a["title"], a["publishTime"], ft_ts(a["publishTime"]), mkt))
 all_ann.sort(key=lambda x: -x[3])
+
+# Translate OKX English announcement titles
+okx_indices = [i for i, (ex, _, title, *_) in enumerate(all_ann) if ex == "OKX" and title.isascii()]
+if okx_indices:
+    okx_titles = [all_ann[i][2] for i in okx_indices]
+    okx_translated = translate_texts(okx_titles)
+    for j, ai in enumerate(okx_indices):
+        if j < len(okx_translated):
+            ex, url, _, ts, ts_str, mkt = all_ann[ai]
+            all_ann[ai] = (ex, url, okx_translated[j], ts, ts_str, mkt)
+    print(f"Translated {len(okx_indices)} OKX titles", flush=True)
 
 if os.path.exists(NEW_FILE):
     with open(NEW_FILE) as f: deduped = json.load(f)
@@ -319,7 +329,7 @@ def mk_ex_panel(cat, tid, active=False):
                     arrow = "▲" if pct >= 0 else "▼"
                     h += '            <div class="ex-item"><div class="ex-item-pair"><a href="{}" target="_blank">{}</a></div><div class="ex-item-data"><b>{}</b> <span class="{}" style="font-size:10px;opacity:.5">{}</span></div></div>\n'.format(url, dp, fmt(vol), c, arrow)
                 else:
-                    h += '            <div class="ex-item"><div class="ex-item-pair"><a href="{}" target="_blank">{}</a></div><div class="ex-item-data"><span class="{}" style="font-weight:700;font-size:12px">{}{:.2f}%</span> <span style="font-size:10px;color:var(--t3)">{}</span></div></div>\n'.format(url, dp, c, sg, pct, fmt(vol))
+                    h += '            <div class="ex-item"><div class="ex-item-pair"><a href="{}" target="_blank">{}</a></div><div class="ex-item-data"><span class="{}" style="font-weight:700;font-size:14px">{}{:.2f}%</span> <span style="font-size:11px;color:var(--t3)">{}</span></div></div>\n'.format(url, dp, c, sg, pct, fmt(vol))
             h += '          </div>\n'
         h += '        </div>\n      </div>\n'
     h += '    </div>\n  </div>\n'
@@ -329,7 +339,7 @@ def build_hn_html(stories):
     h = '<div class="tab-panel" id="tab-hn">\n  <div class="news-list" id="hn-list">\n'
     for i, s in enumerate(stories):
         ts = ft_ts(s["time"])
-        h += '    <div class="news-row" data-score="{}" data-time="{}" data-comments="{}"><span class="news-n">{}</span><div class="news-body"><a class="news-t" href="{}" target="_blank">{}</a><div class="news-meta"><span class="tag tag-tech">HN</span> ↑{} · 💬{} · {}</div></div></div>\n'.format(
+        h += '    <div class="news-row" data-score="{}" data-time="{}" data-comments="{}"><span class="news-n">{}</span><div class="news-body"><a class="news-t" href="{}" target="_blank">{}</a><div class="news-meta">↑{} · 💬{} · {}</div></div></div>\n'.format(
             s["score"], s["time"], s["descendants"], i+1, esc(s["url"]), esc(s["title"]), s["score"], s["descendants"], ts)
     if not stories:
         h += '    <div style="padding:8px;color:var(--t3);font-size:11px">暂无数据</div>\n'
@@ -337,14 +347,20 @@ def build_hn_html(stories):
     return h
 
 def build_news_html(news):
-    tag_cls_map = {"Markets":"tag-ex","Latest News":"tag-crypto","Policy":"tag-pol","DeFi":"tag-defi","Regulation":"tag-sec","Crypto":"tag-crypto",
-                   "市场":"tag-ex","最新":"tag-crypto","政策":"tag-pol","DeFi":"tag-defi","监管":"tag-sec","加密":"tag-crypto","区块链":"tag-defi"}
+    tag_cls_map = {"Markets":"tag-ex","Policy":"tag-pol","DeFi":"tag-defi","Regulation":"tag-sec","Crypto":"tag-crypto",
+                   "市场":"tag-ex","政策":"tag-pol","DeFi":"tag-defi","监管":"tag-sec","加密":"tag-crypto","区块链":"tag-defi"}
+    # Generic tags to skip
+    SKIP_TAGS = {"Latest News", "最新", "Trump memecoin"}
     h = '<div class="tab-panel" id="tab-news">\n  <div class="news-list">\n'
     for i, n in enumerate(news):
-        tag = n.get("tag", "Crypto")
-        tag_cls = tag_cls_map.get(tag, "tag-tech")
-        h += '    <div class="news-row"><span class="news-n">{}</span><div class="news-body"><a class="news-t" href="{}" target="_blank">{}</a><div class="news-meta"><span class="tag {}">{}</span></div></div></div>\n'.format(
-            i+1, esc(n["url"]), esc(n["title"]), tag_cls, esc(tag))
+        tag = n.get("tag", "")
+        tag_html = ""
+        if tag and tag not in SKIP_TAGS:
+            tag_cls = tag_cls_map.get(tag, "tag-tech")
+            tag_html = '<span class="tag {}">{}</span>'.format(tag_cls, esc(tag))
+        meta_html = '<div class="news-meta">{}</div>'.format(tag_html) if tag_html else ''
+        h += '    <div class="news-row"><span class="news-n">{}</span><div class="news-body"><a class="news-t" href="{}" target="_blank">{}</a>{}</div></div>\n'.format(
+            i+1, esc(n["url"]), esc(n["title"]), meta_html)
     if not news:
         h += '    <div style="padding:8px;color:var(--t3);font-size:11px">暂无数据</div>\n'
     h += '  </div>\n</div>'
