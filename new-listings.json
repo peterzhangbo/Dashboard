@@ -3,24 +3,72 @@
     "exchange": "bn",
     "symbol": "HYUNDAIUSDT",
     "market": "fut",
-    "discovered": 1780563980,
-    "change": -0.65,
-    "volume": 26514.46
+    "discovered": 1780564188,
+    "change": -2.17,
+    "volume": 236594.22
+  },
+  {
+    "exchange": "bg",
+    "symbol": "HYUNDAIUSDT",
+    "market": "fut",
+    "discovered": 1780564188,
+    "change": -1.95,
+    "volume": 5428.73
+  },
+  {
+    "exchange": "bb",
+    "symbol": "HYUNDAIUSDT",
+    "market": "fut",
+    "discovered": 1780564188,
+    "change": -1.99,
+    "volume": 13280.61
   },
   {
     "exchange": "bn",
     "symbol": "SAMSUNGUSDT",
     "market": "fut",
-    "discovered": 1780563980,
-    "change": -0.38,
-    "volume": 47635.84
+    "discovered": 1780564188,
+    "change": -0.8,
+    "volume": 66840.93
+  },
+  {
+    "exchange": "bg",
+    "symbol": "SAMSUNGUSDT",
+    "market": "fut",
+    "discovered": 1780564188,
+    "change": -0.77,
+    "volume": 11317.63
+  },
+  {
+    "exchange": "bb",
+    "symbol": "SAMSUNGUSDT",
+    "market": "fut",
+    "discovered": 1780564188,
+    "change": -0.82,
+    "volume": 3825.5
   },
   {
     "exchange": "bn",
     "symbol": "SKHYNIXUSDT",
     "market": "fut",
-    "discovered": 1780563980,
-    "change": -0.62,
-    "volume": 196366.83
+    "discovered": 1780564188,
+    "change": -1.38,
+    "volume": 753468.19
+  },
+  {
+    "exchange": "bg",
+    "symbol": "SKHYNIXUSDT",
+    "market": "fut",
+    "discovered": 1780564188,
+    "change": -1.49,
+    "volume": 41600.91
+  },
+  {
+    "exchange": "bb",
+    "symbol": "SKHYNIXUSDT",
+    "market": "fut",
+    "discovered": 1780564188,
+    "change": -1.58,
+    "volume": 8402.33
   }
 ]
