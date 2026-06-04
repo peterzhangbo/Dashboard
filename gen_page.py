@@ -157,6 +157,58 @@ def ft_ts(ts):
 def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
+# --- HN and Cointelegraph fetching ---
+import xml.etree.ElementTree as ET
+
+HN_STORIES = []
+CT_NEWS = []
+
+def fetch_hn_detail(sid):
+    try:
+        d = fetch_json("https://hacker-news.firebaseio.com/v0/item/{}.json".format(sid))
+        return {"title": d.get("title",""), "score": d.get("score",0),
+                "descendants": d.get("descendants",0), "time": d.get("time",0),
+                "url": d.get("url","") or "https://news.ycombinator.com/item?id={}".format(sid)}
+    except:
+        return None
+
+def fetch_hn():
+    try:
+        ids = fetch_json("https://hacker-news.firebaseio.com/v0/topstories.json")
+        with ThreadPoolExecutor(max_workers=10) as pool:
+            futs = [pool.submit(fetch_hn_detail, sid) for sid in ids[:15]]
+            results = [f.result() for f in futs if f.result()]
+        results.sort(key=lambda x: -x["score"])
+        return results[:8]
+    except:
+        return []
+
+def fetch_ct():
+    try:
+        req = urllib.request.Request("https://cointelegraph.com/rss", headers={"User-Agent":"Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            rss = r.read().decode("utf-8")
+        root = ET.fromstring(rss)
+        items = root.findall(".//item")
+        news = []
+        for item in items[:15]:
+            title = item.findtext("title", "")
+            link = item.findtext("link", "")
+            cats = [c.text for c in item.findall("category") if c.text]
+            tag = cats[0] if cats else "Crypto"
+            news.append({"title": title, "url": link, "tag": tag})
+        return news[:8]
+    except:
+        return []
+
+print("Fetching HN & CT...", flush=True)
+with ThreadPoolExecutor(max_workers=4) as pool:
+    hn_fut = pool.submit(fetch_hn)
+    ct_fut = pool.submit(fetch_ct)
+    HN_STORIES = hn_fut.result()
+    CT_NEWS = ct_fut.result()
+print(f"HN: {len(HN_STORIES)}, CT: {len(CT_NEWS)}", flush=True)
+
 all_ann = []
 for a in bn_ann["data"]["catalogs"][0]["articles"][:5]:
     mkt = "合约" if "Futures" in a["title"] or "Perpetual" in a["title"] else "现货"
@@ -223,14 +275,32 @@ def mk_ex_panel(cat, tid, active=False):
     h += '    </div>\n  </div>\n'
     return h
 
-with open(OUT_FILE) as f:
-    old = f.read()
+def build_hn_html(stories):
+    h = '<div class="tab-panel" id="tab-hn">\n  <div class="news-list" id="hn-list">\n'
+    for i, s in enumerate(stories):
+        ts = ft_ts(s["time"])
+        h += '    <div class="news-row" data-score="{}" data-time="{}" data-comments="{}"><span class="news-n">{}</span><div class="news-body"><a class="news-t" href="{}" target="_blank">{}</a><div class="news-meta"><span class="tag tag-tech">HN</span> ↑{} · 💬{} · {}</div></div></div>\n'.format(
+            s["score"], s["time"], s["descendants"], i+1, esc(s["url"]), esc(s["title"]), s["score"], s["descendants"], ts)
+    if not stories:
+        h += '    <div style="padding:8px;color:var(--t3);font-size:11px">暂无数据</div>\n'
+    h += '  </div>\n</div>'
+    return h
 
-hn_match = re.search(r'(<!-- Hacker News Tab -->[\s\S]*?</div>\s*</div>\s*</div>)', old)
-hn_html = hn_match.group(1) if hn_match and hn_match.group(1).count("</div>") >= 3 else ""
+def build_news_html(news):
+    tag_cls_map = {"Markets":"tag-ex","Latest News":"tag-crypto","Policy":"tag-pol","DeFi":"tag-defi","Regulation":"tag-sec","Crypto":"tag-crypto"}
+    h = '<div class="tab-panel" id="tab-news">\n  <div class="news-list">\n'
+    for i, n in enumerate(news):
+        tag = n.get("tag", "Crypto")
+        tag_cls = tag_cls_map.get(tag, "tag-tech")
+        h += '    <div class="news-row"><span class="news-n">{}</span><div class="news-body"><a class="news-t" href="{}" target="_blank">{}</a><div class="news-meta"><span class="tag {}">{}</span></div></div></div>\n'.format(
+            i+1, esc(n["url"]), esc(n["title"]), tag_cls, esc(tag))
+    if not news:
+        h += '    <div style="padding:8px;color:var(--t3);font-size:11px">暂无数据</div>\n'
+    h += '  </div>\n</div>'
+    return h
 
-news_match = re.search(r'(<!-- 行业热点 Tab -->[\s\S]*?</div>\s*</div>\s*</div>)', old)
-news_html = news_match.group(1) if news_match and news_match.group(1).count("</div>") >= 3 else ""
+hn_html = build_hn_html(HN_STORIES)
+news_html = build_news_html(CT_NEWS)
 
 # Read template
 with open(TPL_FILE) as f:
@@ -244,8 +314,8 @@ page = page.replace("{{BTC_CHG_VAL}}", "{:.2f}".format(abs(btc_c)))
 page = page.replace("{{BTC_MCAP}}", "{:.2f}".format(btc_p * 19850000 / 1e12))
 page = page.replace("{{NL_HTML}}", nl_html.strip() if nl_html.strip() else '<div style="padding:8px;color:var(--t3);font-size:11px">12h 内暂无新增交易对</div>')
 page = page.replace("{{LISTING_HTML}}", listing_html)
-page = page.replace("{{HN_HTML}}", hn_html if hn_html else '<div class="tab-panel" id="tab-hn"><div class="news-list" id="hn-list"><div class="ex-row" style="color:var(--t3)">暂无数据</div></div></div>')
-page = page.replace("{{NEWS_HTML}}", news_html if news_html else '<div class="tab-panel" id="tab-news"><div class="news-list"><div class="ex-row" style="color:var(--t3)">暂无数据</div></div></div>')
+page = page.replace("{{HN_HTML}}", hn_html)
+page = page.replace("{{NEWS_HTML}}", news_html)
 page = page.replace("{{EX_VOL}}", mk_ex_panel("vol", "etab-vol", True))
 page = page.replace("{{EX_GAIN}}", mk_ex_panel("gain", "etab-gain"))
 page = page.replace("{{EX_LOSS}}", mk_ex_panel("loss", "etab-loss"))
@@ -253,3 +323,17 @@ page = page.replace("{{EX_LOSS}}", mk_ex_panel("loss", "etab-loss"))
 with open(OUT_FILE, "w") as f:
     f.write(page)
 print(f"Done: {len(page)} bytes", flush=True)
+
+# --- Generate snapshot ---
+SNAP_FILE_JSONL = os.path.join(DATA_DIR, "dashboard-snapshots.jsonl")
+hn_snap = [{"t":s["title"],"s":s["score"],"c":s["descendants"],"ts":s["time"]} for s in HN_STORIES]
+crypto_snap = [{"t":n["title"],"tag":n.get("tag","")} for n in CT_NEWS]
+snap = {
+    "ts": now.isoformat(),
+    "btc": {"price": btc_p, "change": btc_c, "mcap": btc_p * 19850000},
+    "hn": hn_snap,
+    "crypto": crypto_snap
+}
+with open(SNAP_FILE_JSONL, "a") as f:
+    f.write(json.dumps(snap, ensure_ascii=False) + "\n")
+print(f"Snapshot appended: BTC ${btc_p:,.0f}, {btc_c:+.2f}%", flush=True)
