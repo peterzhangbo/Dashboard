@@ -269,7 +269,7 @@ def mk_ex_panel(cat, tid, active=False):
                     arrow = "▲" if pct >= 0 else "▼"
                     h += '            <div class="ex-item"><div class="ex-item-pair"><a href="{}" target="_blank">{}</a></div><div class="ex-item-data"><b>{}</b> <span class="{}" style="font-size:10px;opacity:.5">{}</span></div></div>\n'.format(url, dp, fmt(vol), c, arrow)
                 else:
-                    h += '            <div class="ex-item"><div class="ex-item-pair"><a href="{}" target="_blank">{}</a></div><div class="ex-item-data"><span class="{}" style="font-weight:700;font-size:14px">{}{:.2f}%</span> <span style="font-size:11px;color:var(--t3)">{}</span></div></div>\n'.format(url, dp, c, sg, pct, fmt(vol))
+                    h += '            <div class="ex-item"><div class="ex-item-pair"><a href="{}" target="_blank">{}</a></div><div class="ex-item-data"><span class="{}" style="font-weight:700;font-size:12px">{}{:.2f}%</span> <span style="font-size:10px;color:var(--t3)">{}</span></div></div>\n'.format(url, dp, c, sg, pct, fmt(vol))
             h += '          </div>\n'
         h += '        </div>\n      </div>\n'
     h += '    </div>\n  </div>\n'
