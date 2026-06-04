@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>快照 - 科技与加密货币仪表盘</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#08080A;
+  --card:#141418;
+  --card-2:#1a1a20;
+  --surface-2:#222228;
+  --border:#2a2a32;
+  --divider:#222228;
+  --fg:#ffffff;
+  --fg-2:#b4b8c0;
+  --fg-3:#6e7280;
+  --brand:#5227FF;
+  --brand-400:#6C4FFF;
+  --brand-tint:rgba(82,39,255,.12);
+  --green:#1ED760;
+  --green-tint:rgba(30,215,96,.12);
+  --red:#FF5C42;
+  --red-tint:rgba(255,92,66,.12);
+  --orange:#FFA940;
+  --orange-tint:rgba(255,169,64,.12);
+  --blue:#4DA3FF;
+  --blue-tint:rgba(77,163,255,.12);
+  --purple:#B07AFF;
+  --purple-tint:rgba(176,122,255,.12);
+  --r-lg:16px;
+  --r-md:12px;
+  --r-sm:8px;
+  --shadow:0 2px 8px rgba(0,0,0,.3);
+  --mono:'Fira Code','SF Mono',monospace;
+  --sans:'Inter','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--fg);line-height:1.5;padding:20px;max-width:1320px;margin:0 auto;font-size:13px;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* Header */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.header h1{font-size:18px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+.header h1 .bar{display:inline-block;width:4px;height:20px;background:var(--brand);border-radius:2px}
+.back-link{font-size:12px;color:var(--fg-3);display:flex;align-items:center;gap:4px;transition:color .15s}
+.back-link:hover{color:var(--brand)}
+.back-link svg{width:14px;height:14px}
+
+/* Loading */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px}
+.loading .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{color:var(--fg-3);font-size:13px}
+
+/* Error */
+.error-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:40px;text-align:center;max-width:480px;margin:80px auto}
+.error-box h2{font-size:16px;font-weight:700;margin-bottom:8px}
+.error-box p{color:var(--fg-3);font-size:12px}
+
+/* BTC KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;box-shadow:var(--shadow)}
+.kpi-label{font-size:11px;font-weight:600;color:var(--fg-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.kpi-label .dot-sm{width:6px;height:6px;border-radius:50%;display:inline-block}
+.kpi-value{font-family:var(--mono);font-size:24px;font-weight:700;letter-spacing:-.5px}
+.kpi-sub{font-family:var(--mono);font-size:12px;margin-top:4px}
+.up{color:var(--green);font-weight:600}
+.down{color:var(--red);font-weight:600}
+
+/* Section */
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;margin-top:28px}
+.section-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.section-title .bar{display:inline-block;width:4px;height:16px;background:var(--brand);border-radius:2px}
+.section-sub{font-size:11px;color:var(--fg-3)}
+
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow);overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--divider)}
+.card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+
+/* News Row */
+.news-list{max-height:520px;overflow-y:auto}
+.news-row{display:flex;flex-direction:column;gap:4px;padding:11px 16px;transition:background .15s;border-bottom:1px solid var(--divider)}
+.news-row:last-child{border-bottom:none}
+.news-row:hover{background:var(--surface-2)}
+.news-row .r-top{display:flex;align-items:center;gap:8px}
+.news-row .r-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--fg-3);min-width:18px;text-align:right}
+.news-row .r-t{font-size:12px;font-weight:500;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.news-row .r-t:hover{color:var(--brand)}
+.news-row .r-meta{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--fg-3);margin-left:26px}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.3px}
+.tag-hn{background:var(--orange-tint);color:var(--orange)}
+.tag-bg{background:var(--green-tint);color:var(--green)}
+
+/* Two-col grid */
+.two-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+
+/* Footer */
+.footer{text-align:center;margin-top:32px;font-size:10px;color:var(--fg-3);letter-spacing:.3px;padding-bottom:20px}
+
+@media(max-width:800px){
+  .kpi-grid{grid-template-columns:1fr}
+  .two-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div class="msg">加载快照数据...</div>
+  </div>
+</div>
+
+<script>
+/* ── CDN Fallback ── */
+var CDN_URLS=[
+  'https://fastly.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl',
+  'https://gcore.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl',
+  'https://cdn.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl',
+  'https://peterzhangbo.github.io/Dashboard/dashboard-snapshots.jsonl'
+];
+var GITHUB_API='https://api.github.com/repos/peterzhangbo/Dashboard/contents/dashboard-snapshots.jsonl';
+
+function fetchWithTimeout(url,timeout){
+  return new Promise(function(resolve,reject){
+    var ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+    var timer;
+    if(ctrl){timer=setTimeout(function(){ctrl.abort()},timeout||8000)}
+    fetch(url,{signal:ctrl?ctrl.signal:undefined}).then(function(r){
+      if(!r.ok)throw new Error(r.status);
+      return r.text();
+    }).then(function(t){
+      if(timer)clearTimeout(timer);
+      resolve(t);
+    }).catch(reject);
+  });
+}
+
+function loadJSONL(idx){
+  function tryNext(i){
+    if(i>=CDN_URLS.length){
+      /* GitHub API fallback */
+      fetchWithTimeout(GITHUB_API,10000).then(function(raw){
+        var d=JSON.parse(raw);
+        return atob(d.content);
+      }).then(parseAndRender.bind(null,idx))
+        .catch(function(){showError('无法加载快照数据，请检查网络后刷新重试')});
+      return;
+    }
+    fetchWithTimeout(CDN_URLS[i]).then(function(txt){
+      parseAndRender(idx,txt);
+    }).catch(function(){tryNext(i+1)});
+  }
+  tryNext(0);
+}
+
+/* ── Parse & Render ── */
+function parseAndRender(idx,txt){
+  var lines=txt.trim().split('\n');
+  var snaps=[];
+  for(var i=0;i<lines.length;i++){
+    try{var o=JSON.parse(lines[i]);if(o.ts)snaps.push(o)}catch(e){}
+  }
+  snaps.reverse();
+  if(idx<0||idx>=snaps.length){showError('快照索引 '+idx+' 不存在（共 '+snaps.length+' 条）');return}
+  renderSnap(snaps[idx],idx,snaps.length);
+}
+
+function renderSnap(s,idx,total){
+  var d=new Date(s.ts);
+  var timeStr=d.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  var btc=s.btc||{};
+  var btcP=btc.price||0;
+  var btcC=btc.change||0;
+  var btcM=btc.mcap||0;
+  var btcCls=btcC>=0?'up':'down';
+  var btcArrow=btcC>=0?'▲':'▼';
+  var btcMcap=(btcM/1e12).toFixed(2);
+
+  var h='';
+  /* Header */
+  h+='<div class="header">';
+  h+='<h1><span class="bar"></span>历史快照</h1>';
+  h+='<a class="back-link" href="betanews.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回主页</a>';
+  h+='</div>';
+
+  /* Timestamp */
+  h+='<div style="margin-bottom:20px;font-size:12px;color:var(--fg-3)">快照时间：<span style="color:var(--fg);font-family:var(--mono);font-weight:600">'+timeStr+'</span>';
+  h+=' <span style="margin-left:8px;opacity:.5">('+(idx+1)+'/'+total+')</span></div>';
+
+  /* BTC KPI */
+  h+='<div class="kpi-grid">';
+  h+='<div class="kpi-card"><div class="kpi-label"><span class="dot-sm" style="background:#f7931a"></span>BTC 价格</div>';
+  h+='<div class="kpi-value">$'+Number(btcP).toLocaleString()+'</div></div>';
+  h+='<div class="kpi-card"><div class="kpi-label"><span class="dot-sm" style="background:var(--brand)"></span>24h 涨跌</div>';
+  h+='<div class="kpi-value '+btcCls+'">'+btcArrow+' '+Math.abs(btcC).toFixed(2)+'%</div></div>';
+  h+='<div class="kpi-card"><div class="kpi-label"><span class="dot-sm" style="background:var(--green)"></span>市值</div>';
+  h+='<div class="kpi-value">$'+btcMcap+'万亿</div></div>';
+  h+='</div>';
+
+  /* Two-column: HN + Crypto */
+  h+='<div class="two-grid">';
+
+  /* HN */
+  h+='<div><div class="section-head" style="margin-top:0"><h2 class="section-title"><span class="bar"></span>Hacker News</h2>';
+  h+='<span class="section-sub">Top 15</span></div>';
+  h+='<div class="card"><div class="news-list">';
+  var hn=s.hn||[];
+  if(hn.length){
+    for(var i=0;i<hn.length;i++){
+      var item=hn[i];
+      var url='https://news.ycombinator.com/item?id='+item.ts;
+      h+='<div class="news-row"><div class="r-top"><span class="r-n">'+(i+1)+'</span>';
+      h+='<a class="r-t" href="'+url+'" target="_blank">'+esc(item.t)+'</a></div>';
+      h+='<div class="r-meta"><span class="tag tag-hn">HN</span> ↑'+item.s+' · 💬'+item.c;
+      var pub=new Date(item.ts*1000);
+      h+=' · '+pub.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+      h+='</div></div>';
+    }
+  }else{
+    h+='<div style="padding:16px;color:var(--fg-3);font-size:11px">暂无数据</div>';
+  }
+  h+='</div></div></div>';
+
+  /* Crypto News */
+  h+='<div><div class="section-head" style="margin-top:0"><h2 class="section-title"><span class="bar"></span>加密热点</h2>';
+  h+='<span class="section-sub">CoinTelegraph</span></div>';
+  h+='<div class="card"><div class="news-list">';
+  var ct=s.crypto||[];
+  if(ct.length){
+    for(var i=0;i<ct.length;i++){
+      var item=ct[i];
+      h+='<div class="news-row"><div class="r-top"><span class="r-n">'+(i+1)+'</span>';
+      h+='<a class="r-t" href="https://cointelegraph.com/tags/'+esc((item.tag||'').toLowerCase())+'" target="_blank">'+esc(item.t)+'</a></div>';
+      h+='<div class="r-meta"><span class="tag tag-bg">'+esc(item.tag||'Crypto')+'</span></div></div>';
+    }
+  }else{
+    h+='<div style="padding:16px;color:var(--fg-3);font-size:11px">暂无数据</div>';
+  }
+  h+='</div></div></div>';
+
+  h+='</div>'; /* two-grid */
+
+  /* Footer */
+  h+='<div class="footer">数据来源：Binance · OKX · Bitget · Bybit · CoinTelegraph · Hacker News | 快照时间 '+timeStr+'</div>';
+
+  document.getElementById('app').innerHTML=h;
+}
+
+function showError(msg){
+  document.getElementById('app').innerHTML='<div class="error-box"><h2>加载失败</h2><p>'+msg+'</p></div>';
+}
+
+function esc(s){
+  if(!s)return'';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Init ── */
+(function(){
+  var hash=location.hash.replace('#','');
+  var idx=parseInt(hash);
+  if(isNaN(idx)||idx<0){showError('请通过主页快照菜单打开此页面');return}
+  loadJSONL(idx);
+})();
+</script>
+</body>
+</html>
