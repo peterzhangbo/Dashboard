@@ -953,15 +953,16 @@ def _gh_push(path, content, message):
         print(f"  {path}: FAIL - {e}", flush=True)
 
 
-_gh_push("betanews.html", page, f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC")
-_gh_push("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False),
-         f"New listings {now.strftime('%Y-%m-%d %H:%M')} UTC")
-_gh_push("dashboard-snapshots.jsonl", open(SNAPL_FILE).read(),
-         f"Snapshot {now.strftime('%Y-%m-%d %H:%M')} UTC")
-_gh_push("exchange-pairs-snapshot.json", json.dumps(current, indent=2),
-         f"Pairs snapshot {now.strftime('%Y-%m-%d %H:%M')} UTC")
-_gh_push("snapshot.html", open(SNAP_HTML_FILE).read(),
-         f"Snapshot page {now.strftime('%Y-%m-%d %H:%M')} UTC")
+msg = f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC"
+pushes = [
+    ("betanews.html", page, msg),
+    ("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False), msg),
+    ("dashboard-snapshots.jsonl", open(SNAPL_FILE).read(), msg),
+    ("exchange-pairs-snapshot.json", json.dumps(current, indent=2), msg),
+    ("snapshot.html", open(SNAP_HTML_FILE).read(), msg),
+]
+with ThreadPoolExecutor(max_workers=5) as ex:
+    list(ex.map(lambda p: _gh_push(*p), pushes))
 
 print("\n=== Done ===")
 print(f"BTC: ${btc_p:,.0f} ({btc_c:+.2f}%)  Supply: {btc_supply:,.0f}")
