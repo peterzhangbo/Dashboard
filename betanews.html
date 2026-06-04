@@ -6,176 +6,194 @@
 <title>科技与加密货币仪表盘</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
-/* ─── CoinW Dark Design System ─── */
-:root{
-  color-scheme:dark;
-  --bg:#08080A;
-  --card:#141418;
-  --card-2:#1a1a20;
-  --surface-2:#222228;
-  --border:#2a2a32;
-  --divider:#222228;
-  --fg:#ffffff;
-  --fg-2:#b4b8c0;
-  --fg-3:#6e7280;
-  --brand:#5227FF;
-  --brand-400:#6C4FFF;
-  --brand-tint:rgba(82,39,255,.12);
-  --green:#1ED760;
-  --green-tint:rgba(30,215,96,.12);
-  --red:#FF5C42;
-  --red-tint:rgba(255,92,66,.12);
-  --orange:#FFA940;
-  --orange-tint:rgba(255,169,64,.12);
-  --blue:#4DA3FF;
-  --blue-tint:rgba(77,163,255,.12);
-  --purple:#B07AFF;
-  --purple-tint:rgba(176,122,255,.12);
-  --r-lg:16px;
-  --r-md:12px;
-  --r-sm:8px;
-  --shadow:0 2px 8px rgba(0,0,0,.3);
-  --mono:'Fira Code','SF Mono',monospace;
-  --sans:'Inter','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+/* ─── CoinW Design System ─── */
+:root {
+  --bg:        #08080A;
+  --surface:   #121214;
+  --surface-2: #1A1A1C;
+  --surface-3: #232326;
+  --hairline:  rgba(255,255,255,0.09);
+  --hairline-2:rgba(255,255,255,0.14);
+  --divider:   rgba(255,255,255,0.06);
+  --fg:   #FFFFFF;
+  --fg-2: rgba(255,255,255,0.66);
+  --fg-3: rgba(255,255,255,0.42);
+  --fg-4: rgba(255,255,255,0.26);
+  --brand:      #5227FF;
+  --brand-400:  #6C4FFF;
+  --brand-700:  #2509B3;
+  --brand-t08:  rgba(82,39,255,0.12);
+  --brand-t16:  rgba(82,39,255,0.20);
+  --lime:       #D1FF55;
+  --up:         #1ED760;
+  --up-bg:      rgba(20,167,57,0.14);
+  --down:       #FF5C42;
+  --down-bg:    rgba(233,80,50,0.14);
+  --warning:    #FFA940;
+  --info:       #4DA3FF;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+  --r-pill: 999px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --dur: .2s;
+  --dur-fast: .12s;
+  --maxw: 1440px;
+  --header-h: 60px;
+  --mono: 'Fira Code','SF Mono',monospace;
+  --sans: 'Inter','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
 }
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--sans);background:var(--bg);color:var(--fg);line-height:1.5;padding:20px;max-width:1320px;margin:0 auto;font-size:13px;min-height:100vh}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+body{padding-bottom:64px}
 a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:0}
+.up{color:var(--up)}.down{color:var(--down)}
+.muted{color:var(--fg-3)}
 
-/* ─── Header ─── */
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
-.header h1{font-size:18px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
-.header h1 .bar{display:inline-block;width:4px;height:20px;background:var(--brand);border-radius:2px}
-.meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--fg-3);position:relative}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.ts-btn{cursor:pointer;border-bottom:1px dashed var(--fg-3);padding-bottom:1px;color:var(--fg-2);transition:color .15s}
-.ts-btn:hover{color:var(--brand)}
-.snap-dd{position:absolute;top:100%;right:0;margin-top:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow);z-index:100;min-width:280px;max-height:380px;overflow-y:auto;display:none}
-.snap-dd.open{display:block}
-.snap-dd-title{font-size:11px;font-weight:600;color:var(--fg-3);padding:12px 14px 8px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--divider)}
-.snap-item{display:flex;padding:10px 14px;font-size:12px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--divider)}
-.snap-item:last-child{border-bottom:none}
-.snap-item:hover{background:var(--surface-2)}
-.snap-item .s-ts{font-family:var(--mono);font-weight:500;color:var(--fg)}
+/* ── App shell ── */
+.shell{max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,40px)}
 
-/* ─── BTC Banner ─── */
-.btc-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:20px}
-.btc-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f7931a,#e8860a);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.btc-icon svg{width:26px;height:26px;fill:#fff}
-.btc-price{font-family:var(--mono);font-size:28px;font-weight:700;letter-spacing:-.5px}
-.btc-chg{font-family:var(--mono);font-size:14px;font-weight:600;margin-top:2px}
-.btc-chg.up{color:var(--green)}.btc-chg.down{color:var(--red)}
-.btc-meta{margin-left:auto;text-align:right;font-family:var(--mono);font-size:12px;color:var(--fg-2);line-height:1.8}
+/* ── Top bar ── */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(8,8,10,0.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--hairline)}
+.topbar__in{max-width:var(--maxw);margin:0 auto;padding:14px clamp(16px,3vw,40px);display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__txt{min-width:0;display:flex;flex-direction:column}
+.brand__title{font-weight:900;font-size:17px;line-height:1.2;letter-spacing:-.2px;white-space:nowrap}
+.brand__title .accent{color:var(--lime)}
+.brand__sub{font-size:11px;color:var(--fg-3);white-space:nowrap}
+.topbar__spacer{flex:1}
+.topbar__meta{display:flex;align-items:center;gap:14px}
+.live{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--fg-2);white-space:nowrap}
+.live__dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 0 0 rgba(30,215,96,0.5);animation:pulse 2.2s var(--ease) infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,215,96,0.45)}70%{box-shadow:0 0 0 7px rgba(30,215,96,0)}100%{box-shadow:0 0 0 0 rgba(30,215,96,0)}}
+.snap-select{display:inline-flex;align-items:center;gap:8px;height:38px;min-width:144px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.snap-select:hover{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
+.snap-wrap{position:relative}
+.snap-wrap.is-open .snap-select{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
+.snap-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:280px;padding:6px;background:var(--surface);border:1px solid var(--hairline-2);border-radius:var(--r-md);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);max-height:380px;overflow-y:auto}
+.snap-wrap.is-open .snap-menu{opacity:1;transform:none;pointer-events:auto}
+.snap-menu__head{font-size:11px;color:var(--fg-3);padding:6px 10px 4px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--divider)}
+.snap-menu__item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
+.snap-menu__item:hover{background:var(--surface-2);color:var(--fg)}
+.snap-menu__item .s-ts{font-family:var(--mono);font-weight:500}
 
-/* ─── Section Heads ─── */
-.section-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 0}
-.section-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
-.section-title .bar{display:inline-block;width:4px;height:16px;background:var(--brand);border-radius:2px}
-.section-sub{font-size:11px;color:var(--fg-3)}
-.info-btn{cursor:pointer;color:var(--fg-3);display:flex;align-items:center;gap:4px;font-size:10px;transition:color .15s;margin-left:auto}
-.info-btn:hover{color:var(--brand)}
+/* ── Section primitives ── */
+.section__head{position:sticky;top:var(--header-h);z-index:20;background:var(--bg);display:flex;align-items:center;gap:12px;margin-top:clamp(14px,2.2vw,24px);margin-bottom:6px;padding:12px 0 10px;flex-wrap:wrap}
+.section__title{font-size:19px;font-weight:900;letter-spacing:-.2px;color:var(--fg);display:flex;align-items:center;gap:10px}
+.section__title .bar{width:4px;height:18px;border-radius:2px;background:var(--lime);transition:box-shadow var(--dur) var(--ease)}
+.section__sub{font-size:12px;color:var(--fg-3)}
 
-/* ─── Cards ─── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow);overflow:hidden}
-.card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--divider)}
-.card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl)}
+.card__head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--divider)}
+.card__title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:9px}
 
-/* ─── Feed Tabs (HN sort) ─── */
-.feed-tabs{display:flex;gap:4px}
-.feed-tab{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--fg-3);transition:all .15s}
-.feed-tab.on{background:var(--brand);color:#fff;border-color:var(--brand)}
-.feed-tab:hover:not(.on){color:var(--fg);border-color:var(--fg-3)}
+/* ── Feed tabs ── */
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tab{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--hairline);background:transparent;color:var(--fg-3);transition:all var(--dur-fast) var(--ease)}
+.tab.is-on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.tab:hover:not(.is-on){color:var(--fg);border-color:var(--fg-3)}
 
-/* ─── News Row ─── */
-.news-list{max-height:360px;overflow-y:auto}
-.news-row{display:flex;flex-direction:column;gap:4px;padding:11px 16px;transition:background .15s;border-bottom:1px solid var(--divider)}
+/* ── News row ── */
+.feed__list{max-height:400px;overflow-y:auto}
+.news-row{display:flex;flex-direction:column;gap:4px;padding:12px 18px;transition:background var(--dur-fast) var(--ease);border-bottom:1px solid var(--divider);cursor:pointer}
 .news-row:last-child{border-bottom:none}
 .news-row:hover{background:var(--surface-2)}
-.news-row .r-top{display:flex;align-items:center;gap:8px}
-.news-row .r-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--fg-3);min-width:18px;text-align:right}
-.news-row .r-t{font-size:12px;font-weight:500;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
-.news-row .r-t:hover{color:var(--brand)}
-.news-row .r-meta{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--fg-3);margin-left:26px}
+.news-row__title{font-size:13px;font-weight:500;color:var(--fg);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}
+.news-row__title:hover{color:var(--brand)}
+.news-row__meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--fg-3)}
+.news-row__meta .stat{display:inline-flex;align-items:center;gap:3px}
+.news-row__meta .stat svg{width:13px;height:13px}
+.news-row__meta .stat.up{color:var(--up)}
+.news-row__meta .src{display:inline-block;padding:2px 7px;border-radius:var(--r-sm);background:var(--brand-t08);color:var(--brand-400);font-size:10px;font-weight:600}
 
-/* ─── Tags ─── */
-.tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.3px}
-.tag-bn{background:var(--orange-tint);color:var(--orange)}
-.tag-okx{background:var(--blue-tint);color:var(--blue)}
-.tag-bg{background:var(--green-tint);color:var(--green)}
-.tag-bb{background:var(--purple-tint);color:var(--purple)}
-.tag-ct{background:var(--green-tint);color:var(--green)}
+/* ── 12h Listings ── */
+.list-block{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl);padding:18px}
+.list-block__head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.list-block__title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:9px}
+.list-block__badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:var(--r-pill);background:var(--brand-t08);color:var(--brand-400)}
+.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.list-pill{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r-md);background:var(--surface-2);border:1px solid var(--hairline);transition:all var(--dur-fast) var(--ease);text-decoration:none}
+.list-pill:hover{border-color:var(--brand-400);background:var(--brand-t08)}
+.lst__main{display:flex;flex-direction:column;gap:4px;min-width:0}
+.lst__pair{font-family:var(--mono);font-weight:600;font-size:13px}
+.lst__pair .q{color:var(--fg-3);font-weight:400}
+.lst__1h{display:flex;align-items:center;gap:10px;font-size:12px}
+.lst__vol{color:var(--fg-3)}
+.lst__aside{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-left:auto}
+.lst__ex{font-size:12px;font-weight:600;color:var(--fg-2)}
+.lst__mkt{font-size:10px;font-weight:600;padding:1px 6px;border-radius:var(--r-sm)}
+.lst__mkt.is-perp{background:var(--brand-t08);color:var(--brand-400)}
+.lst__mkt.is-spot{background:var(--up-bg);color:var(--up)}
+.lst__time{font-family:var(--mono);font-size:11px;color:var(--fg-3)}
 
-/* ─── 12h Listings Pill ─── */
-.nl-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:20px;padding:14px 16px}
-.nl-banner-title{font-size:11px;font-weight:700;color:var(--fg-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.nl-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
-.nl-pill{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-sm);background:var(--card-2);border:1px solid var(--border);transition:all .15s;font-size:12px}
-.nl-pill:hover{border-color:var(--brand);background:var(--brand-tint)}
-.nl-pill .nl-pair{font-family:var(--mono);font-weight:600;min-width:90px}
-.nl-pill .nl-pair a{color:var(--fg)}.nl-pill .nl-pair a:hover{color:var(--brand)}
-.nl-pill .nl-chg{font-family:var(--mono);font-weight:600;min-width:60px}
-.nl-pill .nl-vol{font-family:var(--mono);color:var(--fg-3)}
-.nl-pill .nl-ex{font-weight:700;font-size:10px;text-transform:uppercase;margin-left:auto}
-.nl-pill .nl-mkt{font-size:10px;color:var(--fg-3)}
-.nl-pill .nl-time{font-family:var(--mono);font-size:10px;color:var(--fg-3)}
+/* ── Feeds grid ── */
+.feeds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 
-/* ─── Feeds Grid ─── */
-.feeds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
-
-/* ─── Exchange Monitor ─── */
-.ex-tabs{display:flex;gap:4px;padding:12px 16px;border-bottom:1px solid var(--divider)}
-.ex-tab{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--fg-3);transition:all .15s}
-.ex-tab.on{background:var(--brand);color:#fff;border-color:var(--brand)}
-.ex-tab:hover:not(.on){color:var(--fg);border-color:var(--fg-3)}
-.ex-panel{display:none;padding:16px}
-.ex-panel.active{display:block}
-.ex-dual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.ex-side-label{font-size:11px;font-weight:700;color:var(--fg-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+/* ── Exchange monitor ── */
+.ex-tabs{display:flex;gap:4px;padding:12px 18px;border-bottom:1px solid var(--divider)}
+.ex-tab{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--hairline);background:transparent;color:var(--fg-3);transition:all var(--dur-fast) var(--ease)}
+.ex-tab.is-on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.ex-tab:hover:not(.is-on){color:var(--fg);border-color:var(--fg-3)}
+.ex-panel{display:none;padding:18px}
+.ex-panel.is-active{display:block}
+.ex-dual{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ex-side-label{font-size:11px;font-weight:700;color:var(--fg-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .ex-side-label .dot-sm{width:6px;height:6px;border-radius:50%;display:inline-block}
 .ex-side-label.is-perp .dot-sm{background:var(--brand)}
-.ex-side-label.is-spot .dot-sm{background:var(--green)}
-.ex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.ex-box{background:var(--card-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px}
-.ex-box-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--divider)}
-.ex-logo{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.ex-side-label.is-spot .dot-sm{background:var(--up)}
+.ex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ex-box{background:var(--surface-2);border:1px solid var(--hairline);border-radius:var(--r-md);padding:14px}
+.ex-box__head{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--divider)}
+.ex-logo{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
 .ex-logo.bn{background:#f0b90b}.ex-logo.okx{background:#00c4b3}.ex-logo.bg{background:#00d4aa}.ex-logo.bb{background:#f7a600}
-.ex-box-name{font-size:12px;font-weight:700;color:var(--fg)}
-.ex-item{padding:6px 0;border-bottom:1px solid var(--divider)}
-.ex-item:last-child{border-bottom:none}
-.ex-item-pair{font-family:var(--mono);font-size:12px;font-weight:600}
-.ex-item-pair a{color:var(--fg)}
-.ex-item-pair a:hover{color:var(--brand)}
-.ex-item-data{font-family:var(--mono);font-size:11px;color:var(--fg-2);margin-top:2px}
-.up{color:var(--green);font-weight:600}
-.down{color:var(--red);font-weight:600}
+.ex-box__name{font-size:13px;font-weight:700;color:var(--fg)}
+.ex-row{padding:8px 0;border-bottom:1px solid var(--divider)}
+.ex-row:last-child{border-bottom:none}
+.ex-row__pair{font-family:var(--mono);font-size:12px;font-weight:600}
+.ex-row__pair a{color:var(--fg)}
+.ex-row__pair a:hover{color:var(--brand)}
+.ex-row__pair .q{color:var(--fg-3);font-weight:400}
+.ex-row__data{font-family:var(--mono);font-size:11px;color:var(--fg-2);margin-top:3px}
+.streak{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;color:var(--warning);margin-left:6px}
 
-/* ─── Method Modal ─── */
+/* ── BTC Banner ── */
+.btc-banner{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl);padding:24px;display:flex;align-items:center;gap:20px}
+.btc-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#f7931a,#e8860a);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btc-icon svg{width:28px;height:28px;fill:#fff}
+.btc-price{font-family:var(--mono);font-size:32px;font-weight:700;letter-spacing:-.5px}
+.btc-chg{font-family:var(--mono);font-size:14px;font-weight:600;margin-top:4px}
+.btc-chg.up{color:var(--up)}.btc-chg.down{color:var(--down)}
+.btc-meta{margin-left:auto;text-align:right;font-family:var(--mono);font-size:12px;color:var(--fg-2);line-height:2}
+
+/* ── Method Modal ── */
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:200;justify-content:center;align-items:center}
-.modal-overlay.open{display:flex}
-.modal-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:580px;width:90%;max-height:80vh;overflow-y:auto;padding:24px}
-.modal-box h3{font-size:16px;font-weight:700;margin-bottom:16px}
-.modal-box h4{font-size:12px;font-weight:700;color:var(--brand);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.3px}
+.modal-overlay.is-open{display:flex}
+.modal-box{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:580px;width:90%;max-height:80vh;overflow-y:auto;padding:28px}
+.modal-box h3{font-size:18px;font-weight:900;margin-bottom:20px}
+.modal-box h4{font-size:12px;font-weight:700;color:var(--brand-400);margin:18px 0 8px;text-transform:uppercase;letter-spacing:.3px}
 .modal-box li{font-size:12px;color:var(--fg-2);line-height:1.7;margin-bottom:6px}
-.modal-box ul{padding-left:16px;margin-bottom:10px}
-.modal-box code{font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:2px 6px;border-radius:4px}
-.modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:var(--fg-3);line-height:1;padding:4px}
+.modal-box ul{padding-left:18px;margin-bottom:12px}
+.modal-box code{font-family:var(--mono);font-size:11px;background:var(--surface-3);padding:2px 6px;border-radius:var(--r-sm)}
+.modal-close{float:right;background:none;border:none;font-size:22px;cursor:pointer;color:var(--fg-3);line-height:1;padding:4px}
 .modal-close:hover{color:var(--fg)}
 
-/* ─── Footer ─── */
-.footer{text-align:center;margin-top:24px;font-size:10px;color:var(--fg-3);letter-spacing:.3px;padding-bottom:20px}
+/* ── Footer ── */
+.footer{text-align:center;margin-top:32px;font-size:10px;color:var(--fg-3);letter-spacing:.3px;padding-bottom:20px}
 
-/* ─── Responsive ─── */
+/* ── Responsive ── */
 @media(max-width:1100px){
   .feeds-grid{grid-template-columns:1fr}
   .ex-grid{grid-template-columns:1fr 1fr}
   .ex-dual{grid-template-columns:1fr}
-  .nl-items{grid-template-columns:1fr}
+  .list-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
-  .btc-price{font-size:22px}
+  .btc-price{font-size:24px}
   .btc-banner{flex-direction:column;text-align:center;gap:12px}
   .btc-meta{text-align:center;margin-left:0}
   .ex-grid{grid-template-columns:1fr}
@@ -184,178 +202,192 @@ a{color:inherit;text-decoration:none}
 </head>
 <body>
 
-<!-- ─── Header ─── -->
-<div class="header">
-  <h1><span class="bar"></span>科技与加密货币仪表盘</h1>
-  <div class="meta">
-    <span class="dot"></span>
-    <span class="ts-btn" onclick="toggleSnap()">更新于 2026-06-04 17:42 UTC</span>
-    <div class="snap-dd" id="snap-dd">
-      <div class="snap-dd-title">历史快照</div>
-      <div id="snap-list"><div style="padding:12px;color:var(--fg-3);font-size:11px">点击加载...</div></div>
+<!-- ─── Top bar ─── -->
+<header class="topbar">
+  <div class="topbar__in">
+    <div class="brand">
+      <div class="brand__txt">
+        <div class="brand__title"><span class="accent">●</span> 仪表盘</div>
+        <div class="brand__sub">科技与加密货币</div>
+      </div>
+    </div>
+    <div class="topbar__spacer"></div>
+    <div class="topbar__meta">
+      <span class="live"><span class="live__dot"></span>更新于 2026-06-04 17:55 UTC</span>
+      <div class="snap-wrap" id="snap-wrap">
+        <button class="snap-select" onclick="toggleSnap()">历史快照 ▾</button>
+        <div class="snap-menu" id="snap-menu">
+          <div class="snap-menu__head">历史快照</div>
+          <div id="snap-list"><div style="padding:12px;color:var(--fg-3);font-size:11px">点击加载...</div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</header>
+
+<div class="shell">
 
 <!-- ─── BTC Banner ─── -->
 <div class="btc-banner">
   <div class="btc-icon"><svg viewBox="0 0 24 24"><path d="M14.24 10.56c-.31 1.24-2.24.61-2.84.44l.55-2.18c.62.18 2.61.44 2.29 1.74zm-3.11 1.56l-.6 2.41c.74.19 3.03.92 3.37-.44.36-1.42-2.03-1.79-2.77-1.97zm10.57 2.3c-1.34 5.36-6.76 8.62-12.12 7.28S.96 14.94 2.3 9.58 9.06.96 14.42 2.3s8.62 6.76 7.28 12.12zm-5.47-5.58c.08-1.78-1.08-2.47-2.93-3.05l.6-2.39-1.46-.37-.58 2.33c-.38-.1-.78-.18-1.16-.28l.58-2.32-1.46-.37-.6 2.39c-.32-.07-.63-.14-.93-.22l-2.01-.51-.39 1.54s1.08.25 1.06.26c.59.15.7.55.68.87l-.68 2.72c.04.01.1.03.17.05l-.17-.04-1 3.84c-.07.18-.26.45-.67.35.02.02-1.06-.27-1.06-.27l-.73 1.68 1.89.48c.35.09.7.18 1.04.27l-.61 2.42 1.46.37.6-2.39c.4.11.78.21 1.16.31l-.6 2.37 1.46.37.61-2.41c2.35.45 4.11.27 4.86-1.86.6-1.71-.03-2.7-1.26-3.35.9-.21 1.58-.8 1.76-2.03z"/></svg></div>
   <div>
-    <div class="btc-price">$63,008</div>
-    <div class="btc-chg down">▼ 4.73%</div>
+    <div class="btc-price">$63,540</div>
+    <div class="btc-chg down">▼ 3.56%</div>
   </div>
   <div class="btc-meta">
-    <div>市值：$1.26万亿</div>
-    <div>24h 变动：▼ 4.73%</div>
+    <div>市值：$1.27万亿</div>
+    <div>24h 变动：▼ 3.56%</div>
   </div>
 </div>
 
-<!-- ─── 12h New Listings ─── -->
-<div class="nl-banner" id="nl-banner">
-  <div class="nl-banner-title">12h 内上线</div>
-  <div class="nl-items" id="nl-list">
-<div class="nl-pill" data-ts="1780582890"><span class="nl-pair"><a href="https://www.bitget.com/spot/REWZUSDT" target="_blank">REWZUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:21</span></div>
-<div class="nl-pill" data-ts="1780582882"><span class="nl-pair"><a href="https://www.bitget.com/spot/REWYUSDT" target="_blank">REWYUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:21</span></div>
-<div class="nl-pill" data-ts="1780582874"><span class="nl-pair"><a href="https://www.bitget.com/spot/REWJUSDT" target="_blank">REWJUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:21</span></div>
-<div class="nl-pill" data-ts="1780582866"><span class="nl-pair"><a href="https://www.bitget.com/spot/RINDAUSDT" target="_blank">RINDAUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:21</span></div>
-<div class="nl-pill" data-ts="1780582856"><span class="nl-pair"><a href="https://www.bitget.com/spot/RFXIUSDT" target="_blank">RFXIUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:20</span></div>
-<div class="nl-pill" data-ts="1780582238"><span class="nl-pair"><a href="https://www.bitget.com/spot/RETHAUSDT" target="_blank">RETHAUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:10</span></div>
-<div class="nl-pill" data-ts="1780582220"><span class="nl-pair"><a href="https://www.bitget.com/spot/RIBITUSDT" target="_blank">RIBITUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:10</span></div>
-<div class="nl-pill" data-ts="1780582172"><span class="nl-pair"><a href="https://www.bitget.com/spot/RSITMUSDT" target="_blank">RSITMUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:09</span></div>
-<div class="nl-pill" data-ts="1780582152"><span class="nl-pair"><a href="https://www.bitget.com/spot/RBBUSDT" target="_blank">RBBUSDT</a></span><span class="nl-chg up">+0.00%</span><span class="nl-vol">$0.00</span><span class="nl-ex">Bitget</span><span class="nl-mkt">现货</span><span class="nl-time">06-04 14:09</span></div>
+<!-- ─── 12h Listings ─── -->
+<div class="section__head">
+  <h2 class="section__title"><span class="bar"></span>12h 内上线</h2>
+</div>
+<div class="list-block" id="list-block">
+  <div class="list-grid" id="list-grid">
+<a class="list-pill" href="https://www.bitget.com/spot/REWZUSDT" target="_blank" data-ts="1780582890"><span class="lst__main"><span class="lst__pair">REWZUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:21</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/REWYUSDT" target="_blank" data-ts="1780582882"><span class="lst__main"><span class="lst__pair">REWYUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:21</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/REWJUSDT" target="_blank" data-ts="1780582874"><span class="lst__main"><span class="lst__pair">REWJUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:21</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/RINDAUSDT" target="_blank" data-ts="1780582866"><span class="lst__main"><span class="lst__pair">RINDAUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:21</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/RFXIUSDT" target="_blank" data-ts="1780582856"><span class="lst__main"><span class="lst__pair">RFXIUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:20</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/RETHAUSDT" target="_blank" data-ts="1780582238"><span class="lst__main"><span class="lst__pair">RETHAUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:10</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/RIBITUSDT" target="_blank" data-ts="1780582220"><span class="lst__main"><span class="lst__pair">RIBITUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:10</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/RSITMUSDT" target="_blank" data-ts="1780582172"><span class="lst__main"><span class="lst__pair">RSITMUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:09</span></span></a>
+<a class="list-pill" href="https://www.bitget.com/spot/RBBUSDT" target="_blank" data-ts="1780582152"><span class="lst__main"><span class="lst__pair">RBBUSDT<span class="q">/USDT</span></span><span class="lst__1h"><span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span></span></span><span class="lst__aside"><span class="lst__ex">Bitget<span class="lst__mkt is-spot">现货</span></span><span class="lst__time mono">06-04 14:09</span></span></a>
 
   </div>
 </div>
 
-<!-- ─── News Feeds (3 cards) ─── -->
-<div class="section-head">
-  <h2 class="section-title"><span class="bar"></span>行业资讯</h2>
-  <span class="section-sub">新币上线 · Hacker News · 行业热点</span>
+<!-- ─── News Feeds ─── -->
+<div class="section__head">
+  <h2 class="section__title"><span class="bar"></span>行业资讯</h2>
+  <span class="section__sub">新币上线 · Hacker News · 行业热点</span>
 </div>
 <div class="feeds-grid">
 
   <!-- Listing Card -->
   <div class="card">
-    <div class="card-head">
-      <span class="card-title">新币上线</span>
+    <div class="card__head">
+      <span class="card__title">🚀 新币上线</span>
     </div>
-    <div class="news-list">
-<div class="news-row"><div class="r-top"><span class="r-n">1</span><a class="r-t" href="https://www.bitget.com/zh-CN/support/articles/12560603885107" target="_blank">BTWUSDT 现已上线合约交易和交易BOT</a></div><div class="r-meta"><span class="tag tag-bg">Bitget 合约</span> <span>06-04 14:57</span></div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">2</span><a class="r-t" href="https://www.bitget.com/zh-CN/support/articles/12560603885106" target="_blank">ZESTUSDT 现已上线合约交易和交易BOT</a></div><div class="r-meta"><span class="tag tag-bg">Bitget 合约</span> <span>06-04 14:51</span></div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">3</span><a class="r-t" href="https://www.bitget.com/zh-CN/support/articles/12560603885087" target="_blank">Bitget 关于上线 rBB、rNBIS、rGME、rAMC、rSOFI等49只股票现货的公告</a></div><div class="r-meta"><span class="tag tag-bg">Bitget 现货</span> <span>06-04 12:00</span></div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">4</span><a class="r-t" href="https://www.bitget.com/zh-CN/support/articles/12560603885034" target="_blank">Bitget将转换 QNTSTOCKUSDT永续合约盘前交易为标准U本位永续合约</a></div><div class="r-meta"><span class="tag tag-bg">Bitget 合约</span> <span>06-04 08:38</span></div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">5</span><a class="r-t" href="https://www.okx.com/help/okx-to-list-perpetual-futures-for-adbe-asml-and-ewt-equities" target="_blank">OKX 将上市 ADBE、ASML 和 EWT 股票永续期货</a></div><div class="r-meta"><span class="tag tag-okx">OKX 现货</span> <span>06-03 07:00</span></div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">6</span><a class="r-t" href="https://www.okx.com/help/okx-to-list-slxusd-expiry-perp-x-perp" target="_blank">OKX 上线 SLXUSD 到期 Perp (X-Perp)</a></div><div class="r-meta"><span class="tag tag-okx">OKX 现货</span> <span>06-03 06:30</span></div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">7</span><a class="r-t" href="https://www.binance.com/zh-CN/support/announcement/66d54f75b3a041ff991ddd179ab6ed39" target="_blank">币安新增 USDT/AED 现货交易对</a></div><div class="r-meta"><span class="tag tag-bn">Binance 现货</span> <span>06-03 03:00</span></div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">8</span><a class="r-t" href="https://www.okx.com/help/okx-to-list-perpetual-futures-for-hpe-asts-and-now-equities" target="_blank">OKX 将上市 HPE、ASTS 和 NOW 股票的永续期货</a></div><div class="r-meta"><span class="tag tag-okx">OKX 现货</span> <span>06-02 09:05</span></div></div>
+    <div class="feed__list">
+<div class="news-row"><span class="news-row__title">BTWUSDT 现已上线合约交易和交易BOT</span><span class="news-row__meta"><span class="src">Bitget 合约</span><span class="mono">06-04 14:57</span></span></div>
+<div class="news-row"><span class="news-row__title">ZESTUSDT 现已上线合约交易和交易BOT</span><span class="news-row__meta"><span class="src">Bitget 合约</span><span class="mono">06-04 14:51</span></span></div>
+<div class="news-row"><span class="news-row__title">Bitget 关于上线 rBB、rNBIS、rGME、rAMC、rSOFI等49只股票现货的公告</span><span class="news-row__meta"><span class="src">Bitget 现货</span><span class="mono">06-04 12:00</span></span></div>
+<div class="news-row"><span class="news-row__title">Bitget将转换 QNTSTOCKUSDT永续合约盘前交易为标准U本位永续合约</span><span class="news-row__meta"><span class="src">Bitget 合约</span><span class="mono">06-04 08:38</span></span></div>
+<div class="news-row"><span class="news-row__title">OKX 将上市 ADBE、ASML 和 EWT 股票永续期货</span><span class="news-row__meta"><span class="src">OKX 现货</span><span class="mono">06-03 07:00</span></span></div>
+<div class="news-row"><span class="news-row__title">OKX 上线 SLXUSD 到期 Perp (X-Perp)</span><span class="news-row__meta"><span class="src">OKX 现货</span><span class="mono">06-03 06:30</span></span></div>
+<div class="news-row"><span class="news-row__title">币安新增 USDT/AED 现货交易对</span><span class="news-row__meta"><span class="src">Binance 现货</span><span class="mono">06-03 03:00</span></span></div>
+<div class="news-row"><span class="news-row__title">OKX 将上市 HPE、ASTS 和 NOW 股票的永续期货</span><span class="news-row__meta"><span class="src">OKX 现货</span><span class="mono">06-02 09:05</span></span></div>
 
     </div>
   </div>
 
   <!-- HN Card -->
   <div class="card" id="hn-card">
-    <div class="card-head">
-      <span class="card-title">Hacker News</span>
-      <div class="feed-tabs" id="hn-tabs">
-        <button class="feed-tab on" onclick="sortHN('score')">最热</button>
-        <button class="feed-tab" onclick="sortHN('time')">最新</button>
-        <button class="feed-tab" onclick="sortHN('comments')">评论</button>
+    <div class="card__head">
+      <span class="card__title">📰 Hacker News</span>
+      <div class="tabs" id="hn-tabs">
+        <button class="tab is-on" onclick="sortHN('score')">最热</button>
+        <button class="tab" onclick="sortHN('time')">最新</button>
+        <button class="tab" onclick="sortHN('comments')">评论</button>
       </div>
     </div>
-    <div class="news-list" id="hn-list">
-<div class="news-row" data-score="1191" data-time="1780529838" data-comments="518"><div class="r-top"><span class="r-n">1</span><a class="r-t" href="https://maxleiter.com/blog/weights" target="_blank">它们是由重物制成的</a></div><div class="r-meta">↑1191 · 💬518 · 06-03 23:37</div></div>
-<div class="news-row" data-score="917" data-time="1780513346" data-comments="365"><div class="r-top"><span class="r-n">2</span><a class="r-t" href="https://elixir-lang.org/blog/2026/06/03/elixir-v1-20-0-released/" target="_blank">Elixir v1.20：现在是一种逐渐类型化的语言</a></div><div class="r-meta">↑917 · 💬365 · 06-03 19:02</div></div>
-<div class="news-row" data-score="380" data-time="1780578051" data-comments="192"><div class="r-top"><span class="r-n">3</span><a class="r-t" href="https://blog.cloudflare.com/voidzero-joins-cloudflare/" target="_blank">VoidZero 即将加入 Cloudflare</a></div><div class="r-meta">↑380 · 💬192 · 06-04 13:00</div></div>
-<div class="news-row" data-score="311" data-time="1780573168" data-comments="91"><div class="r-top"><span class="r-n">4</span><a class="r-t" href="https://www.france24.com/en/culture/20260604-french-iranian-author-marjane-satrapi-author-of-persepolis-dies-at-56" target="_blank">法裔伊朗作家、《波斯波利斯》作者玛嘉·萨特拉皮 (Marjane Satrapi) 去世，享年 56 岁</a></div><div class="r-meta">↑311 · 💬91 · 06-04 11:39</div></div>
-<div class="news-row" data-score="298" data-time="1780571854" data-comments="120"><div class="r-top"><span class="r-n">5</span><a class="r-t" href="https://www.fieggen.com/shoelace/secureknot.htm" target="_blank">伊恩的安全鞋带结</a></div><div class="r-meta">↑298 · 💬120 · 06-04 11:17</div></div>
-<div class="news-row" data-score="228" data-time="1780583799" data-comments="211"><div class="r-top"><span class="r-n">6</span><a class="r-t" href="https://electrek.co/2026/05/20/in-a-first-wind-solar-generated-more-power-than-gas-globally-april-2026/" target="_blank">2026 年 4 月，全球风能和太阳能发电量首次超过天然气</a></div><div class="r-meta">↑228 · 💬211 · 06-04 14:36</div></div>
-<div class="news-row" data-score="146" data-time="1780422600" data-comments="41"><div class="r-top"><span class="r-n">7</span><a class="r-t" href="https://en.wikipedia.org/wiki/U.S._Army_Corps_of_Engineers_Bay_Model" target="_blank">美国陆军工程兵团湾模型</a></div><div class="r-meta">↑146 · 💬41 · 06-02 17:50</div></div>
-<div class="news-row" data-score="141" data-time="1780570093" data-comments="50"><div class="r-top"><span class="r-n">8</span><a class="r-t" href="https://momentsingraphics.de/Siggraph2026.html" target="_blank">高斯点溅射</a></div><div class="r-meta">↑141 · 💬50 · 06-04 10:48</div></div>
+    <div class="feed__list" id="hn-list">
+<div class="news-row" data-score="1201" data-time="1780529838" data-comments="523"><span class="news-row__title">它们是由重物制成的</span><span class="news-row__meta"><span class="stat up">↑1201</span><span class="stat">💬523</span><span class="mono">06-03 23:37</span></span></div>
+<div class="news-row" data-score="918" data-time="1780513346" data-comments="365"><span class="news-row__title">Elixir v1.20：现在是一种逐渐类型化的语言</span><span class="news-row__meta"><span class="stat up">↑918</span><span class="stat">💬365</span><span class="mono">06-03 19:02</span></span></div>
+<div class="news-row" data-score="389" data-time="1780578051" data-comments="193"><span class="news-row__title">VoidZero 即将加入 Cloudflare</span><span class="news-row__meta"><span class="stat up">↑389</span><span class="stat">💬193</span><span class="mono">06-04 13:00</span></span></div>
+<div class="news-row" data-score="306" data-time="1780571854" data-comments="123"><span class="news-row__title">伊恩的安全鞋带结</span><span class="news-row__meta"><span class="stat up">↑306</span><span class="stat">💬123</span><span class="mono">06-04 11:17</span></span></div>
+<div class="news-row" data-score="152" data-time="1780422600" data-comments="42"><span class="news-row__title">美国陆军工程兵团湾模型</span><span class="news-row__meta"><span class="stat up">↑152</span><span class="stat">💬42</span><span class="mono">06-02 17:50</span></span></div>
+<div class="news-row" data-score="142" data-time="1780570093" data-comments="50"><span class="news-row__title">高斯点溅射</span><span class="news-row__meta"><span class="stat up">↑142</span><span class="stat">💬50</span><span class="mono">06-04 10:48</span></span></div>
+<div class="news-row" data-score="74" data-time="1780314542" data-comments="68"><span class="news-row__title">现在是成为管道胶带工程师的最佳时机</span><span class="news-row__meta"><span class="stat up">↑74</span><span class="stat">💬68</span><span class="mono">06-01 11:49</span></span></div>
+<div class="news-row" data-score="63" data-time="1780586280" data-comments="7"><span class="news-row__title">KVarN：华为用于 KV 缓存量化的本机 vLLM 后端</span><span class="news-row__meta"><span class="stat up">↑63</span><span class="stat">💬7</span><span class="mono">06-04 15:18</span></span></div>
 
     </div>
   </div>
 
   <!-- Industry Card -->
   <div class="card">
-    <div class="card-head">
-      <span class="card-title">行业热点</span>
+    <div class="card__head">
+      <span class="card__title">🔥 行业热点</span>
     </div>
-    <div class="news-list">
-<div class="news-row"><div class="r-top"><span class="r-n">1</span><a class="r-t" href="https://cointelegraph.com/news/what-happened-in-crypto-today?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">这是今天加密货币领域发生的事情</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 14:58</div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">2</span><a class="r-t" href="https://cointelegraph.com/news/strategys-unrealized-loss-soars-11b-standard-chartered-bottom-near?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">Saylor 淡化比特币下滑，因为 Strategy 面临 11B 美元的账面损失</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 14:48</div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">3</span><a class="r-t" href="https://cointelegraph.com/news/apex-group-tokenized-real-estate-fund-goldman-sachs?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">Apex、Archax 加入高盛代币化房地产基金项目</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 13:25</div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">4</span><a class="r-t" href="https://cointelegraph.com/news/arthur-hayes-dumped-hype-near-holdings-mega-ai-ipos?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">Arthur Hayes 放弃炒作，警告人工智能 IPO 浪潮即将到来</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 13:04</div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">5</span><a class="r-t" href="https://cointelegraph.com/news/coinbase-launches-pre-ipo-markets-amid-crypto-push-private-markets?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">Coinbase 启动 IPO 前市场，从埃隆·马斯克 (Elon Musk) 的 SpaceX 开始</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 12:48</div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">6</span><a class="r-t" href="https://cointelegraph.com/markets/bitcoin-price-just-tagged-200-week-trend-line-that-defined-2022-bear-market?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">比特币价格刚刚触及定义 2022 年熊市的 200 周趋势线</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 11:46</div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">7</span><a class="r-t" href="https://cointelegraph.com/news/fg-nexus-offloads-additional-178m-ether-as-treasury-losses-top-100m?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">FG Nexus 额外出售 1780 万美元以太币，损失高达 1 亿美元</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 11:41</div></div>
-<div class="news-row"><div class="r-top"><span class="r-n">8</span><a class="r-t" href="https://cointelegraph.com/news/polymarket-dispute-strategys-bitcoin-sale-resolves-no?utm_source=rss_feed&amp;utm_medium=rss&amp;utm_campaign=rss_partner_inbound" target="_blank">战略销售市场决定“不”后，Polymarket 用户大喊大叫</a></div><div class="r-meta"><span class="tag tag-bg">CoinTelegraph</span> 06-04 11:27</div></div>
+    <div class="feed__list">
+<div class="news-row"><span class="news-row__title">这是今天加密货币领域发生的事情</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 14:58</span></span></div>
+<div class="news-row"><span class="news-row__title">Saylor 淡化比特币下滑，因为 Strategy 面临 11B 美元的账面损失</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 14:48</span></span></div>
+<div class="news-row"><span class="news-row__title">Apex、Archax 加入高盛代币化房地产基金项目</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 13:25</span></span></div>
+<div class="news-row"><span class="news-row__title">Arthur Hayes 放弃炒作，警告人工智能 IPO 浪潮即将到来</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 13:04</span></span></div>
+<div class="news-row"><span class="news-row__title">Coinbase 启动 IPO 前市场，从埃隆·马斯克 (Elon Musk) 的 SpaceX 开始</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 12:48</span></span></div>
+<div class="news-row"><span class="news-row__title">比特币价格刚刚触及定义 2022 年熊市的 200 周趋势线</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 11:46</span></span></div>
+<div class="news-row"><span class="news-row__title">FG Nexus 额外出售 1780 万美元以太币，损失高达 1 亿美元</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 11:41</span></span></div>
+<div class="news-row"><span class="news-row__title">战略销售市场决定“不”后，Polymarket 用户大喊大叫</span><span class="news-row__meta"><span class="src">CoinTelegraph</span><span class="mono">06-04 11:27</span></span></div>
 
     </div>
   </div>
 </div>
 
 <!-- ─── Exchange Monitor ─── -->
-<div class="section-head">
-  <h2 class="section-title"><span class="bar"></span>竞品监控</h2>
-  <span class="section-sub">Binance · OKX · Bitget · Bybit</span>
-  <div class="info-btn" onclick="openMethod()" title="统计说明">
+<div class="section__head">
+  <h2 class="section__title"><span class="bar"></span>竞品监控</h2>
+  <span class="section__sub">Binance · OKX · Bitget · Bybit</span>
+  <div style="margin-left:auto;cursor:pointer;color:var(--fg-3);display:flex;align-items:center;gap:4px;font-size:11px" onclick="openMethod()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
     说明
   </div>
 </div>
 <div class="card">
   <div class="ex-tabs">
-    <button class="ex-tab on" onclick="switchExTab('vol')">1h 成交额</button>
+    <button class="ex-tab is-on" onclick="switchExTab('vol')">1h 成交额</button>
     <button class="ex-tab" onclick="switchExTab('gain')">1h 涨幅</button>
     <button class="ex-tab" onclick="switchExTab('loss')">1h 跌幅</button>
   </div>
-  <div class="ex-panel active" id="etab-vol">
+  <div class="ex-panel is-active" id="etab-vol">
     <div class="ex-dual">
       <div><div class="ex-side-label is-spot"><span class="dot-sm"></span>现货</div>
         <div class="ex-grid">
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bn">B</div><div class="ex-box-name">Binance</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/USDTIDR_USDT" target="_blank">USDTIDR/USDT</a></div><div class="ex-item-data"><b>$4,035.80M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/BUSDBIDR_USDT" target="_blank">BUSDBIDR/USDT</a></div><div class="ex-item-data"><b>$1,259.22M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/WLDIDR_USDT" target="_blank">WLDIDR/USDT</a></div><div class="ex-item-data"><b>$1,049.76M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bn">B</div><div class="ex-box__name">Binance</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/USDTIDR_USDT" target="_blank">USDTIDR/USDT</a></div><div class="ex-row__data"><b>$5,367.83M</b> <span class="down">-0.04%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/WLDIDR_USDT" target="_blank">WLDIDR/USDT</a></div><div class="ex-row__data"><b>$1,364.76M</b> <span class="down">-6.72%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/BUSDBIDR_USDT" target="_blank">BUSDBIDR/USDT</a></div><div class="ex-row__data"><b>$1,259.22M</b> <span class="up">+0.61%</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo okx">O</div><div class="ex-box-name">OKX</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/usdttry-usdt" target="_blank">USDTTRY/USDT</a></div><div class="ex-item-data"><b>$57.15M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/trxtry-usdt" target="_blank">TRXTRY/USDT</a></div><div class="ex-item-data"><b>$15.15M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/wld-usdt" target="_blank">WLD/USDT</a></div><div class="ex-item-data"><b>$10.66M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo okx">O</div><div class="ex-box__name">OKX</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/usdttry-usdt" target="_blank">USDTTRY/USDT</a></div><div class="ex-row__data"><b>$57.15M</b> <span class="up">+0.01%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/trxtry-usdt" target="_blank">TRXTRY/USDT</a></div><div class="ex-row__data"><b>$15.15M</b> <span class="up">+0.09%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/wld-usdt" target="_blank">WLD/USDT</a></div><div class="ex-row__data"><b>$10.66M</b> <span class="up">+7.30%</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bg">G</div><div class="ex-box-name">Bitget</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/WLDUSDT" target="_blank">WLD/USDT</a></div><div class="ex-item-data"><b>$2.54M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LITUSDT" target="_blank">LIT/USDT</a></div><div class="ex-item-data"><b>$904.80K</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/BGBUSDT" target="_blank">BGB/USDT</a></div><div class="ex-item-data"><b>$619.36K</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bg">G</div><div class="ex-box__name">Bitget</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/WLDUSDT" target="_blank">WLD/USDT</a></div><div class="ex-row__data"><b>$3.04M</b> <span class="down">-6.34%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/LITUSDT" target="_blank">LIT/USDT</a></div><div class="ex-row__data"><b>$1.15M</b> <span class="down">-2.54%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/BGBUSDT" target="_blank">BGB/USDT</a></div><div class="ex-row__data"><b>$871.48K</b> <span class="down">-0.16%</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bb">X</div><div class="ex-box-name">Bybit</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/ETHEUR/USDT" target="_blank">ETHEUR/USDT</a></div><div class="ex-item-data"><b>$4.74M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/BTCEUR/USDT" target="_blank">BTCEUR/USDT</a></div><div class="ex-item-data"><b>$2.41M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/MON/USDT" target="_blank">MON/USDT</a></div><div class="ex-item-data"><b>$1.89M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bb">X</div><div class="ex-box__name">Bybit</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/ETHEUR/USDT" target="_blank">ETHEUR/USDT</a></div><div class="ex-row__data"><b>$8.14M</b> <span class="down">-0.11%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/BTCEUR/USDT" target="_blank">BTCEUR/USDT</a></div><div class="ex-row__data"><b>$4.60M</b> <span class="down">-0.08%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/MON/USDT" target="_blank">MON/USDT</a></div><div class="ex-row__data"><b>$2.66M</b> <span class="up">+2.60%</span></div></div>
           </div>
         </div>
       </div>
       <div><div class="ex-side-label is-perp"><span class="dot-sm"></span>永续合约</div>
         <div class="ex-grid">
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bn">B</div><div class="ex-box-name">Binance</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><b>$110.61M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><b>$89.60M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/ZECUSDT" target="_blank">ZECUSDT</a></div><div class="ex-item-data"><b>$57.48M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bn">B</div><div class="ex-box__name">Binance</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-row__data"><b>$134.95M</b> <span class="down">-6.75%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-row__data"><b>$120.43M</b> <span class="up">+43.93%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/ZECUSDT" target="_blank">ZECUSDT</a></div><div class="ex-row__data"><b>$79.04M</b> <span class="down">-1.84%</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo okx">O</div><div class="ex-box-name">OKX</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/wldusdtswap-usdt-swap" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><b>$95.98M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/dogeusdtswap-usdt-swap" target="_blank">DOGEUSDT</a></div><div class="ex-item-data"><b>$11.77M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/nearusdtswap-usdt-swap" target="_blank">NEARUSDT</a></div><div class="ex-item-data"><b>$11.07M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo okx">O</div><div class="ex-box__name">OKX</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/wldusdtswap-usdt-swap" target="_blank">WLDUSDT</a></div><div class="ex-row__data"><b>$95.98M</b> <span class="up">+7.14%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/dogeusdtswap-usdt-swap" target="_blank">DOGEUSDT</a></div><div class="ex-row__data"><b>$11.77M</b> <span class="down">-0.08%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/nearusdtswap-usdt-swap" target="_blank">NEARUSDT</a></div><div class="ex-row__data"><b>$11.07M</b> <span class="up">+1.63%</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bg">G</div><div class="ex-box-name">Bitget</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><b>$20.18M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><b>$12.64M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/ZECUSDT" target="_blank">ZECUSDT</a></div><div class="ex-item-data"><b>$5.79M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bg">G</div><div class="ex-box__name">Bitget</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-row__data"><b>$25.63M</b> <span class="down">-6.74%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-row__data"><b>$16.95M</b> <span class="up">+43.36%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/ZECUSDT" target="_blank">ZECUSDT</a></div><div class="ex-row__data"><b>$7.77M</b> <span class="down">-1.82%</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bb">X</div><div class="ex-box-name">Bybit</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/BTCPERP" target="_blank">BTCPERP</a></div><div class="ex-item-data"><b>$32.83M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><b>$31.21M</b> <span class="down" style="font-size:10px;opacity:.5">▼</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><b>$27.83M</b> <span class="up" style="font-size:10px;opacity:.5">▲</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bb">X</div><div class="ex-box__name">Bybit</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-row__data"><b>$42.09M</b> <span class="down">-6.72%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-row__data"><b>$37.38M</b> <span class="up">+41.16%</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/BTCPERP" target="_blank">BTCPERP</a></div><div class="ex-row__data"><b>$36.79M</b> <span class="down">-0.06%</span></div></div>
           </div>
         </div>
       </div>
@@ -366,49 +398,49 @@ a{color:inherit;text-decoration:none}
     <div class="ex-dual">
       <div><div class="ex-side-label is-spot"><span class="dot-sm"></span>现货</div>
         <div class="ex-grid">
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bn">B</div><div class="ex-box-name">Binance</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/SXPTRY_USDT" target="_blank">SXPTRY/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+12.94%</span> <span style="font-size:10px;color:var(--fg-3)">$2.23M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/BAKETRY_USDT" target="_blank">BAKETRY/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+12.04%</span> <span style="font-size:10px;color:var(--fg-3)">$19.48M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/PORTALTRY_USDT" target="_blank">PORTALTRY/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+11.02%</span> <span style="font-size:10px;color:var(--fg-3)">$42.46M</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bn">B</div><div class="ex-box__name">Binance</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/PORTALTRY_USDT" target="_blank">PORTALTRY/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+13.85%</span> <span style="font-size:10px;color:var(--fg-3)">$64.72M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/SXPTRY_USDT" target="_blank">SXPTRY/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+12.94%</span> <span style="font-size:10px;color:var(--fg-3)">$2.23M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/BAKETRY_USDT" target="_blank">BAKETRY/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+12.04%</span> <span style="font-size:10px;color:var(--fg-3)">$19.48M</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo okx">O</div><div class="ex-box-name">OKX</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/degen-usdt" target="_blank">DEGEN/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+8.84%</span> <span style="font-size:10px;color:var(--fg-3)">$311.13K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/wld-usdt" target="_blank">WLD/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+6.46%</span> <span style="font-size:10px;color:var(--fg-3)">$10.66M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/wldtry-usdt" target="_blank">WLDTRY/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+4.63%</span> <span style="font-size:10px;color:var(--fg-3)">$367.60K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo okx">O</div><div class="ex-box__name">OKX</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/wldtry-usdt" target="_blank">WLDTRY/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+8.30%</span> <span style="font-size:10px;color:var(--fg-3)">$367.60K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/wld-usdt" target="_blank">WLD/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+7.30%</span> <span style="font-size:10px;color:var(--fg-3)">$10.66M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/degen-usdt" target="_blank">DEGEN/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+6.61%</span> <span style="font-size:10px;color:var(--fg-3)">$311.13K</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bg">G</div><div class="ex-box-name">Bitget</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/LABUSDT" target="_blank">LAB/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+15.48%</span> <span style="font-size:10px;color:var(--fg-3)">$380.93K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/BSBUSDT" target="_blank">BSB/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+3.17%</span> <span style="font-size:10px;color:var(--fg-3)">$42.38K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/OPNUSDT" target="_blank">OPN/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+2.80%</span> <span style="font-size:10px;color:var(--fg-3)">$283.07K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bg">G</div><div class="ex-box__name">Bitget</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/LABUSDT" target="_blank">LAB/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+10.63%</span> <span style="font-size:10px;color:var(--fg-3)">$512.50K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/BSBUSDT" target="_blank">BSB/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+4.17%</span> <span style="font-size:10px;color:var(--fg-3)">$57.31K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/OPNUSDT" target="_blank">OPN/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+3.85%</span> <span style="font-size:10px;color:var(--fg-3)">$369.26K</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bb">X</div><div class="ex-box-name">Bybit</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/PORTAL/USDT" target="_blank">PORTAL/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+10.97%</span> <span style="font-size:10px;color:var(--fg-3)">$39.27K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/HMNT/USDT" target="_blank">HMNT/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+3.58%</span> <span style="font-size:10px;color:var(--fg-3)">$34.74</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/ICNT/USDT" target="_blank">ICNT/USDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+3.25%</span> <span style="font-size:10px;color:var(--fg-3)">$132.25K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bb">X</div><div class="ex-box__name">Bybit</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/PORTAL/USDT" target="_blank">PORTAL/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+14.15%</span> <span style="font-size:10px;color:var(--fg-3)">$59.60K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/BSB/USDT" target="_blank">BSB/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+4.55%</span> <span style="font-size:10px;color:var(--fg-3)">$72.30K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/ES/USDT" target="_blank">ES/USDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+4.35%</span> <span style="font-size:10px;color:var(--fg-3)">$95.74K</span></div></div>
           </div>
         </div>
       </div>
       <div><div class="ex-side-label is-perp"><span class="dot-sm"></span>永续合约</div>
         <div class="ex-grid">
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bn">B</div><div class="ex-box-name">Binance</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+44.41%</span> <span style="font-size:10px;color:var(--fg-3)">$89.60M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+10.10%</span> <span style="font-size:10px;color:var(--fg-3)">$3.77M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/ZESTUSDT" target="_blank">ZESTUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+5.62%</span> <span style="font-size:10px;color:var(--fg-3)">$2.07M</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bn">B</div><div class="ex-box__name">Binance</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+43.93%</span> <span style="font-size:10px;color:var(--fg-3)">$120.43M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+13.53%</span> <span style="font-size:10px;color:var(--fg-3)">$5.18M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/ZESTUSDT" target="_blank">ZESTUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+7.30%</span> <span style="font-size:10px;color:var(--fg-3)">$3.08M</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo okx">O</div><div class="ex-box-name">OKX</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/wldusdtswap-usdt-swap" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+6.47%</span> <span style="font-size:10px;color:var(--fg-3)">$95.98M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/strkusdtswap-usdt-swap" target="_blank">STRKUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+3.55%</span> <span style="font-size:10px;color:var(--fg-3)">$1.89M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/pumpusdtswap-usdt-swap" target="_blank">PUMPUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+3.24%</span> <span style="font-size:10px;color:var(--fg-3)">$3.12M</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo okx">O</div><div class="ex-box__name">OKX</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/homeusdtswap-usdt-swap" target="_blank">HOMEUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+8.56%</span> <span style="font-size:10px;color:var(--fg-3)">$10.62M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/wldusdtswap-usdt-swap" target="_blank">WLDUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+7.14%</span> <span style="font-size:10px;color:var(--fg-3)">$95.98M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/slxusdtswap-usdt-swap" target="_blank">SLXUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+3.83%</span> <span style="font-size:10px;color:var(--fg-3)">$815.59K</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bg">G</div><div class="ex-box-name">Bitget</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+43.77%</span> <span style="font-size:10px;color:var(--fg-3)">$12.64M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/AAOIUSDT" target="_blank">AAOIUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+8.56%</span> <span style="font-size:10px;color:var(--fg-3)">$1.43M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/BSBUSDT" target="_blank">BSBUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+2.92%</span> <span style="font-size:10px;color:var(--fg-3)">$209.17K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bg">G</div><div class="ex-box__name">Bitget</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+43.36%</span> <span style="font-size:10px;color:var(--fg-3)">$16.95M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/AAOIUSDT" target="_blank">AAOIUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+7.02%</span> <span style="font-size:10px;color:var(--fg-3)">$1.92M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/BSBUSDT" target="_blank">BSBUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+4.27%</span> <span style="font-size:10px;color:var(--fg-3)">$277.40K</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bb">X</div><div class="ex-box-name">Bybit</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+43.11%</span> <span style="font-size:10px;color:var(--fg-3)">$27.83M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+10.19%</span> <span style="font-size:10px;color:var(--fg-3)">$1.29M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/BSBUSDT" target="_blank">BSBUSDT</a></div><div class="ex-item-data"><span class="up" style="font-weight:700;font-size:14px">+3.01%</span> <span style="font-size:10px;color:var(--fg-3)">$294.39K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bb">X</div><div class="ex-box__name">Bybit</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank">LABUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+41.16%</span> <span style="font-size:10px;color:var(--fg-3)">$37.38M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/PORTALUSDT" target="_blank">PORTALUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+13.63%</span> <span style="font-size:10px;color:var(--fg-3)">$1.84M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/UBUSDT" target="_blank">UBUSDT</a></div><div class="ex-row__data"><span class="up" style="font-weight:700;font-size:14px">+4.36%</span> <span style="font-size:10px;color:var(--fg-3)">$140.22K</span></div></div>
           </div>
         </div>
       </div>
@@ -419,49 +451,49 @@ a{color:inherit;text-decoration:none}
     <div class="ex-dual">
       <div><div class="ex-side-label is-spot"><span class="dot-sm"></span>现货</div>
         <div class="ex-grid">
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bn">B</div><div class="ex-box-name">Binance</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/PHBTRY_USDT" target="_blank">PHBTRY/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-35.14%</span> <span style="font-size:10px;color:var(--fg-3)">$7.72M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/ACATRY_USDT" target="_blank">ACATRY/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-11.63%</span> <span style="font-size:10px;color:var(--fg-3)">$4.58M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/trade/BSWTRY_USDT" target="_blank">BSWTRY/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-7.04%</span> <span style="font-size:10px;color:var(--fg-3)">$6.84M</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bn">B</div><div class="ex-box__name">Binance</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/PHBTRY_USDT" target="_blank">PHBTRY/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-35.14%</span> <span style="font-size:10px;color:var(--fg-3)">$7.72M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/HOMETRY_USDT" target="_blank">HOMETRY/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-14.05%</span> <span style="font-size:10px;color:var(--fg-3)">$43.68M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/trade/ACATRY_USDT" target="_blank">ACATRY/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-11.63%</span> <span style="font-size:10px;color:var(--fg-3)">$4.58M</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo okx">O</div><div class="ex-box-name">OKX</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/mon-usdt" target="_blank">MON/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-2.81%</span> <span style="font-size:10px;color:var(--fg-3)">$86.85K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/allotry-usdt" target="_blank">ALLOTRY/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-2.77%</span> <span style="font-size:10px;color:var(--fg-3)">$396.34K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-spot/kite-usdt" target="_blank">KITE/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-2.43%</span> <span style="font-size:10px;color:var(--fg-3)">$18.08K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo okx">O</div><div class="ex-box__name">OKX</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/grass-usdt" target="_blank">GRASS/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-4.47%</span> <span style="font-size:10px;color:var(--fg-3)">$19.20K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/meme-usdt" target="_blank">MEME/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-3.88%</span> <span style="font-size:10px;color:var(--fg-3)">$37.12K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-spot/grass-usdt" target="_blank">GRASS/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-3.75%</span> <span style="font-size:10px;color:var(--fg-3)">$160.94K</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bg">G</div><div class="ex-box-name">Bitget</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/WLDUSDT" target="_blank">WLD/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-5.98%</span> <span style="font-size:10px;color:var(--fg-3)">$2.54M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/ICPUSDT" target="_blank">ICP/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-4.00%</span> <span style="font-size:10px;color:var(--fg-3)">$59.08K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/spot/SKYAIUSDT" target="_blank">SKYAI/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-3.97%</span> <span style="font-size:10px;color:var(--fg-3)">$432.36K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bg">G</div><div class="ex-box__name">Bitget</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/WLDUSDT" target="_blank">WLD/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-6.34%</span> <span style="font-size:10px;color:var(--fg-3)">$3.04M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/ICPUSDT" target="_blank">ICP/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-4.07%</span> <span style="font-size:10px;color:var(--fg-3)">$87.41K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/spot/SLXUSDT" target="_blank">SLX/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-3.69%</span> <span style="font-size:10px;color:var(--fg-3)">$71.52K</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bb">X</div><div class="ex-box-name">Bybit</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/DEGEN/USDT" target="_blank">DEGEN/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-7.32%</span> <span style="font-size:10px;color:var(--fg-3)">$49.46K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/HOME/USDT" target="_blank">HOME/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-6.90%</span> <span style="font-size:10px;color:var(--fg-3)">$75.63K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/spot/WLD/USDT" target="_blank">WLD/USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-6.12%</span> <span style="font-size:10px;color:var(--fg-3)">$1.84M</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bb">X</div><div class="ex-box__name">Bybit</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/HOME/USDT" target="_blank">HOME/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-14.48%</span> <span style="font-size:10px;color:var(--fg-3)">$132.09K</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/WLD/USDT" target="_blank">WLD/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-6.79%</span> <span style="font-size:10px;color:var(--fg-3)">$2.33M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/spot/WLD/USDT" target="_blank">WLD/USDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-6.42%</span> <span style="font-size:10px;color:var(--fg-3)">$111.27K</span></div></div>
           </div>
         </div>
       </div>
       <div><div class="ex-side-label is-perp"><span class="dot-sm"></span>永续合约</div>
         <div class="ex-grid">
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bn">B</div><div class="ex-box-name">Binance</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/QNTXUSDT" target="_blank">QNTXUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-9.39%</span> <span style="font-size:10px;color:var(--fg-3)">$8.79M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-6.23%</span> <span style="font-size:10px;color:var(--fg-3)">$110.61M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.binance.com/en/futures/WLDUSDC" target="_blank">WLDUSDC</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-6.15%</span> <span style="font-size:10px;color:var(--fg-3)">$10.54M</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bn">B</div><div class="ex-box__name">Binance</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/QNTXUSDT" target="_blank">QNTXUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-9.72%</span> <span style="font-size:10px;color:var(--fg-3)">$12.08M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/HOMEUSDT" target="_blank">HOMEUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-8.40%</span> <span style="font-size:10px;color:var(--fg-3)">$33.21M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.binance.com/en/futures/WLDUSDC" target="_blank">WLDUSDC</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-6.77%</span> <span style="font-size:10px;color:var(--fg-3)">$13.70M</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo okx">O</div><div class="ex-box-name">OKX</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/bsbusdtswap-usdt-swap" target="_blank">BSBUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-3.10%</span> <span style="font-size:10px;color:var(--fg-3)">$1.72M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/monusdtswap-usdt-swap" target="_blank">MONUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-2.86%</span> <span style="font-size:10px;color:var(--fg-3)">$421.95K</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.okx.com/trade-swap/opnusdtswap-usdt-swap" target="_blank">OPNUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-2.41%</span> <span style="font-size:10px;color:var(--fg-3)">$7.73M</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo okx">O</div><div class="ex-box__name">OKX</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/ubusdtswap-usdt-swap" target="_blank">UBUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-4.32%</span> <span style="font-size:10px;color:var(--fg-3)">$1.73M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/bsbusdtswap-usdt-swap" target="_blank">BSBUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-3.96%</span> <span style="font-size:10px;color:var(--fg-3)">$1.72M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.okx.com/trade-swap/memeusdtswap-usdt-swap" target="_blank">MEMEUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-3.86%</span> <span style="font-size:10px;color:var(--fg-3)">$585.44K</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bg">G</div><div class="ex-box-name">Bitget</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/QNTSTOCKUSDT" target="_blank">QNTSTOCKUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-9.71%</span> <span style="font-size:10px;color:var(--fg-3)">$5.63M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-6.09%</span> <span style="font-size:10px;color:var(--fg-3)">$20.18M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bitget.com/futures/usdt/ICPUSDT" target="_blank">ICPUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-4.07%</span> <span style="font-size:10px;color:var(--fg-3)">$228.86K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bg">G</div><div class="ex-box__name">Bitget</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/QNTSTOCKUSDT" target="_blank">QNTSTOCKUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-10.94%</span> <span style="font-size:10px;color:var(--fg-3)">$6.05M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/HOMEUSDT" target="_blank">HOMEUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-8.37%</span> <span style="font-size:10px;color:var(--fg-3)">$2.53M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-6.74%</span> <span style="font-size:10px;color:var(--fg-3)">$25.63M</span></div></div>
           </div>
-          <div class="ex-box"><div class="ex-box-head"><div class="ex-logo bb">X</div><div class="ex-box-name">Bybit</div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-6.04%</span> <span style="font-size:10px;color:var(--fg-3)">$31.21M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/HOMEUSDT" target="_blank">HOMEUSDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-4.79%</span> <span style="font-size:10px;color:var(--fg-3)">$8.72M</span></div></div>
-            <div class="ex-item"><div class="ex-item-pair"><a href="https://www.bybit.com/trade/usdt/SKYAI1USDT" target="_blank">SKYAI1USDT</a></div><div class="ex-item-data"><span class="down" style="font-weight:700;font-size:14px">-4.27%</span> <span style="font-size:10px;color:var(--fg-3)">$147.04K</span></div></div>
+          <div class="ex-box"><div class="ex-box__head"><div class="ex-logo bb">X</div><div class="ex-box__name">Bybit</div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/HOMEUSDT" target="_blank">HOMEUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-12.36%</span> <span style="font-size:10px;color:var(--fg-3)">$12.13M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank">WLDUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-6.72%</span> <span style="font-size:10px;color:var(--fg-3)">$42.09M</span></div></div>
+            <div class="ex-row"><div class="ex-row__pair"><a href="https://www.bybit.com/trade/usdt/ICPUSDT" target="_blank">ICPUSDT</a></div><div class="ex-row__data"><span class="down" style="font-weight:700;font-size:14px">-4.01%</span> <span style="font-size:10px;color:var(--fg-3)">$1.31M</span></div></div>
           </div>
         </div>
       </div>
@@ -469,6 +501,8 @@ a{color:inherit;text-decoration:none}
   </div>
 
 </div>
+
+</div><!-- .shell -->
 
 <!-- ─── Method Modal ─── -->
 <div class="modal-overlay" id="method-modal">
@@ -483,30 +517,29 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<div class="footer">数据来源：Binance · OKX · Bitget · Bybit · Cointelegraph · Hacker News | 每小时自动更新</div>
+<div class="footer">数据来源：Binance · OKX · Bitget · Bybit · CoinTelegraph · Hacker News | 每小时自动更新</div>
 
 <script>
 /* ── Exchange Tab Switching ── */
 function switchExTab(id){
   document.querySelectorAll('.ex-tab').forEach(function(b){
-    b.classList.toggle('on', b.textContent.indexOf({vol:'成交额',gain:'涨幅',loss:'跌幅'}[id])>=0);
+    b.classList.toggle('is-on', b.textContent.indexOf({vol:'成交额',gain:'涨幅',loss:'跌幅'}[id])>=0);
   });
   document.querySelectorAll('.ex-panel').forEach(function(p){
-    p.classList.toggle('active', p.id==='etab-'+id);
+    p.classList.toggle('is-active', p.id==='etab-'+id);
   });
 }
 
 /* ── HN Sort ── */
 function sortHN(key){
   var labels={score:'最热',time:'最新',comments:'评论'};
-  document.querySelectorAll('#hn-tabs .feed-tab').forEach(function(b){
-    b.classList.toggle('on', b.textContent===labels[key]);
+  document.querySelectorAll('#hn-tabs .tab').forEach(function(b){
+    b.classList.toggle('is-on', b.textContent===labels[key]);
   });
   var list=document.getElementById('hn-list');
   var items=Array.from(list.querySelectorAll('.news-row'));
   items.sort(function(a,b){return(parseInt(b.dataset[key])||0)-(parseInt(a.dataset[key])||0)});
-  items.forEach(function(item,i){
-    var n=item.querySelector('.r-n');if(n)n.textContent=i+1;
+  items.forEach(function(item){
     list.appendChild(item);
   });
 }
@@ -514,29 +547,29 @@ function sortHN(key){
 /* ── New Listings: filter by 12h ── */
 (function(){
   var now=Math.floor(Date.now()/1000);
-  var list=document.getElementById('nl-list');
-  if(!list)return;
-  var items=Array.from(list.querySelectorAll('.nl-pill'));
+  var grid=document.getElementById('list-grid');
+  if(!grid)return;
+  var items=Array.from(grid.querySelectorAll('.list-pill'));
   items.forEach(function(el){
     var ts=parseInt(el.dataset.ts)||0;
     if(ts && now-ts>12*3600) el.remove();
   });
-  if(!list.children.length){
-    document.getElementById('nl-banner').style.display='none';
+  if(!grid.children.length){
+    document.getElementById('list-block').style.display='none';
   }
 })();
 setTimeout(function(){location.reload()},69*60*1000);
 
 /* ── Method Modal ── */
-function openMethod(){document.getElementById('method-modal').classList.add('open')}
-function closeMethod(){document.getElementById('method-modal').classList.remove('open')}
+function openMethod(){document.getElementById('method-modal').classList.add('is-open')}
+function closeMethod(){document.getElementById('method-modal').classList.remove('is-open')}
 
 /* ── Snapshot Dropdown ── */
 var snapshots=[];
 function toggleSnap(){
-  var dd=document.getElementById('snap-dd');
-  dd.classList.toggle('open');
-  if(dd.classList.contains('open')&&!snapshots.length) loadSnaps();
+  var wrap=document.getElementById('snap-wrap');
+  wrap.classList.toggle('is-open');
+  if(wrap.classList.contains('is-open')&&!snapshots.length) loadSnaps();
 }
 function loadSnaps(){
   var urls=[
@@ -570,22 +603,22 @@ function parseSnaps(txt){
   snapshots.forEach(function(s,idx){
     var d=new Date(s.ts);
     var t=document.createElement('div');
-    t.className='snap-item';
+    t.className='snap-menu__item';
     var btcStr='';
     if(s.btc) btcStr=' · $'+Number(s.btc.price).toLocaleString()+' '+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%';
-    t.innerHTML='<span class="s-ts">'+d.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span>'+btcStr;
+    t.innerHTML='<span class="s-ts">'+d.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span><span>'+btcStr+'</span>';
     t.onclick=function(){openSnapPage(idx)};
     list.appendChild(t);
   });
 }
 function openSnapPage(idx){
-  document.getElementById('snap-dd').classList.remove('open');
+  document.getElementById('snap-wrap').classList.remove('is-open');
   window.open('snapshot.html#'+idx,'_blank');
 }
 
 /* ── Close dropdowns on outside click ── */
 document.addEventListener('click',function(e){
-  if(!e.target.closest('.meta')) document.getElementById('snap-dd').classList.remove('open');
+  if(!e.target.closest('.snap-wrap')) document.getElementById('snap-wrap').classList.remove('is-open');
   if(e.target===document.getElementById('method-modal')) closeMethod();
 });
 </script>
