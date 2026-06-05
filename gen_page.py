@@ -13,7 +13,7 @@ Dashboard Generator — All-in-one script.
 8. 追加 JSONL 快照，清理 7 天前旧快照
 9. 推送 GitHub
 """
-import json, urllib.request, urllib.parse, os, re, time, base64, threading, xml.etree.ElementTree as ET
+import json, urllib.request, urllib.parse, os, re, time, base64, threading, html, xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -23,9 +23,17 @@ SNAP_FILE = os.path.join(DATA_DIR, "exchange-pairs-snapshot.json")
 NEW_FILE = os.path.join(DATA_DIR, "new-listings.json")
 OUT_FILE = os.path.join(DATA_DIR, "betanews.html")
 TPL_FILE = os.path.join(DATA_DIR, "template.html")
+SNAP_HTML_FILE = os.path.join(DATA_DIR, "snapshot.html")
 SNAPL_FILE = os.path.join(DATA_DIR, "dashboard-snapshots.jsonl")
-GITHUB_REPO = "peterzhangbo/Dashboard"
+CONFIG_FILE = os.path.join(DATA_DIR, "config.json")
 SNAP_RETAIN_HOURS = 168  # 7 天
+
+# 从 config.json 读取 GitHub 配置
+_cfg = {}
+if os.path.exists(CONFIG_FILE):
+    with open(CONFIG_FILE) as _f:
+        _cfg = json.load(_f)
+GITHUB_REPO = _cfg.get("github_repo", "peterzhangbo/Dashboard")
 
 EXCLUDE = {
     "BTC","ETH","SOL","BNB","XRP","ADA","DOGE","AVAX","DOT","LINK","MATIC","POL",
@@ -70,7 +78,7 @@ def fmt(v):
 
 
 def esc(s):
-    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return html.escape(s, quote=True)
 
 
 def get_listing_time(ex_code, symbol, market):
@@ -664,15 +672,14 @@ def turl(ex, sym, fut):
     return "#"
 
 
-# 公告 HTML
+# 公告 HTML（新卡片行结构）
 listing_html = ""
 for i, (ex, url, title, ts, mkt) in enumerate(all_ann):
-    tag_cls = {"Binance": "tag-ex", "OKX": "tag-crypto", "Bitget": "tag-defi", "Bybit": "tag-pol"}.get(ex, "tag-crypto")
     listing_html += (
-        f'<div class="news-row"><span class="news-n">{i+1}</span>'
-        f'<div class="news-body"><a class="news-t" href="{url}" target="_blank">{esc(title)}</a>'
-        f'<div class="news-meta"><span class="tag {tag_cls}">{ex} {mkt}</span> {ft_ts(ts)}</div>'
-        f'</div></div>\n'
+        f'<a class="news-row" href="{esc(url)}" target="_blank" rel="noopener">'
+        f'<span class="news-row__title">{esc(title)}</span>'
+        f'<span class="news-row__meta"><span class="src">{ex} {mkt}</span><span class="mono">{ft_ts(ts)}</span></span>'
+        f'</a>\n'
     )
 
 # 新币 HTML（按实际上线时间过滤 12h）
@@ -733,7 +740,7 @@ deduped.sort(key=lambda x: -x.get("listing_time", 0))
 with open(NEW_FILE, "w") as f:
     json.dump(deduped, f, indent=2, ensure_ascii=False)
 
-# 生成新币 HTML
+# 生成新币 HTML（pill 卡片结构）
 nl_html = ""
 for p in deduped[:10]:
     ex_code = p["exchange"]
@@ -747,35 +754,34 @@ for p in deduped[:10]:
     sg = "+" if chg >= 0 else ""
     lt = p.get("listing_time", p.get("discovered", 0))
     ts_str = datetime.fromtimestamp(lt, tz=timezone.utc).strftime("%m-%d %H:%M")
-    mkt_label = "合约" if is_fut else "现货"
+    mkt_label = "永续" if is_fut else "现货"
+    mkt_cls = "is-perp" if is_fut else "is-spot"
+    chg_html = f'<span class="{cls} mono">{sg}{chg:.2f}%</span><span class="lst__vol mono">{fmt(vol)}</span>' if vol else '<span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span>'
     nl_html += (
-        f'<div class="nl-item" data-ts="{lt}">'
-        f'<span class="nl-pair"><a href="{url}" target="_blank">{sym}</a></span>'
-        f'<span class="nl-chg {cls}">{sg}{chg:.2f}%</span>'
-        f'<span class="nl-vol">{fmt(vol)}</span>'
-        f'<span class="nl-right"><span class="nl-ex">{ex_name}</span>'
-        f'<span class="nl-type">{mkt_label}</span><span class="nl-time">{ts_str}</span></span></div>\n'
+        f'<a class="list-pill" href="{url}" target="_blank" data-ts="{lt}">'
+        f'<span class="lst__main"><span class="lst__pair">{sym}<span class="q">/USDT</span></span>'
+        f'<span class="lst__1h">{chg_html}</span></span>'
+        f'<span class="lst__aside"><span class="lst__ex">{ex_name}<span class="lst__mkt {mkt_cls}">{mkt_label}</span></span>'
+        f'<span class="lst__time mono">{ts_str}</span></span></a>\n'
     )
 
 if not nl_html:
-    nl_html = '<div style="padding:8px;color:var(--t3);font-size:11px">12h 内暂无新增交易对</div>'
+    nl_html = '<div style="padding:8px;color:var(--fg-3);font-size:11px">12h 内暂无新增交易对</div>'
 
-# HN HTML
-hn_html = '<div class="tab-panel" id="tab-hn">\n  <div class="news-list" id="hn-list">\n'
+# HN HTML（仅行数据，外层卡片由 template 提供）
+hn_html = ""
 for i, s in enumerate(HN_STORIES):
     hn_html += (
-        f'    <div class="news-row" data-score="{s["score"]}" data-time="{s["time"]}" data-comments="{s["descendants"]}">'
-        f'<span class="news-n">{i+1}</span>'
-        f'<div class="news-body"><a class="news-t" href="{esc(s["url"])}" target="_blank">{esc(s["title"])}</a>'
-        f'<div class="news-meta">↑{s["score"]} · \U0001f4ac{s["descendants"]} · {ft_ts(s["time"])}</div>'
-        f'</div></div>\n'
+        f'<a class="news-row" href="{esc(s["url"])}" target="_blank" rel="noopener" data-score="{s["score"]}" data-time="{s["time"]}" data-comments="{s["descendants"]}">'
+        f'<span class="news-row__title">{esc(s["title"])}</span>'
+        f'<span class="news-row__meta"><span class="stat up">↑{s["score"]}</span><span class="stat">💬{s["descendants"]}</span><span class="mono">{ft_ts(s["time"])}</span></span>'
+        f'</a>\n'
     )
 if not HN_STORIES:
-    hn_html += '    <div style="padding:8px;color:var(--t3);font-size:11px">暂无数据</div>\n'
-hn_html += '  </div>\n</div>'
+    hn_html = '<div style="padding:12px;color:var(--fg-3);font-size:11px">暂无数据</div>\n'
 
-# CT HTML
-news_html = '<div class="tab-panel" id="tab-news">\n  <div class="news-list">\n'
+# CT HTML（仅行数据，外层卡片由 template 提供）
+news_html = ""
 for i, n in enumerate(CT_NEWS):
     time_str = ""
     pub = n.get("pub_date", "")
@@ -785,37 +791,41 @@ for i, n in enumerate(CT_NEWS):
             time_str = dt.strftime("%m-%d %H:%M")
         except Exception:
             pass
-    meta_parts = ['<span class="tag tag-crypto">CoinTelegraph</span>']
+    meta_parts = ['<span class="src">CoinTelegraph</span>']
     if time_str:
-        meta_parts.append(time_str)
-    meta = f'<div class="news-meta">{" ".join(meta_parts)}</div>'
+        meta_parts.append(f'<span class="mono">{time_str}</span>')
+    meta = "".join(meta_parts)
     news_html += (
-        f'    <div class="news-row"><span class="news-n">{i+1}</span>'
-        f'<div class="news-body"><a class="news-t" href="{esc(n["url"])}" target="_blank">{esc(n["title"])}</a>{meta}</div></div>\n'
+        f'<a class="news-row" href="{esc(n["url"])}" target="_blank" rel="noopener">'
+        f'<span class="news-row__title">{esc(n["title"])}</span>'
+        f'<span class="news-row__meta">{meta}</span>'
+        f'</a>\n'
     )
 if not CT_NEWS:
-    news_html += '    <div style="padding:8px;color:var(--t3);font-size:11px">暂无数据</div>\n'
-news_html += '  </div>\n</div>'
+    news_html = '<div style="padding:12px;color:var(--fg-3);font-size:11px">暂无数据</div>\n'
 
 
 # ── 交易所面板 ──
 
 def _ex_panel(cat, tid, active=False):
-    """构建交易所监控面板。cat: vol/gain/loss。"""
-    act = " active" if active else ""
+    """构建交易所监控面板。cat: vol/gain/loss。永续在上，现货在下。"""
+    act = " is-active" if active else ""
     by_map = {"vol": "vol", "gain": "g", "loss": "l"}
     ex_names = [("bn", "Binance"), ("okx", "OKX"), ("bg", "Bitget"), ("bb", "Bybit")]
     ex_sfx = {"bn": ("bn_s", "bn_f"), "okx": ("okx_s", "okx_f"),
               "bg": ("bg_s", "bg_f"), "bb": ("bb_s", "bb_f")}
+    ex_initials = {"bn": "B", "okx": "O", "bg": "G", "bb": "X"}
 
-    h = f'  <div class="ex-panel{act}" id="{tid}">\n    <div class="ex-dual">\n'
-    for market, label in [("spot", "现货"), ("fut", "永续合约")]:
+    h = f'  <div class="ex-panel{act}" id="{tid}">\n'
+    for market, label, mkt_cls in [("fut", "永续合约", "is-perp"), ("spot", "现货", "is-spot")]:
         is_fut = market == "fut"
-        h += f'      <div class="ex-side"><div class="ex-side-label">{label}</div>\n        <div class="ex-grid">\n'
+        h += f'    <div class="ex-block__label {mkt_cls}"><span class="dot-sm"></span>{label}</div>\n'
+        h += f'    <div class="ex-block__grid">\n'
         for ex_code, ex_name in ex_names:
             ex_s = ex_sfx[ex_code][1 if is_fut else 0]
             raw = _rk(ex_s, S[ex_s], by=by_map[cat], n=3)
-            h += f'          <div class="ex-box"><div class="ex-box-name">{ex_name}</div>\n'
+            ini = ex_initials.get(ex_code, ex_code[0].upper())
+            h += f'      <div class="ex-card"><div class="ex-card__head"><div class="ex-logo {ex_code}">{ini}</div><div class="ex-card__name">{ex_name}</div></div><div class="ex-rows">\n'
             for pair, pct, vol in raw:
                 dp = pair if is_fut else f"{base_of(pair)}/USDT"
                 if is_fut and ex_code == "okx":
@@ -824,13 +834,12 @@ def _ex_panel(cat, tid, active=False):
                 c = "up" if pct >= 0 else "down"
                 sg = "+" if pct >= 0 else ""
                 if cat == "vol":
-                    arrow = "▲" if pct >= 0 else "▼"
-                    h += f'            <div class="ex-item"><div class="ex-item-pair"><a href="{url}" target="_blank">{dp}</a></div><div class="ex-item-data"><b>{fmt(vol)}</b> <span class="{c}" style="font-size:10px;opacity:.5">{arrow}</span></div></div>\n'
+                    h += f'        <a class="ex-row" href="{url}" target="_blank" rel="noopener"><div class="ex-row__pair">{dp}</div><div class="ex-row__right"><span class="ex-row__val {c}">{fmt(vol)}</span><span class="ex-row__sub">{sg}{pct:.2f}%</span></div></a>\n'
                 else:
-                    h += f'            <div class="ex-item"><div class="ex-item-pair"><a href="{url}" target="_blank">{dp}</a></div><div class="ex-item-data"><span class="{c}" style="font-weight:700;font-size:14px">{sg}{pct:.2f}%</span> <span style="font-size:10px;color:var(--t3)">{fmt(vol)}</span></div></div>\n'
-            h += '          </div>\n'
-        h += '        </div>\n      </div>\n'
-    h += '    </div>\n  </div>\n'
+                    h += f'        <a class="ex-row" href="{url}" target="_blank" rel="noopener"><div class="ex-row__pair">{dp}</div><div class="ex-row__right"><span class="ex-row__val {c}">{sg}{pct:.2f}%</span><span class="ex-row__sub">{fmt(vol)}</span></div></a>\n'
+            h += '      </div></div>\n'
+        h += '    </div>\n'
+    h += '  </div>\n'
     return h
 
 
@@ -843,15 +852,10 @@ with open(TPL_FILE) as f:
     page = f.read()
 
 page = page.replace("{{TIME}}", now.strftime("%Y-%m-%d %H:%M"))
-page = page.replace("{{BTC_PRICE}}", f"{btc_p:,.0f}")
-page = page.replace("{{BTC_CHG_CLS}}", btc_cls)
-page = page.replace("{{BTC_ARROW}}", btc_arrow)
-page = page.replace("{{BTC_CHG_VAL}}", f"{abs(btc_c):.2f}")
-page = page.replace("{{BTC_MCAP}}", btc_mcap_t)
 page = page.replace("{{NL_HTML}}", nl_html)
 page = page.replace("{{LISTING_HTML}}", listing_html)
-page = page.replace("{{HN_HTML}}", hn_html)
-page = page.replace("{{NEWS_HTML}}", news_html)
+page = page.replace("{{HN_ROWS}}", hn_html)
+page = page.replace("{{NEWS_ROWS}}", news_html)
 page = page.replace("{{EX_VOL}}", _ex_panel("vol", "etab-vol", True))
 page = page.replace("{{EX_GAIN}}", _ex_panel("gain", "etab-gain"))
 page = page.replace("{{EX_LOSS}}", _ex_panel("loss", "etab-loss"))
@@ -915,46 +919,59 @@ except Exception:
 print("Pushing to GitHub...", flush=True)
 
 
-def _gh_push(path, content, message):
-    """通过 GitHub Contents API 更新文件。"""
+def _gh_push(path, content, message, _retries=2):
+    """通过 GitHub Contents API 更新文件，409 时自动重试。"""
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}", "User-Agent": "Mozilla/5.0",
                "Accept": "application/vnd.github.v3+json"}
 
-    # 获取当前 SHA
-    sha = None
-    try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=15) as r:
-            sha = json.loads(r.read()).get("sha")
-    except Exception:
-        pass
+    for attempt in range(_retries + 1):
+        # 获取当前 SHA
+        sha = None
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as r:
+                sha = json.loads(r.read()).get("sha")
+        except Exception:
+            pass
 
-    body = {
-        "message": message,
-        "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
-    }
-    if sha:
-        body["sha"] = sha
+        body = {
+            "message": message,
+            "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
+        }
+        if sha:
+            body["sha"] = sha
 
-    try:
-        data = json.dumps(body).encode("utf-8")
-        req = urllib.request.Request(url, data=data, method="PUT",
-                                     headers={**headers, "Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
-            print(f"  {path}: OK ({sha_out})", flush=True)
-    except Exception as e:
-        print(f"  {path}: FAIL - {e}", flush=True)
+        try:
+            data = json.dumps(body).encode("utf-8")
+            req = urllib.request.Request(url, data=data, method="PUT",
+                                         headers={**headers, "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
+                print(f"  {path}: OK ({sha_out})", flush=True)
+                return
+        except urllib.error.HTTPError as e:
+            if e.code == 409 and attempt < _retries:
+                print(f"  {path}: 409 conflict, retry {attempt+1}/{_retries}...", flush=True)
+                time.sleep(1)
+                continue
+            print(f"  {path}: FAIL - {e}", flush=True)
+            return
+        except Exception as e:
+            print(f"  {path}: FAIL - {e}", flush=True)
+            return
 
 
-_gh_push("betanews.html", page, f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC")
-_gh_push("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False),
-         f"New listings {now.strftime('%Y-%m-%d %H:%M')} UTC")
-_gh_push("dashboard-snapshots.jsonl", open(SNAPL_FILE).read(),
-         f"Snapshot {now.strftime('%Y-%m-%d %H:%M')} UTC")
-_gh_push("exchange-pairs-snapshot.json", json.dumps(current, indent=2),
-         f"Pairs snapshot {now.strftime('%Y-%m-%d %H:%M')} UTC")
+msg = f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC"
+pushes = [
+    ("betanews.html", page, msg),
+    ("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False), msg),
+    ("dashboard-snapshots.jsonl", open(SNAPL_FILE).read(), msg),
+    ("exchange-pairs-snapshot.json", json.dumps(current, indent=2), msg),
+    ("snapshot.html", open(SNAP_HTML_FILE).read(), msg),
+]
+with ThreadPoolExecutor(max_workers=5) as ex:
+    list(ex.map(lambda p: _gh_push(*p), pushes))
 
 print("\n=== Done ===")
 print(f"BTC: ${btc_p:,.0f} ({btc_c:+.2f}%)  Supply: {btc_supply:,.0f}")
