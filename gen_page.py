@@ -13,7 +13,7 @@ Dashboard Generator — All-in-one script.
 8. 追加 JSONL 快照，清理 7 天前旧快照
 9. 推送 GitHub
 """
-import json, urllib.request, urllib.parse, os, re, time, base64, threading, xml.etree.ElementTree as ET
+import json, urllib.request, urllib.parse, os, re, time, base64, threading, html, xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -79,7 +79,7 @@ def fmt(v):
 
 
 def esc(s):
-    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return html.escape(s, quote=True)
 
 
 def get_listing_time(ex_code, symbol, market):
