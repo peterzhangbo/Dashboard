@@ -1,5 +1,45 @@
 [
   {
+    "exchange": "bg",
+    "symbol": "RAXPUSDT",
+    "market": "spot",
+    "listing_time": 1780656072,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "RCOFUSDT",
+    "market": "spot",
+    "listing_time": 1780656062,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "RSCHWUSDT",
+    "market": "spot",
+    "listing_time": 1780656054,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "RWFCUSDT",
+    "market": "spot",
+    "listing_time": 1780656036,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "RCUSDT",
+    "market": "spot",
+    "listing_time": 1780656028,
+    "change": 0,
+    "volume": 0
+  },
+  {
     "exchange": "bb",
     "symbol": "NOKIAUSDT",
     "market": "fut",
