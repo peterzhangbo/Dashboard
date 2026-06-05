@@ -109,8 +109,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .lst__time{font-family:var(--mono);font-size:11px;color:var(--fg-3)}
 
 /* ── Segmented control ── */
-.seg{display:inline-flex;padding:3px;gap:2px;background:var(--surface-3);border-radius:var(--r-md);border:1px solid var(--hairline)}
-.seg button{font-size:13px;font-weight:600;color:var(--fg-3);padding:7px 16px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;height:38px;transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)}
+.seg{display:inline-flex;padding:3px;gap:2px;background:var(--surface-3);border-radius:var(--r-md);border:1px solid var(--hairline);height:38px;align-items:center}
+.seg button{font-size:13px;font-weight:600;color:var(--fg-3);padding:7px 16px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)}
 .seg button.is-on{background:var(--lime);color:#1A1A1A}
 .seg button:hover:not(.is-on){color:var(--fg)}
 .seg#segMetric button.is-on{background:var(--brand);color:#fff}
@@ -181,7 +181,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .brand__title{font-size:15px}
   .live{font-size:11px}
   .live__prefix{display:none}
-  .snap-select{min-width:0}
+  .snap-select{min-width:0;width:auto}
   .snap-select span:not(.chev){display:none}
   .snap-menu{width:min(78vw,260px)}
   .section__title{font-size:17px}
@@ -405,9 +405,10 @@ document.addEventListener('click',function(e){if(!e.target.closest('.snap-wrap')
   var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
   var offset=-new Date().getTimezoneOffset();
   var sign=offset>=0?'+':'';
-  var h=String(Math.floor(Math.abs(offset)/60)).padStart(2,'0');
-  var m=String(Math.abs(offset)%60).padStart(2,'0');
-  var label=sign+h+':'+m;
+  var totalMin=Math.abs(offset);
+  var h=Math.floor(totalMin/60);
+  var m=totalMin%60;
+  var label=m>0?sign+h+':'+String(m).padStart(2,'0'):sign+h;
   document.querySelectorAll('time[data-epoch]').forEach(function(el){
     var d=new Date(parseInt(el.dataset.epoch)*1000);
     el.textContent=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz});
@@ -416,7 +417,12 @@ document.addEventListener('click',function(e){if(!e.target.closest('.snap-wrap')
   if(hdr&&hdr.dataset.utc){
     var parts=hdr.dataset.utc.split(' ');
     var dt=new Date(parts[0]+'T'+parts[1]+':00Z');
-    hdr.textContent=dt.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz})+' (UTC'+label+')';
+    var mobile=window.innerWidth<=760;
+    if(mobile){
+      hdr.textContent=dt.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz})+' (UTC'+label+')';
+    }else{
+      hdr.textContent=dt.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz})+' (UTC'+label+')';
+    }
   }
 })();
 </script>
