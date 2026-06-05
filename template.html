@@ -42,7 +42,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,215,96,0.45)}70%{box-shadow:0 0 0 7px rgba(30,215,96,0)}100%{box-shadow:0 0 0 0 rgba(30,215,96,0)}}
 
 /* ── Snap select ── */
-.snap-select{display:inline-flex;align-items:center;gap:8px;height:38px;min-width:120px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.snap-select{display:inline-flex;align-items:center;gap:8px;height:38px;width:131px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
 .snap-select:hover{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .snap-select svg{width:15px;height:15px;flex-shrink:0}
 .snap-select .chev{width:13px;margin-left:auto;transition:transform var(--dur-fast) var(--ease)}
@@ -110,7 +110,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* ── Segmented control ── */
 .seg{display:inline-flex;padding:3px;gap:2px;background:var(--surface-3);border-radius:var(--r-md);border:1px solid var(--hairline)}
-.seg button{font-size:13px;font-weight:600;color:var(--fg-3);padding:7px 16px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)}
+.seg button{font-size:13px;font-weight:600;color:var(--fg-3);padding:7px 16px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;height:38px;transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)}
 .seg button.is-on{background:var(--lime);color:#1A1A1A}
 .seg button:hover:not(.is-on){color:var(--fg)}
 .seg#segMetric button.is-on{background:var(--brand);color:#fff}
@@ -146,7 +146,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* ── Footer ── */
 .foot{margin-top:40px;padding:22px 0;border-top:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--fg-3)}
-.foot .srcs{display:flex;gap:8px;flex-wrap:wrap}
+.foot .srcs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .foot .srcs span{padding:2px 10px;border-radius:var(--r-pill);background:var(--surface-2);font-size:11px}
 
 /* ── Modal ── */
@@ -186,12 +186,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .snap-menu{width:min(78vw,260px)}
   .section__title{font-size:17px}
   .feed .card__head{flex-wrap:wrap}
-  .tabs{gap:3px;padding:4px}
-  .tab{padding:7px 18px}
   #head-monitor{row-gap:10px}
   #head-monitor .section__sub{display:none}
   .seg{order:3;flex:1 1 100%}
   .seg button{flex:1;justify-content:center;padding:8px 6px}
+  .foot .grow{display:none}
+  .foot{flex-direction:column;gap:8px}
 }
 @media(max-width:420px){
   .news-row__meta{gap:7px}
@@ -211,7 +211,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     </a>
     <span class="topbar__spacer"></span>
     <div class="topbar__meta">
-      <span class="live"><span class="live__dot"></span><span class="live__prefix">更新于 </span><span class="live__time">{{TIME}} UTC</span></span>
+      <span class="live"><span class="live__dot"></span><span class="live__prefix">更新于 </span><span class="live__time" data-utc="{{TIME}}">{{TIME}} UTC</span></span>
       <span class="snap-wrap" id="snap-wrap">
         <button class="snap-select" onclick="toggleSnap()" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
@@ -399,6 +399,26 @@ function parseSnaps(txt){
 }
 function openSnapPage(idx){document.getElementById('snap-wrap').classList.remove('is-open');window.open('snapshot.html#'+idx,'_blank')}
 document.addEventListener('click',function(e){if(!e.target.closest('.snap-wrap'))document.getElementById('snap-wrap').classList.remove('is-open');if(e.target===document.getElementById('method-modal'))closeMethod()});
+
+/* ── 本地时区转换 ── */
+(function(){
+  var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var offset=-new Date().getTimezoneOffset();
+  var sign=offset>=0?'+':'';
+  var h=String(Math.floor(Math.abs(offset)/60)).padStart(2,'0');
+  var m=String(Math.abs(offset)%60).padStart(2,'0');
+  var label=sign+h+':'+m;
+  document.querySelectorAll('time[data-epoch]').forEach(function(el){
+    var d=new Date(parseInt(el.dataset.epoch)*1000);
+    el.textContent=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz});
+  });
+  var hdr=document.querySelector('.live__time');
+  if(hdr&&hdr.dataset.utc){
+    var parts=hdr.dataset.utc.split(' ');
+    var dt=new Date(parts[0]+'T'+parts[1]+':00Z');
+    hdr.textContent=dt.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz})+' (UTC'+label+')';
+  }
+})();
 </script>
 </body>
 </html>
