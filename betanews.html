@@ -42,10 +42,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,215,96,0.45)}70%{box-shadow:0 0 0 7px rgba(30,215,96,0)}100%{box-shadow:0 0 0 0 rgba(30,215,96,0)}}
 
 /* ── Snap select ── */
-.snap-select{display:inline-flex;align-items:center;gap:8px;height:38px;width:131px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.snap-select{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;width:120px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
 .snap-select:hover{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .snap-select svg{width:15px;height:15px;flex-shrink:0}
 .snap-select .chev{width:13px;margin-left:auto;transition:transform var(--dur-fast) var(--ease)}
+.snap-select--icon{width:38px;padding:0}
 .snap-wrap{position:relative}
 .snap-wrap.is-open .snap-select{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .snap-wrap.is-open .snap-select .chev{transform:rotate(180deg)}
@@ -80,9 +81,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .tab:hover:not(.is-on){color:var(--fg)}
 
 /* ── News row ── */
-.feed__list{overflow-y:auto;flex:1;min-height:0}
-.news-row{display:flex;flex-direction:column;gap:5px;padding:12px 18px;transition:background var(--dur-fast) var(--ease);border-bottom:1px solid var(--divider);cursor:pointer}
-.news-row:last-child{border-bottom:none}
+.feed__list{overflow-y:auto;flex:1;min-height:0;padding:6px}
+.news-row{display:flex;flex-direction:column;gap:6px;padding:11px 12px;border-radius:var(--r-md);transition:background var(--dur-fast) var(--ease);cursor:pointer}
+.news-row+.news-row{border-top:1px solid var(--divider)}
 .news-row:hover{background:var(--surface-2)}
 .news-row__title{font-size:13.5px;line-height:1.4;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.4em * 2)}
 .news-row__title:hover{color:var(--brand)}
@@ -149,7 +150,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .ex-row__sub{font-size:10.5px;color:var(--fg-3);font-family:var(--mono)}
 
 /* ── Footer ── */
-.foot{margin-top:40px;padding:22px 0;border-top:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--fg-3)}
+.foot{margin-top:40px;padding:22px 0;border-top:1px solid var(--hairline);display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--fg-3)}
 .foot .srcs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .foot .srcs span{padding:2px 10px;border-radius:var(--r-pill);background:var(--surface-2);font-size:11px}
 
@@ -192,11 +193,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .feed .card__head{flex-wrap:wrap}
   .feeds .card__head{height:auto;overflow:visible}
   #head-monitor{row-gap:10px}
-  #head-monitor .section__sub{display:none}
-  .seg{order:3;flex:1 1 100%}
-  .seg button{flex:1;justify-content:center;padding:8px 6px}
-  .foot .grow{display:none}
-  .foot{flex-direction:column;gap:8px}
+  #head-feeds .section__sub,#head-monitor .section__sub{display:none}
+  .seg button{padding:8px 6px}
+  .foot{flex-direction:column;align-items:flex-start;gap:8px}
 }
 @media(max-width:420px){
   .news-row__meta{gap:7px}
@@ -216,7 +215,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     </a>
     <span class="topbar__spacer"></span>
     <div class="topbar__meta">
-      <span class="live"><span class="live__dot"></span><span class="live__prefix">更新于 </span><span class="live__time" data-utc="2026-06-05 05:29">2026-06-05 05:29 UTC</span></span>
+      <span class="live"><span class="live__dot"></span><span class="live__prefix">更新于 </span><span class="live__time" data-utc="2026-06-05 05:49">2026-06-05 05:49 UTC</span></span>
       <span class="snap-wrap" id="snap-wrap">
         <button class="snap-select" onclick="toggleSnap()" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
@@ -267,14 +266,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <button class="tab" onclick="sortHN('comments')">评论</button>
       </div>
     </div>
-    <div class="feed__list" id="hn-list"><a class="news-row" href="https://blog.cloudflare.com/voidzero-joins-cloudflare/" target="_blank" rel="noopener" data-score="602" data-time="1780578051" data-comments="264"><span class="news-row__title">VoidZero 即将加入 Cloudflare</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>602</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>264</span><span class="mono"><time data-epoch="1780578051">06-04 13:00</time></span></span></a>
-<a class="news-row" href="https://www.anthropic.com/institute/recursive-self-improvement" target="_blank" rel="noopener" data-score="401" data-time="1780590017" data-comments="533"><span class="news-row__title">当人工智能自我构建时：我们在递归自我完善方面取得的进展</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>401</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>533</span><span class="mono"><time data-epoch="1780590017">06-04 16:20</time></span></span></a>
-<a class="news-row" href="https://github.com/anthropics/defending-code-reference-harness" target="_blank" rel="noopener" data-score="344" data-time="1780603880" data-comments="105"><span class="news-row__title">Anthropic 用于人工智能驱动的漏洞发现的开源框架</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>344</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>105</span><span class="mono"><time data-epoch="1780603880">06-04 20:11</time></span></span></a>
-<a class="news-row" href="https://www.bloomberg.com/news/articles/2026-06-04/s-p-dow-jones-keeps-megacap-ipo-rules-as-is-after-consultation" target="_blank" rel="noopener" data-score="317" data-time="1780613299" data-comments="148"><span class="news-row__title">SpaceX 和其他大型 IPO 拒绝被标准普尔快速纳入指数</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>317</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>148</span><span class="mono"><time data-epoch="1780613299">06-04 22:48</time></span></span></a>
-<a class="news-row" href="https://fb.watch/HxPu0fSyeH/" target="_blank" rel="noopener" data-score="152" data-time="1780620278" data-comments="35"><span class="news-row__title">Meta 在已弃用的 Portal 设备上启用 ADB [视频]</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>152</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>35</span><span class="mono"><time data-epoch="1780620278">06-05 00:44</time></span></span></a>
-<a class="news-row" href="https://arxiv.org/abs/2606.04032" target="_blank" rel="noopener" data-score="136" data-time="1780614716" data-comments="26"><span class="news-row__title">变压器需要三个投影吗？ QKV 变体的系统研究</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>136</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>26</span><span class="mono"><time data-epoch="1780614716">06-04 23:11</time></span></span></a>
-<a class="news-row" href="https://tiki.li/blog/blqsort" target="_blank" rel="noopener" data-score="126" data-time="1780430454" data-comments="21"><span class="news-row__title">使用 C 和 C++ API 的无分支快速排序比 std:sort 和 pdqsort 更快</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>126</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>21</span><span class="mono"><time data-epoch="1780430454">06-02 20:00</time></span></span></a>
-<a class="news-row" href="https://www.scotthyoung.com/blog/2026/05/27/revolutionize-schooling/" target="_blank" rel="noopener" data-score="116" data-time="1780433019" data-comments="178"><span class="news-row__title">我对彻底改变学校教育的努力持怀疑态度</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>116</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>178</span><span class="mono"><time data-epoch="1780433019">06-02 20:43</time></span></span></a>
+    <div class="feed__list" id="hn-list"><a class="news-row" href="https://blog.cloudflare.com/voidzero-joins-cloudflare/" target="_blank" rel="noopener" data-score="607" data-time="1780578051" data-comments="267"><span class="news-row__title">VoidZero 即将加入 Cloudflare</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>607</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>267</span><span class="mono"><time data-epoch="1780578051">06-04 13:00</time></span></span></a>
+<a class="news-row" href="https://github.com/anthropics/defending-code-reference-harness" target="_blank" rel="noopener" data-score="350" data-time="1780603880" data-comments="107"><span class="news-row__title">Anthropic 用于人工智能驱动的漏洞发现的开源框架</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>350</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>107</span><span class="mono"><time data-epoch="1780603880">06-04 20:11</time></span></span></a>
+<a class="news-row" href="https://www.bloomberg.com/news/articles/2026-06-04/s-p-dow-jones-keeps-megacap-ipo-rules-as-is-after-consultation" target="_blank" rel="noopener" data-score="343" data-time="1780613299" data-comments="153"><span class="news-row__title">SpaceX 和其他大型 IPO 拒绝被标准普尔快速纳入指数</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>343</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>153</span><span class="mono"><time data-epoch="1780613299">06-04 22:48</time></span></span></a>
+<a class="news-row" href="https://fb.watch/HxPu0fSyeH/" target="_blank" rel="noopener" data-score="156" data-time="1780620278" data-comments="36"><span class="news-row__title">Meta 在已弃用的 Portal 设备上启用 ADB [视频]</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>156</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>36</span><span class="mono"><time data-epoch="1780620278">06-05 00:44</time></span></span></a>
+<a class="news-row" href="https://arxiv.org/abs/2606.04032" target="_blank" rel="noopener" data-score="136" data-time="1780614716" data-comments="27"><span class="news-row__title">变压器需要三个投影吗？ QKV 变体的系统研究</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>136</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>27</span><span class="mono"><time data-epoch="1780614716">06-04 23:11</time></span></span></a>
+<a class="news-row" href="https://tiki.li/blog/blqsort" target="_blank" rel="noopener" data-score="132" data-time="1780430454" data-comments="23"><span class="news-row__title">使用 C 和 C++ API 的无分支快速排序比 std:sort 和 pdqsort 更快</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>132</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>23</span><span class="mono"><time data-epoch="1780430454">06-02 20:00</time></span></span></a>
+<a class="news-row" href="https://www.scotthyoung.com/blog/2026/05/27/revolutionize-schooling/" target="_blank" rel="noopener" data-score="121" data-time="1780433019" data-comments="187"><span class="news-row__title">我对彻底改变学校教育的努力持怀疑态度</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>121</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>187</span><span class="mono"><time data-epoch="1780433019">06-02 20:43</time></span></span></a>
+<a class="news-row" href="https://github.com/alibaba/open-code-review" target="_blank" rel="noopener" data-score="112" data-time="1780617869" data-comments="26"><span class="news-row__title">开放代码审查 – 人工智能驱动的代码审查 CLI 工具</span><span class="news-row__meta"><span class="stat up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>112</span><span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>26</span><span class="mono"><time data-epoch="1780617869">06-05 00:04</time></span></span></a>
 </div>
   </div>
   <div class="card">
@@ -300,9 +299,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <button data-metric="loss" onclick="switchExTab('loss')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"></path><path d="M14 17h7v-7"></path></svg>1h 跌幅</button>
   </div>
   <span class="grow"></span>
-  <button class="snap-select" onclick="openMethod()" type="button">
+  <button class="snap-select snap-select--icon" onclick="openMethod()" type="button">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-    <span>统计方法说明</span>
   </button>
 </div>
 <div class="card" style="padding:18px">
@@ -311,47 +309,47 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="ex-block__label is-perp"><span class="dot-sm"></span>永续合约</div>
     <div class="ex-block__grid">
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bn">B</div><div class="ex-card__name">Binance</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.binance.com/en/futures/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$130.90M</span><span class="ex-row__sub">-1.89%</span></div></a>
-        <a class="ex-row" href="https://www.binance.com/en/futures/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$23.13M</span><span class="ex-row__sub">+2.30%</span></div></a>
-        <a class="ex-row" href="https://www.binance.com/en/futures/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$22.52M</span><span class="ex-row__sub">+3.50%</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$194.17M</span><span class="ex-row__sub">-4.50%</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$35.59M</span><span class="ex-row__sub">-0.37%</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/XAGUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">XAGUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$35.33M</span><span class="ex-row__sub">-0.54%</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo okx">O</div><div class="ex-card__name">OKX</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.okx.com/trade-swap/dogeusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">DOGEUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$37.80M</span><span class="ex-row__sub">+0.12%</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-swap/wldusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$27.56M</span><span class="ex-row__sub">-2.25%</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-swap/adausdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">ADAUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$19.61M</span><span class="ex-row__sub">+0.96%</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/dogeusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">DOGEUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$37.80M</span><span class="ex-row__sub">+1.88%</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/wldusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$27.56M</span><span class="ex-row__sub">+0.51%</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/adausdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">ADAUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$19.61M</span><span class="ex-row__sub">+2.31%</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bg">G</div><div class="ex-card__name">Bitget</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$17.56M</span><span class="ex-row__sub">-2.01%</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$4.98M</span><span class="ex-row__sub">+4.29%</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$3.20M</span><span class="ex-row__sub">+2.32%</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$25.96M</span><span class="ex-row__sub">-4.51%</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$6.72M</span><span class="ex-row__sub">+2.78%</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$5.27M</span><span class="ex-row__sub">-0.43%</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bb">X</div><div class="ex-card__name">Bybit</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$29.76M</span><span class="ex-row__sub">-2.08%</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$7.03M</span><span class="ex-row__sub">+2.30%</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$6.88M</span><span class="ex-row__sub">+4.23%</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$43.88M</span><span class="ex-row__sub">-4.53%</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val down">$11.20M</span><span class="ex-row__sub">-0.39%</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">$10.75M</span><span class="ex-row__sub">+3.58%</span></div></a>
       </div></div>
     </div>
     <div class="ex-block__label is-spot"><span class="dot-sm"></span>现货</div>
     <div class="ex-block__grid">
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bn">B</div><div class="ex-card__name">Binance</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.binance.com/en/trade/USDTIDR_USDT" target="_blank" rel="noopener"><div class="ex-row__pair">USDTIDR/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$1,397.20M</span><span class="ex-row__sub">-0.04%</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/trade/USDTIDR_USDT" target="_blank" rel="noopener"><div class="ex-row__pair">USDTIDR/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$2,060.93M</span><span class="ex-row__sub">-0.02%</span></div></a>
         <a class="ex-row" href="https://www.binance.com/en/trade/BUSDBIDR_USDT" target="_blank" rel="noopener"><div class="ex-row__pair">BUSDBIDR/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$1,259.22M</span><span class="ex-row__sub">+0.61%</span></div></a>
-        <a class="ex-row" href="https://www.binance.com/en/trade/BTCJPY_USDT" target="_blank" rel="noopener"><div class="ex-row__pair">BTCJPY/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$570.02M</span><span class="ex-row__sub">-0.14%</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/trade/BTCJPY_USDT" target="_blank" rel="noopener"><div class="ex-row__pair">BTCJPY/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$1,085.89M</span><span class="ex-row__sub">-1.31%</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo okx">O</div><div class="ex-card__name">OKX</div></div><div class="ex-rows">
         <a class="ex-row" href="https://www.okx.com/trade-spot/usdttry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">USDTTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$20.81M</span><span class="ex-row__sub">+0.00%</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-spot/btctry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">BTCTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$5.24M</span><span class="ex-row__sub">+0.24%</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-spot/zec-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">ZEC/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$3.44M</span><span class="ex-row__sub">+1.93%</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-spot/btctry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">BTCTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$5.24M</span><span class="ex-row__sub">+1.29%</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-spot/zec-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">ZEC/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$3.44M</span><span class="ex-row__sub">+4.38%</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bg">G</div><div class="ex-card__name">Bitget</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bitget.com/spot/LITUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LIT/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$1.26M</span><span class="ex-row__sub">+0.77%</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/spot/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZEC/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$824.94K</span><span class="ex-row__sub">-1.98%</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/spot/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LAB/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$494.41K</span><span class="ex-row__sub">+5.18%</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/LITUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LIT/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$1.98M</span><span class="ex-row__sub">-0.98%</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZEC/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$1.16M</span><span class="ex-row__sub">-4.04%</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LAB/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$676.10K</span><span class="ex-row__sub">+4.33%</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bb">X</div><div class="ex-card__name">Bybit</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/ETHEUR/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">ETHEUR/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$2.07M</span><span class="ex-row__sub">-0.49%</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/XAUT/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">XAUT/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$1.34M</span><span class="ex-row__sub">+0.09%</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/BTCEUR/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">BTCEUR/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$1.34M</span><span class="ex-row__sub">-0.11%</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/ETHEUR/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">ETHEUR/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$8.90M</span><span class="ex-row__sub">-2.75%</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/BTCEUR/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">BTCEUR/USDT</div><div class="ex-row__right"><span class="ex-row__val down">$3.78M</span><span class="ex-row__sub">-1.23%</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/USDTBRL/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">USDTBRL/USDT</div><div class="ex-row__right"><span class="ex-row__val up">$3.13M</span><span class="ex-row__sub">+-0.00%</span></div></a>
       </div></div>
     </div>
   </div>
@@ -360,24 +358,24 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="ex-block__label is-perp"><span class="dot-sm"></span>永续合约</div>
     <div class="ex-block__grid">
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bn">B</div><div class="ex-card__name">Binance</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.binance.com/en/futures/EPICUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">EPICUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+5.23%</span><span class="ex-row__sub">$2.21M</span></div></a>
-        <a class="ex-row" href="https://www.binance.com/en/futures/龙虾USDT" target="_blank" rel="noopener"><div class="ex-row__pair">龙虾USDT</div><div class="ex-row__right"><span class="ex-row__val up">+3.86%</span><span class="ex-row__sub">$4.98M</span></div></a>
-        <a class="ex-row" href="https://www.binance.com/en/futures/ZESTUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZESTUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+3.53%</span><span class="ex-row__sub">$1.08M</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/EPICUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">EPICUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+6.45%</span><span class="ex-row__sub">$3.74M</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/HOMEUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">HOMEUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.74%</span><span class="ex-row__sub">$12.88M</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.77%</span><span class="ex-row__sub">$33.24M</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo okx">O</div><div class="ex-card__name">OKX</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.okx.com/trade-swap/truthusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">TRUTHUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.66%</span><span class="ex-row__sub">$112.68K</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-swap/allousdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">ALLOUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.40%</span><span class="ex-row__sub">$1.37M</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-swap/billusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">BILLUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+1.89%</span><span class="ex-row__sub">$2.80M</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/irysusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">IRYSUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.04%</span><span class="ex-row__sub">$854.27K</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/biousdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">BIOUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+3.67%</span><span class="ex-row__sub">$350.85K</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/ofcusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">OFCUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+3.63%</span><span class="ex-row__sub">$192.30K</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bg">G</div><div class="ex-card__name">Bitget</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/EPICUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">EPICUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+5.06%</span><span class="ex-row__sub">$180.61K</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.29%</span><span class="ex-row__sub">$4.98M</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.32%</span><span class="ex-row__sub">$3.20M</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/EPICUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">EPICUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+6.12%</span><span class="ex-row__sub">$300.07K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/HOMEUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">HOMEUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.79%</span><span class="ex-row__sub">$896.58K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.78%</span><span class="ex-row__sub">$6.72M</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bb">X</div><div class="ex-card__name">Bybit</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/EPICUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">EPICUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+5.24%</span><span class="ex-row__sub">$559.32K</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.23%</span><span class="ex-row__sub">$6.88M</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.30%</span><span class="ex-row__sub">$7.03M</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/EPICUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">EPICUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+6.21%</span><span class="ex-row__sub">$946.04K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/HOMEUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">HOMEUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+5.73%</span><span class="ex-row__sub">$4.33M</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LABUSDT</div><div class="ex-row__right"><span class="ex-row__val up">+3.58%</span><span class="ex-row__sub">$10.75M</span></div></a>
       </div></div>
     </div>
     <div class="ex-block__label is-spot"><span class="dot-sm"></span>现货</div>
@@ -388,19 +386,19 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <a class="ex-row" href="https://www.binance.com/en/trade/BAKETRY_USDT" target="_blank" rel="noopener"><div class="ex-row__pair">BAKETRY/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+12.04%</span><span class="ex-row__sub">$19.48M</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo okx">O</div><div class="ex-card__name">OKX</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.okx.com/trade-spot/aergo-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">AERGO/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+5.46%</span><span class="ex-row__sub">$105.32K</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-spot/allo-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">ALLO/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.33%</span><span class="ex-row__sub">$104.74K</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-spot/zeceur-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">ZECEUR/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.19%</span><span class="ex-row__sub">$79.96K</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-spot/zeceur-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">ZECEUR/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.77%</span><span class="ex-row__sub">$79.96K</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-spot/zec-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">ZEC/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.38%</span><span class="ex-row__sub">$3.44M</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-spot/irystry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">IRYSTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.34%</span><span class="ex-row__sub">$82.40K</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bg">G</div><div class="ex-card__name">Bitget</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bitget.com/spot/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LAB/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+5.18%</span><span class="ex-row__sub">$494.41K</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/spot/WLDUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLD/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.41%</span><span class="ex-row__sub">$369.46K</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/spot/NIGHTUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">NIGHT/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+1.25%</span><span class="ex-row__sub">$119.85K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/HOMEUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">HOME/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+7.11%</span><span class="ex-row__sub">$46.33K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/LABUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">LAB/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+4.33%</span><span class="ex-row__sub">$676.10K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/BTWUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">BTW/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+3.50%</span><span class="ex-row__sub">$556.70K</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bb">X</div><div class="ex-card__name">Bybit</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/WLD/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLD/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.30%</span><span class="ex-row__sub">$523.31K</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/WLD/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">WLD/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.24%</span><span class="ex-row__sub">$13.51K</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/PORTAL/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">PORTAL/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+2.21%</span><span class="ex-row__sub">$10.97K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/HOME/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">HOME/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+6.59%</span><span class="ex-row__sub">$115.06K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/NXPC/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">NXPC/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+1.46%</span><span class="ex-row__sub">$88.30K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/HMSTR/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">HMSTR/USDT</div><div class="ex-row__right"><span class="ex-row__val up">+0.81%</span><span class="ex-row__sub">$28.64K</span></div></a>
       </div></div>
     </div>
   </div>
@@ -409,24 +407,24 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="ex-block__label is-perp"><span class="dot-sm"></span>永续合约</div>
     <div class="ex-block__grid">
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bn">B</div><div class="ex-card__name">Binance</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.binance.com/en/futures/ALLOUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ALLOUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.40%</span><span class="ex-row__sub">$1.75M</span></div></a>
-        <a class="ex-row" href="https://www.binance.com/en/futures/SIRENUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">SIRENUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.13%</span><span class="ex-row__sub">$1.03M</span></div></a>
-        <a class="ex-row" href="https://www.binance.com/en/futures/HEIUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">HEIUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.03%</span><span class="ex-row__sub">$4.06M</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/VVVUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">VVVUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-5.52%</span><span class="ex-row__sub">$4.56M</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.50%</span><span class="ex-row__sub">$194.17M</span></div></a>
+        <a class="ex-row" href="https://www.binance.com/en/futures/ZECUSDC" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDC</div><div class="ex-row__right"><span class="ex-row__val down">-4.50%</span><span class="ex-row__sub">$15.38M</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo okx">O</div><div class="ex-card__name">OKX</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.okx.com/trade-swap/wldusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">WLDUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.25%</span><span class="ex-row__sub">$27.56M</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-swap/robousdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">ROBOUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.43%</span><span class="ex-row__sub">$228.40K</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-swap/nightusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">NIGHTUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.20%</span><span class="ex-row__sub">$1.66M</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/homeusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">HOMEUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.22%</span><span class="ex-row__sub">$4.79M</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/beatusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">BEATUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.51%</span><span class="ex-row__sub">$5.01M</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-swap/hmstrusdtswap-usdt-swap" target="_blank" rel="noopener"><div class="ex-row__pair">HMSTRUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-0.68%</span><span class="ex-row__sub">$307.53K</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bg">G</div><div class="ex-card__name">Bitget</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/MYXUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">MYXUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.65%</span><span class="ex-row__sub">$106.99K</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/ALLOUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ALLOUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.24%</span><span class="ex-row__sub">$119.79K</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/futures/usdt/SIRENUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">SIRENUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.15%</span><span class="ex-row__sub">$83.14K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/MYXUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">MYXUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-8.03%</span><span class="ex-row__sub">$206.42K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/VVVUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">VVVUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-5.47%</span><span class="ex-row__sub">$274.79K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/futures/usdt/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.51%</span><span class="ex-row__sub">$25.96M</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bb">X</div><div class="ex-card__name">Bybit</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/MYXUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">MYXUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.73%</span><span class="ex-row__sub">$348.10K</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/B3USDT" target="_blank" rel="noopener"><div class="ex-row__pair">B3USDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.79%</span><span class="ex-row__sub">$314.87K</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/usdt/ALLOUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ALLOUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.34%</span><span class="ex-row__sub">$1.19M</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/MYXUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">MYXUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-8.18%</span><span class="ex-row__sub">$478.02K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/VVVUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">VVVUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-5.58%</span><span class="ex-row__sub">$1.25M</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/usdt/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZECUSDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.53%</span><span class="ex-row__sub">$43.88M</span></div></a>
       </div></div>
     </div>
     <div class="ex-block__label is-spot"><span class="dot-sm"></span>现货</div>
@@ -438,18 +436,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo okx">O</div><div class="ex-card__name">OKX</div></div><div class="ex-rows">
         <a class="ex-row" href="https://www.okx.com/trade-spot/nighttry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">NIGHTTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.96%</span><span class="ex-row__sub">$303.17K</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-spot/juptry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">JUPTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.86%</span><span class="ex-row__sub">$6.62K</span></div></a>
-        <a class="ex-row" href="https://www.okx.com/trade-spot/fettry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">FETTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.33%</span><span class="ex-row__sub">$33.66</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-spot/hmstrtry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">HMSTRTRY/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.80%</span><span class="ex-row__sub">$22.67K</span></div></a>
+        <a class="ex-row" href="https://www.okx.com/trade-spot/kitetry-usdt" target="_blank" rel="noopener"><div class="ex-row__pair">KITETRY/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.67%</span><span class="ex-row__sub">$43.09K</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bg">G</div><div class="ex-card__name">Bitget</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bitget.com/spot/MYXUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">MYX/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.27%</span><span class="ex-row__sub">$67.45K</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/spot/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZEC/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.98%</span><span class="ex-row__sub">$824.94K</span></div></a>
-        <a class="ex-row" href="https://www.bitget.com/spot/MAGMAUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">MAGMA/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.92%</span><span class="ex-row__sub">$36.20K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/MYXUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">MYX/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-7.56%</span><span class="ex-row__sub">$130.18K</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/ZECUSDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZEC/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.04%</span><span class="ex-row__sub">$1.16M</span></div></a>
+        <a class="ex-row" href="https://www.bitget.com/spot/ETHRLUSD" target="_blank" rel="noopener"><div class="ex-row__pair">ETHRL/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-3.07%</span><span class="ex-row__sub">$527.12K</span></div></a>
       </div></div>
       <div class="ex-card"><div class="ex-card__head"><div class="ex-logo bb">X</div><div class="ex-card__name">Bybit</div></div><div class="ex-rows">
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/B3/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">B3/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-3.45%</span><span class="ex-row__sub">$22.71K</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/ZEREBRO/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZEREBRO/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-2.16%</span><span class="ex-row__sub">$8.76K</span></div></a>
-        <a class="ex-row" href="https://www.bybit.com/trade/spot/VVV/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">VVV/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-1.91%</span><span class="ex-row__sub">$178.29K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/VVV/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">VVV/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-5.63%</span><span class="ex-row__sub">$444.15K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/ZEREBRO/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">ZEREBRO/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-4.28%</span><span class="ex-row__sub">$16.12K</span></div></a>
+        <a class="ex-row" href="https://www.bybit.com/trade/spot/STETHEUR/USDT" target="_blank" rel="noopener"><div class="ex-row__pair">STETHEUR/USDT</div><div class="ex-row__right"><span class="ex-row__val down">-3.22%</span><span class="ex-row__sub">$23.60K</span></div></a>
       </div></div>
     </div>
   </div>
@@ -460,7 +458,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <footer class="foot">
   <span>数据来源</span>
   <span class="srcs"><span>Binance</span><span>OKX</span><span>Bitget</span><span>Bybit</span><span>Cointelegraph</span><span>Hacker News</span></span>
-  <span class="grow"></span>
   <span>© 2026 · Peter · 每小时更新</span>
 </footer>
 
