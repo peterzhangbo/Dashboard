@@ -643,7 +643,9 @@ def ft_ts(ts):
     ts = int(ts)
     if ts > 1e12:
         ts = ts // 1000
-    return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%m-%d %H:%M")
+    iso = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    display = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%m-%d %H:%M")
+    return f'<time data-epoch="{ts}">{display}</time>'
 
 
 # ──────────────────────────────────────────────
@@ -754,7 +756,7 @@ for p in deduped[:10]:
     cls = "up" if chg >= 0 else "down"
     sg = "+" if chg >= 0 else ""
     lt = p.get("listing_time", p.get("discovered", 0))
-    ts_str = datetime.fromtimestamp(lt, tz=timezone.utc).strftime("%m-%d %H:%M")
+    ts_str = f'<time data-epoch="{lt}">{datetime.fromtimestamp(lt, tz=timezone.utc).strftime("%m-%d %H:%M")}</time>'
     mkt_label = "永续" if is_fut else "现货"
     mkt_cls = "is-perp" if is_fut else "is-spot"
     chg_html = f'<span class="{cls} mono">{sg}{chg:.2f}%</span><span class="lst__vol mono">{fmt(vol)}</span>' if vol else '<span style="color:var(--fg-4);font-style:italic">暂无 1h 数据</span>'
@@ -789,7 +791,8 @@ for i, n in enumerate(CT_NEWS):
     if pub:
         try:
             dt = parsedate_to_datetime(pub)
-            time_str = dt.strftime("%m-%d %H:%M")
+            epoch = int(dt.timestamp())
+            time_str = f'<time data-epoch="{epoch}">{dt.strftime("%m-%d %H:%M")}</time>'
         except Exception:
             pass
     meta_parts = ['<span class="src">CoinTelegraph</span>']
