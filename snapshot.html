@@ -122,20 +122,22 @@ a{color:inherit;text-decoration:none}
 
 <script>
 /* ── CDN Fallback ── */
+var REPO='peterzhangbo/Dashboard';
 var CDN_URLS=[
-  'https://fastly.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl',
-  'https://gcore.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl',
-  'https://cdn.jsdelivr.net/gh/peterzhangbo/Dashboard@main/dashboard-snapshots.jsonl',
-  'https://peterzhangbo.github.io/Dashboard/dashboard-snapshots.jsonl'
+  'dashboard-snapshots.jsonl',
+  'https://cdn.jsdelivr.net/gh/'+REPO+'@main/dashboard-snapshots.jsonl',
+  'https://fastly.jsdelivr.net/gh/'+REPO+'@main/dashboard-snapshots.jsonl',
+  'https://gcore.jsdelivr.net/gh/'+REPO+'@main/dashboard-snapshots.jsonl'
 ];
-var GITHUB_API='https://api.github.com/repos/peterzhangbo/Dashboard/contents/dashboard-snapshots.jsonl';
+var GITHUB_API='https://api.github.com/repos/'+REPO+'/contents/dashboard-snapshots.jsonl';
 
-function fetchWithTimeout(url,timeout){
+function fetchWithTimeout(url,timeout,opts){
   return new Promise(function(resolve,reject){
     var ctrl=typeof AbortController!=='undefined'?new AbortController():null;
     var timer;
     if(ctrl){timer=setTimeout(function(){ctrl.abort()},timeout||8000)}
-    fetch(url,{signal:ctrl?ctrl.signal:undefined}).then(function(r){
+    var fetchOpts=Object.assign({signal:ctrl?ctrl.signal:undefined},opts||{});
+    fetch(url,fetchOpts).then(function(r){
       if(!r.ok)throw new Error(r.status);
       return r.text();
     }).then(function(t){
@@ -156,7 +158,8 @@ function loadJSONL(idx){
         .catch(function(){showError('无法加载快照数据，请检查网络后刷新重试')});
       return;
     }
-    fetchWithTimeout(CDN_URLS[i]).then(function(txt){
+    var url=CDN_URLS[i];
+    fetchWithTimeout(url,8000,url.startsWith('http')?{mode:'cors'}:undefined).then(function(txt){
       parseAndRender(idx,txt);
     }).catch(function(){tryNext(i+1)});
   }
@@ -262,7 +265,7 @@ function showError(msg){
 
 function esc(s){
   if(!s)return'';
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 /* ── Init ── */
