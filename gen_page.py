@@ -677,10 +677,10 @@ def turl(ex, sym, fut):
 listing_html = ""
 for i, (ex, url, title, ts, mkt) in enumerate(all_ann):
     listing_html += (
-        f'<div class="news-row">'
+        f'<a class="news-row" href="{esc(url)}" target="_blank" rel="noopener">'
         f'<span class="news-row__title">{esc(title)}</span>'
         f'<span class="news-row__meta"><span class="src">{ex} {mkt}</span><span class="mono">{ft_ts(ts)}</span></span>'
-        f'</div>\n'
+        f'</a>\n'
     )
 
 # 新币 HTML（按实际上线时间过滤 12h）
@@ -773,10 +773,10 @@ if not nl_html:
 hn_html = ""
 for i, s in enumerate(HN_STORIES):
     hn_html += (
-        f'<div class="news-row" data-score="{s["score"]}" data-time="{s["time"]}" data-comments="{s["descendants"]}">'
+        f'<a class="news-row" href="{esc(s["url"])}" target="_blank" rel="noopener" data-score="{s["score"]}" data-time="{s["time"]}" data-comments="{s["descendants"]}">'
         f'<span class="news-row__title">{esc(s["title"])}</span>'
         f'<span class="news-row__meta"><span class="stat up">↑{s["score"]}</span><span class="stat">💬{s["descendants"]}</span><span class="mono">{ft_ts(s["time"])}</span></span>'
-        f'</div>\n'
+        f'</a>\n'
     )
 if not HN_STORIES:
     hn_html = '<div style="padding:12px;color:var(--fg-3);font-size:11px">暂无数据</div>\n'
@@ -797,10 +797,10 @@ for i, n in enumerate(CT_NEWS):
         meta_parts.append(f'<span class="mono">{time_str}</span>')
     meta = "".join(meta_parts)
     news_html += (
-        f'<div class="news-row">'
+        f'<a class="news-row" href="{esc(n["url"])}" target="_blank" rel="noopener">'
         f'<span class="news-row__title">{esc(n["title"])}</span>'
         f'<span class="news-row__meta">{meta}</span>'
-        f'</div>\n'
+        f'</a>\n'
     )
 if not CT_NEWS:
     news_html = '<div style="padding:12px;color:var(--fg-3);font-size:11px">暂无数据</div>\n'
@@ -835,9 +835,9 @@ def _ex_panel(cat, tid, active=False):
                 c = "up" if pct >= 0 else "down"
                 sg = "+" if pct >= 0 else ""
                 if cat == "vol":
-                    h += f'        <div class="ex-row"><div class="ex-row__pair"><a href="{url}" target="_blank">{dp}</a></div><div class="ex-row__right"><span class="ex-row__val {c}">{fmt(vol)}</span><span class="ex-row__sub">{sg}{pct:.2f}%</span></div></div>\n'
+                    h += f'        <a class="ex-row" href="{url}" target="_blank" rel="noopener"><div class="ex-row__pair">{dp}</div><div class="ex-row__right"><span class="ex-row__val {c}">{fmt(vol)}</span><span class="ex-row__sub">{sg}{pct:.2f}%</span></div></a>\n'
                 else:
-                    h += f'        <div class="ex-row"><div class="ex-row__pair"><a href="{url}" target="_blank">{dp}</a></div><div class="ex-row__right"><span class="ex-row__val {c}">{sg}{pct:.2f}%</span><span class="ex-row__sub">{fmt(vol)}</span></div></div>\n'
+                    h += f'        <a class="ex-row" href="{url}" target="_blank" rel="noopener"><div class="ex-row__pair">{dp}</div><div class="ex-row__right"><span class="ex-row__val {c}">{sg}{pct:.2f}%</span><span class="ex-row__sub">{fmt(vol)}</span></div></a>\n'
             h += '      </div></div>\n'
         h += '    </div>\n'
     h += '  </div>\n'
@@ -920,37 +920,47 @@ except Exception:
 print("Pushing to GitHub...", flush=True)
 
 
-def _gh_push(path, content, message):
-    """通过 GitHub Contents API 更新文件。"""
+def _gh_push(path, content, message, _retries=2):
+    """通过 GitHub Contents API 更新文件，409 时自动重试。"""
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}", "User-Agent": "Mozilla/5.0",
                "Accept": "application/vnd.github.v3+json"}
 
-    # 获取当前 SHA
-    sha = None
-    try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=15) as r:
-            sha = json.loads(r.read()).get("sha")
-    except Exception:
-        pass
+    for attempt in range(_retries + 1):
+        # 获取当前 SHA
+        sha = None
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as r:
+                sha = json.loads(r.read()).get("sha")
+        except Exception:
+            pass
 
-    body = {
-        "message": message,
-        "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
-    }
-    if sha:
-        body["sha"] = sha
+        body = {
+            "message": message,
+            "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
+        }
+        if sha:
+            body["sha"] = sha
 
-    try:
-        data = json.dumps(body).encode("utf-8")
-        req = urllib.request.Request(url, data=data, method="PUT",
-                                     headers={**headers, "Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
-            print(f"  {path}: OK ({sha_out})", flush=True)
-    except Exception as e:
-        print(f"  {path}: FAIL - {e}", flush=True)
+        try:
+            data = json.dumps(body).encode("utf-8")
+            req = urllib.request.Request(url, data=data, method="PUT",
+                                         headers={**headers, "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
+                print(f"  {path}: OK ({sha_out})", flush=True)
+                return
+        except urllib.error.HTTPError as e:
+            if e.code == 409 and attempt < _retries:
+                print(f"  {path}: 409 conflict, retry {attempt+1}/{_retries}...", flush=True)
+                time.sleep(1)
+                continue
+            print(f"  {path}: FAIL - {e}", flush=True)
+            return
+        except Exception as e:
+            print(f"  {path}: FAIL - {e}", flush=True)
+            return
 
 
 msg = f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC"
