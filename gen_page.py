@@ -850,24 +850,6 @@ for p in deduped[:10]:
 if not nl_html:
     nl_html = '<div style="padding:8px;color:var(--fg-3);font-size:11px">12h 内暂无新增交易对</div>'
 
-# ── 生成 Cowork artifact（直接用 betanews.html） ──
-try:
-    with open(OUT_FILE, encoding="utf-8") as _f:
-        _betanews = _f.read()
-    _art_json = json.dumps({
-        "name": "Tech Crypto Dashboard",
-        "schemaVersion": 1,
-        "description": f"科技与加密货币仪表盘 · BTC ${btc_p:,.0f}（{btc_c:+.2f}%）· HN {len(HN_STORIES)} 条 · CT {len(CT_NEWS)} 条",
-        "mcpTools": ["mcp__workspace__web_fetch"],
-        "mcpServerNames": ["workspace"]
-    }, ensure_ascii=False)
-    _art = f'<!DOCTYPE html>\n<script type="application/json" id="cowork-artifact-meta">\n{_art_json}\n</script>\n{_betanews}'
-    with open(ARTIFACT_FILE, "w", encoding="utf-8") as _f:
-        _f.write(_art)
-    print(f"Artifact HTML written: {len(_art)} bytes → {ARTIFACT_FILE}", flush=True)
-except Exception as e:
-    print(f"Artifact generation FAIL: {e}", flush=True)
-
 # HN HTML（仅行数据，外层卡片由 template 提供）
 hn_html = ""
 for i, s in enumerate(HN_STORIES):
@@ -1037,6 +1019,22 @@ page = page.replace("{{EX_LOSS}}", _ex_panel("loss", "etab-loss", streaks=streak
 with open(OUT_FILE, "w") as f:
     f.write(page)
 print(f"HTML written: {len(page)} bytes → {OUT_FILE}", flush=True)
+
+# ── 生成 Cowork artifact（在 betanews.html 写入后，确保读到最新数据） ──
+try:
+    _art_json = json.dumps({
+        "name": "Tech Crypto Dashboard",
+        "schemaVersion": 1,
+        "description": f"科技与加密货币仪表盘 · BTC ${btc_p:,.0f}（{btc_c:+.2f}%）· HN {len(HN_STORIES)} 条 · CT {len(CT_NEWS)} 条",
+        "mcpTools": ["mcp__workspace__web_fetch"],
+        "mcpServerNames": ["workspace"]
+    }, ensure_ascii=False)
+    _art = f'<!DOCTYPE html>\n<script type="application/json" id="cowork-artifact-meta">\n{_art_json}\n</script>\n{page}'
+    with open(ARTIFACT_FILE, "w", encoding="utf-8") as _f:
+        _f.write(_art)
+    print(f"Artifact HTML written: {len(_art)} bytes → {ARTIFACT_FILE}", flush=True)
+except Exception as e:
+    print(f"Artifact generation FAIL: {e}", flush=True)
 
 
 # ──────────────────────────────────────────────
