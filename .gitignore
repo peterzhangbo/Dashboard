@@ -1,19 +1,6 @@
 .claude/
 config.json
 __pycache__/
-
-# ── 历史遗留文件（本地保留，不提交 GitHub）──
-protemplate.html
-phase1.py
-phase1.json
-phase2.py
-phase2.json
-phase3.py
-fetch-dashboard-data.sh
-index.html
-_snap_data.json
-ct_news.json
-hn_stories.json
-exchange-freq.json
-HANDOFF-snapshot-template.md
-LOCAL-README.md
+.DS_Store
+_archive/
+gen_page.log

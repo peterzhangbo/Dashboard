@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>科技与加密货币仪表盘 · betaDashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080A;--surface:#121214;--surface-2:#1A1A1C;--surface-3:#232326;
+  --hairline:rgba(255,255,255,0.09);--hairline-2:rgba(255,255,255,0.14);--divider:rgba(255,255,255,0.06);
+  --fg:#fff;--fg-2:rgba(255,255,255,0.66);--fg-3:rgba(255,255,255,0.42);--fg-4:rgba(255,255,255,0.26);
+  --brand:#5227FF;--brand-400:#6C4FFF;--brand-700:#2509B3;--brand-t08:rgba(82,39,255,0.12);--brand-t16:rgba(82,39,255,0.20);
+  --lime:#D1FF55;--up:#1ED760;--up-bg:rgba(20,167,57,0.14);--down:#FF5C42;--down-bg:rgba(233,80,50,0.14);--warning:#FFA940;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:20px;--r-pill:999px;
+  --ease:cubic-bezier(.4,0,.2,1);--dur:.2s;--dur-fast:.12s;
+  --maxw:1440px;--header-h:66px;
+  --mono:'Fira Code','SF Mono',monospace;--sans:'Inter','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased;letter-spacing:-.01em;line-height:1.5}
+body{display:flex;flex-direction:column;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:0}
+.up{color:var(--up)}.down{color:var(--down)}
+
+/* ── Top bar ── */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(8,8,10,0.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--hairline);height:var(--header-h)}
+.topbar__in{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,40px);display:flex;align-items:center;gap:20px;height:100%}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand__txt{min-width:0;display:flex;flex-direction:column}
+.brand__title{font-weight:900;font-size:17px;line-height:1.2;letter-spacing:-.2px;white-space:nowrap}
+.brand__title .accent{color:var(--lime)}
+.brand__sub{font-size:11px;color:var(--fg-3);white-space:nowrap}
+.topbar__spacer{flex:1}
+.topbar__meta{display:flex;align-items:center;gap:14px}
+.live{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--fg-2);white-space:nowrap}
+.live__dot{width:7px;height:7px;border-radius:50%;background:var(--up);animation:pulse 2.2s var(--ease) infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,215,96,0.45)}70%{box-shadow:0 0 0 7px rgba(30,215,96,0)}100%{box-shadow:0 0 0 0 rgba(30,215,96,0)}}
+
+/* ── Snap select ── */
+.snap-select{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;width:120px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.snap-select:hover{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
+.snap-select svg{width:15px;height:15px;flex-shrink:0}
+.snap-select .chev{width:13px;margin-left:auto;transition:transform var(--dur-fast) var(--ease)}
+.snap-select--icon{width:38px;padding:0}
+.snap-wrap{position:relative}
+.snap-wrap.is-open .snap-select{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
+.snap-wrap.is-open .snap-select .chev{transform:rotate(180deg)}
+.snap-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:240px;padding:6px;background:var(--surface);border:1px solid var(--hairline-2);border-radius:var(--r-md);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);max-height:380px;overflow-y:auto}
+.snap-wrap.is-open .snap-menu{opacity:1;transform:none;pointer-events:auto}
+.snap-menu__head{font-size:11px;color:var(--fg-3);padding:6px 10px 4px;text-transform:uppercase;letter-spacing:.4px}
+.snap-menu__item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
+.snap-menu__item:hover{background:var(--surface-2);color:var(--fg)}
+
+/* ── Shell ── */
+.shell{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,40px)}
+
+/* ── Section head ── */
+.section__head{position:sticky;top:var(--header-h);bottom:0;z-index:20;background:var(--bg);display:flex;align-items:center;gap:12px;margin-top:clamp(14px,2.2vw,24px);margin-bottom:6px;padding:0;height:var(--header-h)}
+.section__title{font-size:19px;font-weight:900;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}
+.section__title .bar{width:4px;height:18px;border-radius:2px;background:var(--lime);transition:box-shadow .4s var(--ease)}
+.section__title .bar.is-active{box-shadow:0 0 6px 1px rgba(209,255,85,0.55),0 0 14px 3px rgba(209,255,85,0.25)}
+.section__sub{font-size:12px;color:var(--fg-3);font-weight:400}
+.section__count{font-size:12px;color:var(--fg-3);font-weight:600}
+.grow{flex:1}
+
+/* ── Card ── */
+.card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl);display:flex;flex-direction:column}
+.card__head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--divider)}
+.feeds .card__head{height:60px;overflow:hidden;flex-shrink:0}
+.feeds .card__head>.tabs{margin-left:auto}
+.card__title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:9px;line-height:1.4}
+.card__title svg{width:16px;height:16px;flex-shrink:0}
+
+/* ── Feed tabs ── */
+.tabs{display:inline-flex;gap:2px;padding:3px;margin-left:auto;background:var(--surface-3);border-radius:var(--r-pill)}
+.tab{font-size:12px;font-weight:600;color:var(--fg-3);padding:5px 12px;border-radius:var(--r-pill);transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);white-space:nowrap;cursor:pointer;border:none;background:transparent}
+.tab.is-on{background:var(--brand);color:#fff}
+.tab:hover:not(.is-on){color:var(--fg)}
+
+/* ── News row ── */
+.feed__list{overflow-y:auto;flex:1;min-height:0;padding:6px}
+.news-row{display:flex;flex-direction:column;gap:6px;padding:11px 12px;min-height:85px;border-radius:var(--r-md);transition:background var(--dur-fast) var(--ease);cursor:pointer}
+.news-row+.news-row{border-top:1px solid var(--divider)}
+.news-row:hover{background:var(--surface-2)}
+.news-row__title{font-size:13.5px;line-height:1.4;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.4em * 2)}
+.news-row__title:hover{color:var(--brand)}
+.news-row__meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--fg-3);min-height:16px;flex-wrap:nowrap}
+.news-row__meta .stat{display:inline-flex;align-items:center;gap:3px}
+.news-row__meta .stat svg{width:12px;height:12px;flex-shrink:0}
+.news-row__meta .stat.up{color:var(--up)}
+.news-row__meta .src{color:var(--fg-2);font-weight:600;padding:1px 7px;border-radius:var(--r-pill);background:var(--surface-3)}
+
+/* ── Feeds grid ── */
+.feeds{display:grid;gap:clamp(14px,1.6vw,20px);grid-template-columns:repeat(3,minmax(0,1fr))}
+
+/* ── 12h Listings ── */
+.listings-grid{display:grid;gap:clamp(12px,1.4vw,16px);grid-template-columns:repeat(3,minmax(0,1fr))}
+.list-pill{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r-md);background:var(--surface-2);border:1px solid var(--hairline);transition:all var(--dur-fast) var(--ease);text-decoration:none}
+.list-pill:hover{border-color:var(--hairline-2);background:var(--surface-2)}
+.lst__main{display:flex;flex-direction:column;gap:4px;min-width:0}
+.lst__pair{font-family:var(--mono);font-weight:800;font-size:14px}
+.lst__pair .q{color:var(--fg-3);font-weight:400}
+.lst__1h{display:flex;align-items:center;gap:8px;font-size:12px}
+.lst__vol{color:var(--fg-3)}
+.lst__aside{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-left:auto}
+.lst__ex{font-size:12px;font-weight:600;color:var(--fg-2);display:inline-flex;align-items:center;gap:6px}
+.lst__mkt{font-size:10px;font-weight:800;padding:1px 7px;border-radius:var(--r-pill)}
+.lst__mkt.is-perp{background:var(--brand-t08);color:var(--brand-400)}
+.lst__mkt.is-spot{background:var(--up-bg);color:var(--up)}
+.lst__time{font-family:var(--mono);font-size:11px;color:var(--fg-3)}
+
+/* ── Segmented control ── */
+.seg{display:inline-flex;padding:3px;gap:2px;background:var(--surface-3);border-radius:var(--r-md);border:1px solid var(--hairline);height:38px;align-items:center}
+.seg button{font-size:13px;font-weight:600;color:var(--fg-3);padding:7px 16px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)}
+.seg button svg{width:14px;height:14px;flex-shrink:0}
+.seg button.is-on{background:var(--lime);color:#1A1A1A}
+.seg button:hover:not(.is-on){color:var(--fg)}
+.seg#segMetric button.is-on{background:var(--brand);color:#fff}
+.seg#segMetric button[data-metric="gain"].is-on{background:var(--up);color:#07210F}
+.seg#segMetric button[data-metric="loss"].is-on{background:var(--down);color:#fff}
+
+/* ── Exchange monitor ── */
+.ex-panel{display:none}
+.ex-panel.is-active{display:block}
+.ex-panel.is-active .ex-block__label:not(:first-child){margin-top:clamp(18px,2.2vw,26px)}
+.ex-grid{display:flex;flex-direction:column;gap:clamp(18px,2.2vw,26px)}
+.ex-block__label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--fg-2);margin-bottom:11px}
+.ex-block__label .dot-sm{width:6px;height:6px;border-radius:50%;display:inline-block}
+.ex-block__label.is-perp .dot-sm{background:var(--brand)}
+.ex-block__label.is-spot .dot-sm{background:var(--up)}
+.ex-block__grid{display:grid;gap:clamp(12px,1.4vw,16px);grid-template-columns:repeat(4,minmax(0,1fr))}
+.ex-card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);overflow:hidden}
+.ex-card__head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--divider)}
+.ex-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ex-logo svg{width:18px;height:18px}
+.ex-logo.bn{background:#F0B90B}.ex-logo.okx{background:#000}.ex-logo.bg{background:#00C2C1}.ex-logo.bb{background:#F7A600}
+.ex-card__name{font-size:14px;font-weight:700}
+.ex-rows{padding:5px}
+.ex-row{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;padding:9px 10px;border-radius:var(--r-sm);transition:background var(--dur-fast) var(--ease)}
+.ex-row:hover{background:var(--surface-2)}
+.ex-row__pair{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;min-width:0}
+.ex-row__pair a{color:var(--fg)}
+.ex-row__pair a:hover{color:var(--brand)}
+.ex-row__pair .q{color:var(--fg-3);font-weight:500}
+.streak{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:800;padding:2px 7px 2px 5px;border-radius:var(--r-pill);color:#fff;background:var(--brand);border:none;vertical-align:middle;line-height:1}
+.streak svg{width:12px;height:12px;flex-shrink:0}
+.ex-row__right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.ex-row__val{font-size:13px;font-weight:700;font-family:var(--mono)}
+.ex-row__sub{font-size:10.5px;color:var(--fg-3);font-family:var(--mono)}
+
+/* ── Footer ── */
+.foot{margin-top:40px;padding:22px 0;border-top:1px solid var(--hairline);display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--fg-3)}
+.foot .srcs{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center}
+.foot .srcs span{padding:2px 10px;border-radius:var(--r-pill);background:var(--surface-2);font-size:11px}
+.foot .grow{flex:1}
+.foot__info{display:inline-flex;align-items:center;gap:8px;flex-wrap:nowrap}
+
+/* ── Modal ── */
+.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;justify-content:center;align-items:center}
+.scrim.is-open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:580px;width:90%;max-height:80vh;overflow-y:auto}
+.modal__head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--divider)}
+.modal__head h2{font-size:17px;font-weight:900;display:flex;align-items:center;gap:10px}
+.modal__head h2 .bar{width:4px;height:16px;border-radius:2px;background:var(--lime)}
+.modal__close{width:38px;height:38px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);display:grid;place-items:center}
+.modal__close:hover{background:var(--surface-2);color:var(--fg)}
+.modal__close svg{width:18px;height:18px}
+.modal__body{padding:20px 24px}
+.modal__body h4{font-size:12px;font-weight:700;color:var(--brand-400);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.3px}
+.modal__body li{font-size:12px;color:var(--fg-2);line-height:1.7;margin-bottom:4px}
+.modal__body ul{padding-left:18px;margin-bottom:10px}
+.modal__body code{font-family:var(--mono);font-size:11px;background:var(--surface-3);padding:2px 6px;border-radius:var(--r-sm)}
+
+/* ── Responsive ── */
+@media(max-width:1100px){
+  .feeds{grid-template-columns:1fr}
+  .ex-block__grid{grid-template-columns:1fr 1fr}
+  .listings-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .feeds .card__head{min-height:0}
+}
+@media(max-width:760px){
+  .topbar__in{gap:10px;padding:0 16px;flex-wrap:nowrap}
+  .ex-block__grid{grid-template-columns:1fr}
+  .listings-grid{grid-template-columns:1fr}
+  .brand__sub{display:none}
+  .brand__title{font-size:15px}
+  .live{font-size:11px}
+  .live__prefix{display:none}
+  .snap-select:not(.snap-select--icon){min-width:0;width:auto}
+  .snap-select span:not(.chev){display:none}
+  .snap-menu{width:min(78vw,260px)}
+  .section__title{font-size:17px}
+  .feeds .card__head{flex-wrap:wrap}
+  .feeds .card__head{height:auto;overflow:visible}
+  #head-monitor{row-gap:10px}
+  #head-feeds .section__sub,#head-monitor .section__sub{display:none}
+  .seg button{padding:8px 6px}
+  .foot{flex-wrap:wrap;align-items:center;gap:6px 8px}
+  .foot .grow{display:none}
+  .foot .srcs{flex-wrap:nowrap}
+}
+@media(max-width:420px){
+  .news-row__meta{gap:7px}
+  .lst__1h{flex-wrap:wrap;gap:4px 8px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__in">
+    <a class="brand" href="#">
+      <span class="brand__txt">
+        <span class="brand__title">科技与加密货币<span class="accent">仪表盘</span></span>
+        <span class="brand__sub">Tech &amp; Crypto Monitor · beta</span>
+      </span>
+    </a>
+    <span class="topbar__spacer"></span>
+    <div class="topbar__meta">
+      <span class="live"><span class="live__dot"></span><span class="live__prefix">更新于 </span><span class="live__time" data-utc="{{TIME}}">{{TIME}} UTC</span></span>
+      <span class="snap-wrap" id="snap-wrap">
+        <button class="snap-select" onclick="toggleSnap()" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+          <span>历史快照</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+        </button>
+        <div class="snap-menu" id="snap-menu"></div>
+      </span>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+
+<div class="section__head" id="head-listings">
+  <h2 class="section__title"><span class="bar"></span>12h 内上线 · 1h 成交额 · 1h 涨跌幅</h2>
+  <span class="section__count" id="listings-count"></span>
+</div>
+<div id="block-listings">
+  <div class="listings-grid" id="list-grid">
+{{NL_HTML}}
+  </div>
+</div>
+
+<div class="section__head" id="head-feeds">
+  <h2 class="section__title"><span class="bar"></span>行业资讯</h2>
+  <span class="section__sub">新币上线 · Hacker News · 行业热点</span>
+</div>
+<div class="feeds">
+  <div class="card">
+    <div class="card__head"><span class="card__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>新币上线</span></div>
+    <div class="feed__list">{{LISTING_HTML}}</div>
+  </div>
+  <div class="card" id="hn-card">
+    <div class="card__head">
+      <span class="card__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>Hacker News</span>
+      <div class="tabs" id="hn-tabs">
+        <button class="tab is-on" onclick="sortHN('score')">最热</button>
+        <button class="tab" onclick="sortHN('time')">最新</button>
+        <button class="tab" onclick="sortHN('comments')">评论</button>
+      </div>
+    </div>
+    <div class="feed__list" id="hn-list">{{HN_ROWS}}</div>
+  </div>
+  <div class="card">
+    <div class="card__head"><span class="card__title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>行业热点</span></div>
+    <div class="feed__list">{{NEWS_ROWS}}</div>
+  </div>
+</div>
+
+<div class="section__head" id="head-monitor">
+  <h2 class="section__title"><span class="bar"></span>竞品监控</h2>
+  <span class="section__sub">Binance · OKX · Bitget · Bybit</span>
+  <div class="seg" id="segMetric">
+    <button class="is-on" data-metric="vol" onclick="switchExTab('vol')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><rect x="7" y="11" width="3" height="6"></rect><rect x="12" y="7" width="3" height="10"></rect><rect x="17" y="13" width="3" height="4"></rect></svg>1h 成交额</button>
+    <button data-metric="gain" onclick="switchExTab('gain')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg>1h 涨幅</button>
+    <button data-metric="loss" onclick="switchExTab('loss')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"></path><path d="M14 17h7v-7"></path></svg>1h 跌幅</button>
+  </div>
+  <span class="grow"></span>
+  <button class="snap-select snap-select--icon" onclick="openMethod()" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+  </button>
+</div>
+<div class="card" style="padding:18px">
+  <div class="ex-grid">
+{{EX_VOL}}
+{{EX_GAIN}}
+{{EX_LOSS}}
+  </div>
+</div>
+
+<footer class="foot">
+  <span class="foot__info"><span>数据来源</span><span class="srcs"><span>Binance</span><span>OKX</span><span>Bitget</span><span>Bybit</span><span>Cointelegraph</span><span>Hacker News</span></span></span>
+  <span class="grow"></span>
+  <span>© 2026 · Peter · 每小时更新</span>
+</footer>
+
+</main>
+
+<div class="scrim" id="method-modal">
+  <div class="modal">
+    <div class="modal__head">
+      <h2><span class="bar"></span>竞品监控 · 统计方法说明</h2>
+      <button class="modal__close" onclick="closeMethod()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+    </div>
+    <div class="modal__body">
+      <h4>数据筛选</h4><ul><li>按 24h ticker 成交额排序，现货各取前 <b>200</b> 名，合约各取前 <b>100</b> 名</li><li>仅保留 USDT 计价对</li><li>排除大市值币（BTC、ETH、SOL、BNB、XRP 等 44 项）、稳定币（USDT、USDC、BUSD 等）、杠杆代币（UP/DOWN/BULL/BEAR）、法币对（TRY、IDR、EUR 等 16 项）</li><li>若有效数据不足 100 个，自动追加下一批 200 条候选并重新拉取 K线，最多补偿 8 轮</li></ul>
+      <h4>计算方法</h4><ul><li>取最近 2 根 1H K线，使用倒数第二根（最近已收盘）那根计算涨跌幅和成交额</li><li>涨跌幅 = <code>(收盘 − 开盘) / 开盘 × 100%</code>（单根 K线内涨跌幅）</li><li>成交额 = quote 计价成交量（USDT），若 quote 成交量为 0 则 fallback 为 base_volume × close_price</li><li>K线不足 2 根或成交额为 0 时排除该币对</li></ul>
+      <h4>榜单规则</h4><ul><li>三种榜单统计相互独立，不跨榜累计</li><li>连续在榜会在其后标注近期在榜次数（×N 徽标）</li></ul>
+      <h4>更新频率</h4><ul><li>所有数据每小时自动更新</li></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Section head click-to-anchor ── */
+document.querySelectorAll('.section__head').forEach(function(head){
+  head.style.cursor='pointer';
+  head.addEventListener('click',function(e){
+    if(e.target.closest('.seg')||e.target.closest('.snap-select')||e.target.closest('button'))return;
+    var next=head.nextElementSibling;
+    if(next){
+      var top=next.getBoundingClientRect().top+window.scrollY-parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'))-head.offsetHeight;
+      window.scrollTo({top:top,behavior:'smooth'});
+    }
+  });
+});
+
+function switchExTab(id){
+  var btns=document.querySelectorAll('#segMetric button');
+  btns.forEach(function(b){b.classList.remove('is-on')});
+  var map={vol:0,gain:1,loss:2};
+  if(map[id]!==undefined)btns[map[id]].classList.add('is-on');
+  document.querySelectorAll('.ex-panel').forEach(function(p){
+    p.classList.toggle('is-active',p.id==='etab-'+id);
+  });
+}
+function sortHN(key){
+  var labels={score:'最热',time:'最新',comments:'评论'};
+  document.querySelectorAll('#hn-tabs .tab').forEach(function(b){b.classList.toggle('is-on',b.textContent===labels[key])});
+  var list=document.getElementById('hn-list');
+  var items=Array.from(list.querySelectorAll('.news-row'));
+  items.sort(function(a,b){return(parseInt(b.dataset[key])||0)-(parseInt(a.dataset[key])||0)});
+  items.forEach(function(item){list.appendChild(item)});
+}
+(function(){
+  var now=Math.floor(Date.now()/1000);
+  var grid=document.getElementById('list-grid');
+  var block=document.getElementById('block-listings');
+  var head=document.getElementById('head-listings');
+  if(!grid)return;
+  var items=Array.from(grid.querySelectorAll('.list-pill'));
+  var count=0;
+  items.forEach(function(el){var ts=parseInt(el.dataset.ts)||0;if(ts&&now-ts>12*3600){el.remove()}else{count++}});
+  document.getElementById('listings-count').textContent=count+' 个新交易对';
+  if(!count){block.style.display='none';head.style.display='none'}
+})();
+/* 基于页面显示的更新时间 + 65 分钟后自动刷新 */
+(function(){
+  var hdr=document.querySelector('.live__time');
+  if(!hdr||!hdr.dataset.utc)return;
+  var parts=hdr.dataset.utc.split(' ');
+  var updateMs=new Date(parts[0]+'T'+parts[1]+':00Z').getTime();
+  var reloadMs=updateMs+65*60*1000;
+  var delay=reloadMs-Date.now();
+  if(delay>0)setTimeout(function(){location.reload()},delay);
+})();
+function openMethod(){document.getElementById('method-modal').classList.add('is-open')}
+function closeMethod(){document.getElementById('method-modal').classList.remove('is-open')}
+var snapshots=[];
+function toggleSnap(){var w=document.getElementById('snap-wrap');w.classList.toggle('is-open');if(w.classList.contains('is-open')&&!snapshots.length)loadSnaps()}
+function loadSnaps(){
+  var menu=document.getElementById('snap-menu');
+  menu.innerHTML='<div style="padding:12px;color:var(--fg-3);font-size:11px">加载中...</div>';
+  var REPO='peterzhangbo/Dashboard';
+  var urls=[
+    'dashboard-snapshots.jsonl',
+    'https://cdn.jsdelivr.net/gh/'+REPO+'@main/dashboard-snapshots.jsonl',
+    'https://fastly.jsdelivr.net/gh/'+REPO+'@main/dashboard-snapshots.jsonl',
+    'https://gcore.jsdelivr.net/gh/'+REPO+'@main/dashboard-snapshots.jsonl'
+  ];
+  function tryNext(i){
+    if(i>=urls.length){
+      fetch('https://api.github.com/repos/'+REPO+'/contents/dashboard-snapshots.jsonl',{headers:{'Accept':'application/vnd.github.v3.raw'},mode:'cors'})
+        .then(function(r){if(!r.ok)throw new Error('GitHub API '+r.status);return r.text()}).then(parseSnaps)
+        .catch(function(e){console.error('Snapshot load failed:',e);menu.innerHTML='<div style="padding:12px;color:var(--fg-3);font-size:11px">加载失败，请刷新重试</div>'});
+      return;
+    }
+    fetch(urls[i],{mode:urls[i].startsWith('http')?'cors':'same-origin'}).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return r.text();
+    }).then(parseSnaps).catch(function(e){console.warn('CDN '+(i+1)+' failed:',e);tryNext(i+1)});
+  }
+  tryNext(0);
+}
+function parseSnaps(txt){
+  snapshots=[];
+  txt.trim().split('\n').forEach(function(l){try{var o=JSON.parse(l);if(o.ts)snapshots.push(o)}catch(e){}});
+  snapshots.reverse();
+  var menu=document.getElementById('snap-menu');
+  if(!snapshots.length){menu.innerHTML='<div style="padding:12px;color:var(--fg-3);font-size:11px">暂无快照</div>';return}
+  menu.innerHTML='';
+  snapshots.forEach(function(s,idx){
+    var d=new Date(s.ts);
+    var t=document.createElement('div');
+    t.className='snap-menu__item';
+    var btcStr='';
+    if(s.btc)btcStr=' · $'+Number(s.btc.price).toLocaleString()+' '+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%';
+    t.innerHTML='<span style="font-family:var(--mono);font-weight:500">'+d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span><span>'+btcStr+'</span>';
+    t.onclick=function(){openSnapPage(idx)};
+    menu.appendChild(t);
+  });
+}
+function openSnapPage(idx){document.getElementById('snap-wrap').classList.remove('is-open');window.open('snapshot.html#'+idx,'_blank')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snap-wrap'))document.getElementById('snap-wrap').classList.remove('is-open');if(e.target===document.getElementById('method-modal'))closeMethod()});
+
+/* ── 本地时区转换 ── */
+(function(){
+  var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var offset=-new Date().getTimezoneOffset();
+  var sign=offset>=0?'+':'';
+  var totalMin=Math.abs(offset);
+  var h=Math.floor(totalMin/60);
+  var m=totalMin%60;
+  var label=m>0?sign+h+':'+String(m).padStart(2,'0'):sign+h;
+  document.querySelectorAll('time[data-epoch]').forEach(function(el){
+    var d=new Date(parseInt(el.dataset.epoch)*1000);
+    el.textContent=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz});
+  });
+  var hdr=document.querySelector('.live__time');
+  if(hdr&&hdr.dataset.utc){
+    var parts=hdr.dataset.utc.split(' ');
+    var dt=new Date(parts[0]+'T'+parts[1]+':00Z');
+    var mobile=window.innerWidth<=760;
+    if(mobile){
+      hdr.textContent=dt.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz})+' (UTC'+label+')';
+    }else{
+      hdr.textContent=dt.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:tz})+' (UTC'+label+')';
+    }
+  }
+})();
+
+/* ── Scroll spy: section head bar glow ── */
+(function(){
+  var headerH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'))||66;
+  var heads=document.querySelectorAll('.section__head');
+  function update(){
+    var threshold=headerH+2;
+    var atBottom=(window.innerHeight+window.scrollY)>=document.body.scrollHeight-2;
+    var last=null;
+    heads.forEach(function(h){
+      var rect=h.getBoundingClientRect();
+      if(threshold>=rect.top&&threshold<=rect.bottom+200)last=h;
+    });
+    if(atBottom)last=heads[heads.length-1]||null;
+    heads.forEach(function(h){
+      var bar=h.querySelector('.bar');
+      if(bar)bar.classList.toggle('is-active',h===last);
+    });
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  update();
+})();
+</script>
+</body>
+</html>
