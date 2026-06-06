@@ -585,15 +585,43 @@ def _fetch_hn_detail(sid):
         return None
 
 
+def _fetch_hn_algolia():
+    """Algolia 备选：单次请求拿 front page，不走 Firebase。"""
+    try:
+        data = fetch_json(
+            "https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=15",
+            timeout=8)
+        results = []
+        for h in data.get("hits", [])[:15]:
+            title = h.get("title", "")
+            if not title:
+                continue
+            results.append({
+                "title": title,
+                "score": h.get("points", 0),
+                "descendants": h.get("num_comments", 0),
+                "time": int(h.get("created_at_i", 0)),
+                "url": h.get("url") or f"https://news.ycombinator.com/item?id={h.get('objectID')}",
+            })
+        results.sort(key=lambda x: -x["score"])
+        return results[:8]
+    except Exception:
+        return []
+
+
 def _fetch_hn():
+    # 先试 Firebase
     try:
         ids = fetch_json("https://hacker-news.firebaseio.com/v0/topstories.json", timeout=5)
         with ThreadPoolExecutor(max_workers=10) as pool:
             results = [r for r in pool.map(_fetch_hn_detail, ids[:15]) if r and r["title"]]
         results.sort(key=lambda x: -x["score"])
-        return results[:8]
+        if results:
+            return results[:8]
     except Exception:
-        return []
+        pass
+    # Firebase 失败，切 Algolia
+    return _fetch_hn_algolia()
 
 
 def _fetch_ct():
