@@ -179,6 +179,7 @@ function parseAndRender(idx,txt){
 }
 
 function renderSnap(s,idx,total){
+  _curIdx=idx; _totalSnaps=total;
   var d=new Date(s.ts);
   var timeStr=d.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
   var btc=s.btc||{};
@@ -193,8 +194,11 @@ function renderSnap(s,idx,total){
   /* Header */
   h+='<div class="header">';
   h+='<h1><span class="bar"></span>历史快照</h1>';
+  h+='<div style="display:flex;align-items:center;gap:10px">';
+  h+='<button id="btn-prev" onclick="navSnap(1)" style="font-size:12px;color:var(--fg-3);padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s" onmouseover="this.style.color=\'var(--fg)\';this.style.borderColor=\'var(--brand)\'" onmouseout="this.style.color=\'var(--fg-3)\';this.style.borderColor=\'var(--border)\'"'+(idx<=0?' disabled style="opacity:.3;cursor:not-allowed"':'')+'>← 上一条</button>';
+  h+='<button id="btn-next" onclick="navSnap(-1)" style="font-size:12px;color:var(--fg-3);padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s" onmouseover="this.style.color=\'var(--fg)\';this.style.borderColor=\'var(--brand)\'" onmouseout="this.style.color=\'var(--fg-3)\';this.style.borderColor=\'var(--border)\'"'+(idx>=total-1?' disabled style="opacity:.3;cursor:not-allowed"':'')+'>下一条 →</button>';
   h+='<a class="back-link" href="betanews.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回主页</a>';
-  h+='</div>';
+  h+='</div></div>';
 
   /* Timestamp */
   h+='<div style="margin-bottom:20px;font-size:12px;color:var(--fg-3)">快照时间：<span style="color:var(--fg);font-family:var(--mono);font-weight:600">'+timeStr+'</span>';
@@ -266,6 +270,15 @@ function showError(msg){
 function esc(s){
   if(!s)return'';
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ── Navigation ── */
+var _allSnaps=[], _curIdx=0, _totalSnaps=0;
+function navSnap(dir){
+  var newIdx=_curIdx-dir;
+  if(newIdx<0||newIdx>=_totalSnaps)return;
+  location.hash=newIdx;
+  location.reload();
 }
 
 /* ── Init ── */
