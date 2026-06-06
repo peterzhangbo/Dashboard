@@ -13,10 +13,12 @@ Dashboard Generator — All-in-one script.
 8. 追加 JSONL 快照，清理 7 天前旧快照
 9. 推送 GitHub
 """
-import json, urllib.request, urllib.parse, os, re, time, base64, threading, html, xml.etree.ElementTree as ET
+import json, urllib.request, urllib.parse, os, re, time, base64, threading, html, ssl, xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+_SSL_CTX = ssl.create_default_context()
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 SNAP_FILE = os.path.join(DATA_DIR, "exchange-pairs-snapshot.json")
@@ -35,6 +37,7 @@ if os.path.exists(CONFIG_FILE):
     with open(CONFIG_FILE) as _f:
         _cfg = json.load(_f)
 GITHUB_REPO = _cfg.get("github_repo", "peterzhangbo/Dashboard")
+GITHUB_TOKEN = _cfg.get("github_token", "")
 
 EXCLUDE = {
     "BTC","ETH","SOL","BNB","XRP","ADA","DOGE","AVAX","DOT","LINK","MATIC","POL",
@@ -51,10 +54,16 @@ LEV_RE = re.compile(r'(UP|DOWN|BULL|BEAR)(USDT|BTC|ETH|BNB)$', re.IGNORECASE)
 # 工具函数
 # ──────────────────────────────────────────────
 
-def fetch_json(url, timeout=5):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.loads(r.read())
+def fetch_json(url, timeout=8, retries=2):
+    for i in range(retries + 1):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=timeout, context=_SSL_CTX) as r:
+                return json.loads(r.read())
+        except Exception:
+            if i == retries:
+                raise
+            time.sleep(1)
 
 
 def base_of(s):
@@ -263,14 +272,14 @@ S_USDT = {
 }
 
 S = {
-    "bn_s": _rank(bn_st, "symbol", "quoteVolume", 200, S_USDT["bn_s"]),
-    "bn_f": _rank(bn_ft, "symbol", "quoteVolume", 100, S_USDT["bn_f"]),
-    "okx_s": _rank(okx_st, "instId", "volCcy24h", 200, S_USDT["okx_s"]),
-    "okx_f": _rank(okx_ft, "instId", "volCcy24h", 100, S_USDT["okx_f"]),
-    "bg_s": _rank(bg_st, "symbol", "quoteVolume", 200, S_USDT["bg_s"]),
-    "bg_f": _rank(bg_ft, "symbol", "usdtVolume", 100, S_USDT["bg_f"]),
-    "bb_s": _rank(bb_st, "symbol", "turnover24h", 200, S_USDT["bb_s"]),
-    "bb_f": _rank(bb_ft, "symbol", "turnover24h", 100, S_USDT["bb_f"]),
+    "bn_s": _rank(bn_st, "symbol", "quoteVolume", 140, S_USDT["bn_s"]),
+    "bn_f": _rank(bn_ft, "symbol", "quoteVolume", 70, S_USDT["bn_f"]),
+    "okx_s": _rank(okx_st, "instId", "volCcy24h", 140, S_USDT["okx_s"]),
+    "okx_f": _rank(okx_ft, "instId", "volCcy24h", 70, S_USDT["okx_f"]),
+    "bg_s": _rank(bg_st, "symbol", "quoteVolume", 140, S_USDT["bg_s"]),
+    "bg_f": _rank(bg_ft, "symbol", "usdtVolume", 70, S_USDT["bg_f"]),
+    "bb_s": _rank(bb_st, "symbol", "turnover24h", 140, S_USDT["bb_s"]),
+    "bb_f": _rank(bb_ft, "symbol", "turnover24h", 70, S_USDT["bb_f"]),
 }
 
 
@@ -319,7 +328,7 @@ def _parse_kline(ex, sym):
     if is_okx:
         _okx_sem.acquire()
     try:
-        d = fetch_json(url, timeout=5)
+        d = fetch_json(url, timeout=8)
         if ex.startswith("okx"):
             kl = d.get("data", [])
         elif ex.startswith("bb"):
@@ -447,15 +456,16 @@ _TICK_KEY = {
     "bb_s": ("symbol", "turnover24h"), "bb_f": ("symbol", "turnover24h"),
 }
 
-补偿轮数 = 0
+retry_round = 0
 for ex_key in list(S.keys()):
-    已有效 = sum(1 for s in S[ex_key] if (ex_key, s) in R)
-    if 已有效 >= 100:
+    valid_count = sum(1 for s in S[ex_key] if (ex_key, s) in R)
+    threshold = 100 if ex_key.endswith("_s") else 60
+    if valid_count >= threshold:
         continue
-    n_target = 200 if ex_key.endswith("_s") else 100
-    补偿轮数 = 0
-    while 已有效 < n_target and 补偿轮数 < 8:
-        补偿轮数 += 1
+    n_target = 140 if ex_key.endswith("_s") else 70
+    retry_round = 0
+    while valid_count < n_target and retry_round < 8:
+        retry_round += 1
         offset = len(S[ex_key])
         new_syms = _rank(_TICKERS[ex_key], *_TICK_KEY[ex_key], n_target, S_USDT[ex_key], offset=offset)
         if not new_syms:
@@ -473,8 +483,8 @@ for ex_key in list(S.keys()):
                     result = f.result()
                     if result:
                         R[(ek, sm)] = result
-        已有效 = sum(1 for s in S[ex_key] if (ex_key, s) in R)
-        print(f"  补偿 {ex_key}: 第{补偿轮数}轮, 新增{len(new_syms)}, 有效{已有效}/{n_target}", flush=True)
+        valid_count = sum(1 for s in S[ex_key] if (ex_key, s) in R)
+        print(f"  补偿 {ex_key}: 第{retry_round}轮, 新增{len(new_syms)}, 有效{valid_count}/{n_target}", flush=True)
 
 
 def _rk(ex, syms, by="vol", n=3):
@@ -589,7 +599,7 @@ def _fetch_hn():
 def _fetch_ct():
     try:
         req = urllib.request.Request("https://cointelegraph.com/rss", headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=15) as r:
+        with urllib.request.urlopen(req, timeout=8, context=_SSL_CTX) as r:
             rss = r.read().decode("utf-8")
         root = ET.fromstring(rss)
         news = []
@@ -631,7 +641,7 @@ def _translate_batch(texts):
         q = urllib.parse.quote(joined)
         url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q={q}"
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=15) as r:
+        with urllib.request.urlopen(req, timeout=5, context=_SSL_CTX) as r:
             data = json.loads(r.read())
         full = "".join(seg[0] for seg in data[0] if seg[0])
         parts = [p.strip() for p in full.split("|||")]
@@ -1087,6 +1097,9 @@ print("Pushing to GitHub...", flush=True)
 
 def _gh_push(path, content, message, _retries=2):
     """通过 GitHub Contents API 更新文件，409 时自动重试。"""
+    if not GITHUB_TOKEN:
+        print(f"  {path}: SKIP (no token)", flush=True)
+        return
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}", "User-Agent": "Mozilla/5.0",
                "Accept": "application/vnd.github.v3+json"}
@@ -1096,7 +1109,7 @@ def _gh_push(path, content, message, _retries=2):
         sha = None
         try:
             req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=15) as r:
+            with urllib.request.urlopen(req, timeout=8, context=_SSL_CTX) as r:
                 sha = json.loads(r.read()).get("sha")
         except Exception:
             pass
@@ -1112,7 +1125,7 @@ def _gh_push(path, content, message, _retries=2):
             data = json.dumps(body).encode("utf-8")
             req = urllib.request.Request(url, data=data, method="PUT",
                                          headers={**headers, "Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as r:
                 sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
                 print(f"  {path}: OK ({sha_out})", flush=True)
                 return
@@ -1146,3 +1159,25 @@ with ThreadPoolExecutor(max_workers=5) as ex_pool:
 print("\n=== Done ===")
 print(f"BTC: ${btc_p:,.0f} ({btc_c:+.2f}%)  Supply: {btc_supply:,.0f}")
 print(f"Klines: {len(R)} valid  New: {len(new_pairs)}  Ann: {len(all_ann)}  HN: {len(HN_STORIES)}  CT: {len(CT_NEWS)}")
+
+# 写入执行结果 log
+_log_path = os.path.join(DATA_DIR, "gen_page.log")
+try:
+    _ex_status = {
+        "Binance spot": len(bn_st), "Binance fut": len(bn_ft),
+        "OKX spot": len(okx_st), "OKX fut": len(okx_ft),
+        "Bitget spot": len(bg_st), "Bitget fut": len(bg_ft),
+        "Bybit spot": len(bb_st), "Bybit fut": len(bb_ft),
+    }
+    _failed = [k for k, v in _ex_status.items() if v == 0]
+    _ok = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    with open(_log_path, "w") as _lf:
+        _lf.write(f"ts: {_ok}\n")
+        _lf.write(f"btc: ${btc_p:,.0f} ({btc_c:+.2f}%)\n")
+        _lf.write(f"tickers: {'OK' if not _failed else 'PARTIAL' if len(_failed) < 8 else 'FAIL'}\n")
+        for _k, _v in _ex_status.items():
+            _lf.write(f"  {_k}: {'FAIL' if _v == 0 else _v}\n")
+        _lf.write(f"klines: {len(R)} valid  new: {len(new_pairs)}\n")
+        _lf.write(f"ann: {len(all_ann)}  hn: {len(HN_STORIES)}  ct: {len(CT_NEWS)}\n")
+except Exception:
+    pass
