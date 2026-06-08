@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "exchange": "bn",
+    "symbol": "BXUSDT",
+    "market": "fut",
+    "listing_time": 1780876800,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bn",
+    "symbol": "HPEUSDT",
+    "market": "fut",
+    "listing_time": 1780876800,
+    "change": 0,
+    "volume": 0
+  }
+]
