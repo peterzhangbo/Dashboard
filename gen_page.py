@@ -156,20 +156,23 @@ def _fetch(label, url, postprocess=None):
         print(f"  {label} FAIL: {e}", flush=True)
         return []
 
-bn_st = _fetch("Binance spot", "https://api.binance.com/api/v3/ticker/24hr")
-bn_ft = _fetch("Binance fut", "https://fapi.binance.com/fapi/v1/ticker/24hr")
-okx_st = _fetch("OKX spot", "https://www.okx.com/api/v5/market/tickers?instType=SPOT",
-                lambda d: d.get("data", []))
-okx_ft = _fetch("OKX fut", "https://www.okx.com/api/v5/market/tickers?instType=SWAP",
-                lambda d: d.get("data", []))
-bg_st = _fetch("Bitget spot", "https://api.bitget.com/api/v2/spot/market/tickers",
-               lambda d: d.get("data", []))
-bg_ft = _fetch("Bitget fut", "https://api.bitget.com/api/v2/mix/market/tickers?productType=USDT-FUTURES",
-               lambda d: d.get("data", []))
-bb_st = _fetch("Bybit spot", "https://api.bybit.com/v5/market/tickers?category=spot",
-               lambda d: d.get("result", {}).get("list", []))
-bb_ft = _fetch("Bybit fut", "https://api.bybit.com/v5/market/tickers?category=linear",
-               lambda d: d.get("result", {}).get("list", []))
+bn_st = bn_ft = okx_st = okx_ft = bg_st = bg_ft = bb_st = bb_ft = []
+_ticker_jobs = [
+    ("Binance spot", "https://api.binance.com/api/v3/ticker/24hr", None, "bn_st"),
+    ("Binance fut",  "https://fapi.binance.com/fapi/v1/ticker/24hr", None, "bn_ft"),
+    ("OKX spot", "https://www.okx.com/api/v5/market/tickers?instType=SPOT", lambda d: d.get("data", []), "okx_st"),
+    ("OKX fut",  "https://www.okx.com/api/v5/market/tickers?instType=SWAP",  lambda d: d.get("data", []), "okx_ft"),
+    ("Bitget spot", "https://api.bitget.com/api/v2/spot/market/tickers", lambda d: d.get("data", []), "bg_st"),
+    ("Bitget fut",  "https://api.bitget.com/api/v2/mix/market/tickers?productType=USDT-FUTURES", lambda d: d.get("data", []), "bg_ft"),
+    ("Bybit spot", "https://api.bybit.com/v5/market/tickers?category=spot", lambda d: d.get("result", {}).get("list", []), "bb_st"),
+    ("Bybit fut",  "https://api.bybit.com/v5/market/tickers?category=linear", lambda d: d.get("result", {}).get("list", []), "bb_ft"),
+]
+def _run_ticker(label, url, pp):
+    return _fetch(label, url, pp)
+with ThreadPoolExecutor(max_workers=8) as _pool:
+    _futs = {_pool.submit(_run_ticker, l, u, p): k for l, u, p, k in _ticker_jobs}
+    for _f in as_completed(_futs):
+        globals()[_futs[_f]] = _f.result()
 
 print(f"  Binance: spot={len(bn_st)} fut={len(bn_ft)}  "
       f"OKX: spot={len(okx_st)} fut={len(okx_ft)}  "
@@ -276,7 +279,7 @@ S = {
     "bn_f": _rank(bn_ft, "symbol", "quoteVolume", 70, S_USDT["bn_f"]),
     "okx_s": _rank(okx_st, "instId", "volCcy24h", 140, S_USDT["okx_s"]),
     "okx_f": _rank(okx_ft, "instId", "volCcy24h", 70, S_USDT["okx_f"]),
-    "bg_s": _rank(bg_st, "symbol", "quoteVolume", 140, S_USDT["bg_s"]),
+    "bg_s": _rank(bg_st, "symbol", "quoteVolume", 400, S_USDT["bg_s"]),
     "bg_f": _rank(bg_ft, "symbol", "usdtVolume", 70, S_USDT["bg_f"]),
     "bb_s": _rank(bb_st, "symbol", "turnover24h", 140, S_USDT["bb_s"]),
     "bb_f": _rank(bb_ft, "symbol", "turnover24h", 70, S_USDT["bb_f"]),
@@ -311,7 +314,7 @@ def _ku_url(ex, sym):
 
 _kl_fail = {}  # 失败原因统计
 _kl_ex = {}    # 各交易所失败数
-_okx_sem = threading.Semaphore(10)  # OKX 限频 10/s
+_okx_sem = threading.Semaphore(15)  # OKX 限频 15/s
 _bg_sym_cache = None  # Bitget 现货全量 symbols 缓存（避免重复拉取）
 
 def _parse_kline(ex, sym):
@@ -976,12 +979,11 @@ btc_cls = "up" if btc_c >= 0 else "down"
 # ──────────────────────────────────────────────
 _EX_KEYS = [("bn", "bn_s", "bn_f"), ("okx", "okx_s", "okx_f"),
             ("bg", "bg_s", "bg_f"), ("bb", "bb_s", "bb_f")]
-_ALL_RANKINGS = {}  # key: "{ex}_{market}_{cat}" → [sym, ...]
+_ALL_RANKINGS = {}  # key: "{ex}_{market}_{cat}" → [(sym, pct, vol), ...]
 for ex_code, sk, fk in _EX_KEYS:
     for cat in ("vol", "g", "l"):
         for market, ex_s in [("spot", sk), ("fut", fk)]:
-            top = _rk(ex_s, S[ex_s], by=cat, n=3)
-            _ALL_RANKINGS[f"{ex_code}_{market}_{cat}"] = [p[0] for p in top]
+            _ALL_RANKINGS[f"{ex_code}_{market}_{cat}"] = _rk(ex_s, S[ex_s], by=cat, n=3)
 
 # ──────────────────────────────────────────────
 # 11b. 从历史快照计算 streak（连续在榜次数，按小时去重）
@@ -1018,7 +1020,8 @@ try:
     # 按时间倒序排列小时
     sorted_hours = sorted(hourly.keys(), reverse=True)
     # 逐币统计连续在榜次数（按小时）
-    for key, cur_syms in _ALL_RANKINGS.items():
+    for key, cur_tuples in _ALL_RANKINGS.items():
+        cur_syms = [t[0] for t in cur_tuples]
         for sym in cur_syms:
             count = 0
             for hk in sorted_hours:
@@ -1071,48 +1074,30 @@ except Exception as e:
 
 hn_snap = [{"t": s["title"], "s": s["score"], "c": s["descendants"], "ts": s["time"]} for s in HN_STORIES]
 crypto_snap = [{"t": n["title"], "tag": n.get("tag", "")} for n in CT_NEWS]
+ann_snap = [{"ex": ex, "url": url, "title": title, "ts": ts, "mkt": mkt} for ex, url, title, ts, mkt in all_ann]
+rank_detail = {}
+for k, tuples in _ALL_RANKINGS.items():
+    rank_detail[k] = [{"sym": t[0], "pct": t[1], "vol": t[2]} for t in tuples]
 snap_line = json.dumps({
     "ts": now.isoformat(),
     "btc": {"price": btc_p, "change": btc_c, "mcap": btc_mcap},
     "hn": hn_snap,
     "crypto": crypto_snap,
-    "rankings": _ALL_RANKINGS,
+    "rankings": rank_detail,
+    "announcements": ann_snap,
+    "listings": [{"exchange": p["exchange"], "symbol": p["symbol"], "market": p["market"],
+                  "listing_time": p.get("listing_time", p.get("discovered", 0)),
+                  "change": p.get("change", 0), "volume": p.get("volume", 0)} for p in deduped[:10]],
+    "exchange_panels": {
+        "vol": _ex_panel("vol", "snap-vol", True),
+        "gain": _ex_panel("gain", "snap-gain"),
+        "loss": _ex_panel("loss", "snap-loss"),
+    },
 }, ensure_ascii=False)
 
 with open(SNAPL_FILE, "a") as f:
     f.write(snap_line + "\n")
 print(f"Snapshot appended: BTC ${btc_p:,.0f} ({btc_c:+.2f}%)", flush=True)
-
-# 清理超过 7 天的旧快照
-try:
-    with open(SNAPL_FILE) as _f:
-        lines = _f.readlines()
-    clean = []
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=SNAP_RETAIN_HOURS)
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            obj = json.loads(line)
-            ts = obj.get("ts", "")
-            if isinstance(ts, str) and ts:
-                dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
-                if dt < cutoff:
-                    continue
-            elif isinstance(ts, (int, float)):
-                dt = datetime.fromtimestamp(ts / 1000 if ts > 1e12 else ts, tz=timezone.utc)
-                if dt < cutoff:
-                    continue
-            clean.append(line)
-        except Exception:
-            continue  # 坏行不再保留，防止文件无限膨胀
-    if len(clean) < len(lines):
-        with open(SNAPL_FILE, "w") as f:
-            f.write("\n".join(clean) + "\n" if clean else "")
-        print(f"Snapshot cleanup: {len(lines)} → {len(clean)} entries", flush=True)
-except Exception:
-    pass
 
 
 # ──────────────────────────────────────────────
@@ -1169,15 +1154,12 @@ def _gh_push(path, content, message, _retries=2):
 
 with open(SNAPL_FILE) as _f:
     _snapl = _f.read()
-with open(SNAP_HTML_FILE) as _f:
-    _snap_html = _f.read()
 msg = f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC"
 pushes = [
     ("betanews.html", page, msg),
     ("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False), msg),
     ("dashboard-snapshots.jsonl", _snapl, msg),
     ("exchange-pairs-snapshot.json", json.dumps(current, indent=2), msg),
-    ("snapshot.html", _snap_html, msg),
 ]
 with ThreadPoolExecutor(max_workers=5) as ex_pool:
     list(ex_pool.map(lambda p: _gh_push(*p), pushes))
