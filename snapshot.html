@@ -53,6 +53,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .snap-menu__item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
 .snap-menu__item:hover{background:var(--surface-2);color:var(--fg)}
 .snap-menu__item.is-active{background:var(--brand-t08);color:var(--brand-400);font-weight:600}
+.snap-nav{position:sticky;top:var(--header-h);z-index:30;background:rgba(8,8,10,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);display:none;align-items:center;gap:12px;padding:0 clamp(16px,3vw,40px);height:44px;max-width:100%}
+.snap-nav.is-show{display:flex}
+.snap-nav .snap-idx{font-size:11px;color:var(--fg-3);font-family:var(--mono)}
+.snap-nav .snap-time{font-size:12px;color:var(--fg-2);font-family:var(--mono)}
+.snap-nav button{height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer;transition:all var(--dur-fast) var(--ease)}
+.snap-nav button:hover:not(:disabled){background:var(--surface-2);color:var(--fg);border-color:var(--hairline-2)}
+.snap-nav button:disabled{opacity:.3;cursor:not-allowed}
 
 .shell{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,40px)}
 .section__head{position:sticky;top:var(--header-h);bottom:0;z-index:20;background:var(--bg);display:flex;align-items:center;gap:12px;margin-top:clamp(14px,2.2vw,24px);margin-bottom:6px;padding:0;height:var(--header-h)}
@@ -193,6 +200,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   </div>
 </header>
 
+<div class="snap-nav" id="snap-nav"></div>
+
 <main class="shell" id="main">
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px">
     <div style="width:36px;height:36px;border:3px solid var(--hairline);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite"></div>
@@ -274,38 +283,73 @@ function renderSnap(s,idx,total){
   var btcCls=btcC>=0?'up':'down';
   var btcArrow=btcC>=0?'▲':'▼';
 
-  var navPrev=(idx>0)?'<button class="snap-select" style="width:auto" onclick="navTo('+(idx-1)+')">← 上一条</button>':'<button class="snap-select" disabled style="width:auto;opacity:.3;cursor:not-allowed">← 上一条</button>';
-  var navNext=(idx<total-1)?'<button class="snap-select" style="width:auto" onclick="navTo('+(idx+1)+')">下一条 →</button>':'<button class="snap-select" disabled style="width:auto;opacity:.3;cursor:not-allowed">下一条 →</button>';
+  /* ── Snap nav bar (in header) ── */
+  var navBar=document.getElementById('snap-nav');
+  navBar.className='snap-nav is-show';
+  navBar.innerHTML=
+    '<span class="snap-time">快照：'+timeStr+'</span>'+
+    '<span class="grow"></span>'+
+    '<button'+(idx<=0?' disabled':'')+' onclick="navTo('+(idx-1)+')">← 上一条</button>'+
+    '<span class="snap-idx">'+(idx+1)+' / '+total+'</span>'+
+    '<button'+(idx>=total-1?' disabled':'')+' onclick="navTo('+(idx+1)+')">下一条 →</button>';
+
+  /* Update header live time */
+  var hdrLiveTime=document.querySelector('.live__time');
+  if(hdrLiveTime)hdrLiveTime.textContent=timeStr+' UTC';
 
   var h='';
 
   /* ── BTC KPI ── */
-  h+='<div class="section__head"><h2 class="section__title"><span class="bar"></span>BTC 概况</h2>';
-  h+='<span class="section__sub">快照 #'+(idx+1)+'/'+total+' · <span style="font-family:var(--mono)">'+timeStr+'</span></span></div>';
+  h+='<div class="section__head"><h2 class="section__title"><span class="bar"></span>BTC 概况</h2></div>';
   h+='<div class="kpi-row">';
   h+='<div class="kpi-card"><div class="kpi-label"><span class="dot" style="background:#f7931a"></span>BTC 价格</div>';
-  h+='<div class="kpi-val">$'+Number(btcP).toLocaleString()+'</div>';
-  h+='<div class="kpi-sub '+btcCls+'">'+btcArrow+' '+Math.abs(btcC).toFixed(2)+'%</div></div>';
+  h+='<div class="kpi-val">$'+Number(btcP).toLocaleString()+'</div></div>';
   h+='<div class="kpi-card"><div class="kpi-label"><span class="dot" style="background:var(--brand)"></span>24h 涨跌</div>';
   h+='<div class="kpi-val '+btcCls+'">'+btcArrow+' '+Math.abs(btcC).toFixed(2)+'%</div></div>';
   h+='<div class="kpi-card"><div class="kpi-label"><span class="dot" style="background:var(--up)"></span>市值</div>';
   h+='<div class="kpi-val">$'+(btcM/1e12).toFixed(2)+'万亿</div></div>';
   h+='</div>';
 
-  /* ── Navigation ── */
-  h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:clamp(14px,2.2vw,24px)">';
-  h+=navPrev;
-  h+='<span class="grow"></span>';
-  h+='<span style="font-size:11px;color:var(--fg-4)">'+timeStr+'</span>';
-  h+='<span class="grow"></span>';
-  h+='<span style="font-size:11px;color:var(--fg-4)">( '+(idx+1)+' / '+total+' )</span>';
-  h+=navNext;
-  h+='</div>';
-
-  /* ── 12h Listings (not in JSONL — hidden) ── */
-  h+='<div id="section-listings" style="display:none">';
-  h+='<div class="section__head"><h2 class="section__title"><span class="bar"></span>12h 内上线</h2></div>';
-  h+='<div id="block-listings"></div></div>';
+  /* ── 12h Listings ── */
+  var EX_NAME={bn:'Binance',okx:'OKX',bg:'Bitget',bb:'Bybit'};
+  var listings=s.listings||[];
+  var now_ts=Math.floor(new Date(s.ts).getTime()/1000);
+  var cutoff=now_ts-12*3600;
+  var filtered=listings.filter(function(p){return p.listing_time>cutoff});
+  if(filtered.length){
+    h+='<div class="section__head"><h2 class="section__title"><span class="bar"></span>12h 内上线</h2>';
+    h+='<span class="section__sub">'+filtered.length+' 个新交易对 · 1h 成交额 · 1h 涨跌幅</span></div>';
+    h+='<div class="listings-grid">';
+    for(var i=0;i<filtered.length;i++){
+      var p=filtered[i];
+      var exCode=p.exchange||'bn';
+      var exName=EX_NAME[exCode]||exCode;
+      var isFut=p.market==='fut';
+      var sym=p.symbol;
+      var b=sym.replace(/USDT$/,'');
+      var url='#';
+      if(exCode==='bn')url=isFut?'https://www.binance.com/en/futures/'+sym:'https://www.binance.com/en/trade/'+b+'_USDT';
+      else if(exCode==='okx')url=isFut?'https://www.okx.com/trade-swap/'+b.toLowerCase()+'-usdt-swap':'https://www.okx.com/trade-spot/'+b.toLowerCase()+'-usdt';
+      else if(exCode==='bg')url=isFut?'https://www.bitget.com/futures/'+sym:'https://www.bitget.com/spot/'+sym;
+      else if(exCode==='bb')url=isFut?'https://www.bybit.com/trade/usdt/'+sym:'https://www.bybit.com/trade/spot/'+b+'/USDT';
+      var chg=p.change||0;
+      var vol=p.volume||0;
+      var cls=chg>=0?'up':'down';
+      var sg=chg>=0?'+':'';
+      var mktLabel=isFut?'永续':'现货';
+      var mktCls=isFut?'is-perp':'is-spot';
+      var chgHtml='<span class="'+cls+' mono">'+sg+chg.toFixed(2)+'%</span><span class="lst__vol mono">'+(vol>=1e6?'$'+(vol/1e6).toFixed(2)+'M':vol>=1e3?'$'+(vol/1e3).toFixed(2)+'K':'$'+vol.toFixed(2))+'</span>';
+      var lt=p.listing_time||0;
+      var d2=new Date(lt*1000);
+      var tsStr='<time data-epoch="'+lt+'">'+String(d2.getMonth()+1).padStart(2,'0')+'-'+String(d2.getDate()).padStart(2,'0')+' '+String(d2.getHours()).padStart(2,'0')+':'+String(d2.getMinutes()).padStart(2,'0')+'</time>';
+      h+='<a class="list-pill" href="'+url+'" target="_blank" data-ts="'+lt+'">';
+      h+='<span class="lst__main"><span class="lst__pair">'+sym+'<span class="q">/USDT</span></span>';
+      h+='<span class="lst__1h">'+chgHtml+'</span></span>';
+      h+='<span class="lst__aside"><span class="lst__ex">'+exName+'<span class="lst__mkt '+mktCls+'">'+mktLabel+'</span></span>';
+      h+='<span class="lst__time mono">'+tsStr+'</span></span></a>';
+    }
+    h+='</div>';
+  }
 
   /* ── Feeds ── */
   h+='<div class="section__head" id="head-feeds"><h2 class="section__title"><span class="bar"></span>行业资讯</h2>';
