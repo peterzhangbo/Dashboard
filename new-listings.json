@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "exchange": "bn",
+    "symbol": "DKNGUSDT",
+    "market": "fut",
+    "listing_time": 1781049600,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bn",
+    "symbol": "ZMUSDT",
+    "market": "fut",
+    "listing_time": 1781049600,
+    "change": 0,
+    "volume": 0
+  }
+]
