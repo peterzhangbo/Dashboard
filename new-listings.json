@@ -8,6 +8,46 @@
     "volume": 0
   },
   {
+    "exchange": "bg",
+    "symbol": "GLWUSDT",
+    "market": "fut",
+    "listing_time": 1781080615,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "TSEMUSDT",
+    "market": "fut",
+    "listing_time": 1781080606,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "OSSUSDT",
+    "market": "fut",
+    "listing_time": 1781080598,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "AEHRUSDT",
+    "market": "fut",
+    "listing_time": 1781080591,
+    "change": 0,
+    "volume": 0
+  },
+  {
+    "exchange": "bg",
+    "symbol": "SIMOUSDT",
+    "market": "fut",
+    "listing_time": 1781080586,
+    "change": 0,
+    "volume": 0
+  },
+  {
     "exchange": "bn",
     "symbol": "DKNGUSDT",
     "market": "fut",
