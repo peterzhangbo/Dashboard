@@ -46,45 +46,5 @@
     "listing_time": 1781080586,
     "change": 0,
     "volume": 0
-  },
-  {
-    "exchange": "bn",
-    "symbol": "DKNGUSDT",
-    "market": "fut",
-    "listing_time": 1781049600,
-    "change": 0,
-    "volume": 0
-  },
-  {
-    "exchange": "bn",
-    "symbol": "ZMUSDT",
-    "market": "fut",
-    "listing_time": 1781049600,
-    "change": 0,
-    "volume": 0
-  },
-  {
-    "exchange": "bn",
-    "symbol": "EWZUSDT",
-    "market": "fut",
-    "listing_time": 1781049600,
-    "change": 0.33,
-    "volume": 334179.38
-  },
-  {
-    "exchange": "bn",
-    "symbol": "RIVNUSDT",
-    "market": "fut",
-    "listing_time": 1781049600,
-    "change": 1.49,
-    "volume": 283077.27
-  },
-  {
-    "exchange": "bn",
-    "symbol": "XLEUSDT",
-    "market": "fut",
-    "listing_time": 1781049600,
-    "change": 0.65,
-    "volume": 45144.33
   }
 ]
