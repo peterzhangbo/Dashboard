@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "exchange": "bg",
+    "symbol": "RFRBTUSDT",
+    "market": "spot",
+    "listing_time": 1781185072,
+    "change": 0,
+    "volume": 0
+  }
+]
