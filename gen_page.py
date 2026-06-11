@@ -420,159 +420,7 @@ for i in range(_max_q):
         if i < len(_ex_queues[ex_key]):
             tasks.append(_ex_queues[ex_key][i])
 
-print(f"Fetching {len(tasks)} klines ({len(new_pairs)} new + {len(tasks)-len(new_pairs)} top)...", flush=True)
-
-R = {}
-done = 0
-with ThreadPoolExecutor(max_workers=120) as pool:
-    futs = {pool.submit(_parse_kline, ex, s): (ex, s) for ex, s in tasks}
-    for f in as_completed(futs):
-        ex, s = futs[f]
-        result = f.result()
-        if result:
-            R[(ex, s)] = result
-        done += 1
-        if done % 200 == 0:
-            print(f"  Klines: {done}/{len(tasks)}", flush=True)
-
-print(f"Klines done: {done} ({len(R)} valid)", flush=True)
-if _kl_fail:
-    print(f"  Fail reasons: {_kl_fail}", flush=True)
-    print(f"  By exchange: {_kl_ex}", flush=True)
-
-
-# ──────────────────────────────────────────────
-# 5b. 补偿：如果有效数据不足 100 个，追加拉取
-# ──────────────────────────────────────────────
-
-# ticker 数据源映射
-_TICKERS = {
-    "bn_s": bn_st, "bn_f": bn_ft,
-    "okx_s": okx_st, "okx_f": okx_ft,
-    "bg_s": bg_st, "bg_f": bg_ft,
-    "bb_s": bb_st, "bb_f": bb_ft,
-}
-_TICK_KEY = {
-    "bn_s": ("symbol", "quoteVolume"), "bn_f": ("symbol", "quoteVolume"),
-    "okx_s": ("instId", "volCcy24h"),  "okx_f": ("instId", "volCcy24h"),
-    "bg_s": ("symbol", "quoteVolume"), "bg_f": ("symbol", "usdtVolume"),
-    "bb_s": ("symbol", "turnover24h"), "bb_f": ("symbol", "turnover24h"),
-}
-
-retry_round = 0
-for ex_key in list(S.keys()):
-    valid_count = sum(1 for s in S[ex_key] if (ex_key, s) in R)
-    threshold = 100 if ex_key.endswith("_s") else 60
-    if valid_count >= threshold:
-        continue
-    n_target = 140 if ex_key.endswith("_s") else 70
-    retry_round = 0
-    while valid_count < n_target and retry_round < 8:
-        retry_round += 1
-        offset = len(S[ex_key])
-        new_syms = _rank(_TICKERS[ex_key], *_TICK_KEY[ex_key], n_target, S_USDT[ex_key], offset=offset)
-        if not new_syms:
-            break
-        S[ex_key].extend(new_syms)
-        # 拉取新批次的 kline
-        new_tasks = [(ex_key, s) for s in new_syms if (ex_key, s) not in R and (ex_key, s) not in seen]
-        for t in new_tasks:
-            seen.add(t)
-        if new_tasks:
-            with ThreadPoolExecutor(max_workers=40) as pool:
-                futs2 = {pool.submit(_parse_kline, ek, sm): (ek, sm) for ek, sm in new_tasks}
-                for f in as_completed(futs2):
-                    ek, sm = futs2[f]
-                    result = f.result()
-                    if result:
-                        R[(ek, sm)] = result
-        valid_count = sum(1 for s in S[ex_key] if (ex_key, s) in R)
-        print(f"  补偿 {ex_key}: 第{retry_round}轮, 新增{len(new_syms)}, 有效{valid_count}/{n_target}", flush=True)
-
-
-def _rk(ex, syms, by="vol", n=3):
-    """返回指定交易所某类排名 Top N。"""
-    items = []
-    for s in syms:
-        p, v = R.get((ex, s), (None, None))
-        if v is None or p is None or v <= 0:
-            continue
-        items.append((s, p, v))
-    if by == "vol":
-        items.sort(key=lambda x: -x[2])
-    elif by == "g":
-        items.sort(key=lambda x: -x[1])
-    elif by == "l":
-        items.sort(key=lambda x: x[1])
-    return items[:n]
-
-
-# ──────────────────────────────────────────────
-# 6. 交易所公告
-# ──────────────────────────────────────────────
-print("Fetching announcements...", flush=True)
-
-all_ann = []
-
-# Binance
-try:
-    bn_ann = fetch_json("https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&catalogId=48&pageNo=1&pageSize=5")
-    for a in bn_ann["data"]["catalogs"][0]["articles"][:5]:
-        t = a["title"]
-        # 跳过杠杆/保证金交易类公告
-        if any(k in t for k in ["杠杆","Margin","借贷","借入","借出","Leverage"]):
-            continue
-        mkt = "合约" if any(k in t for k in ["合约","永续","Futures","Perpetual"]) else "现货"
-        all_ann.append(("Binance", f"https://www.binance.com/zh-CN/support/announcement/{a['code']}", t, a["releaseDate"], mkt))
-except Exception as e:
-    print(f"  Binance FAIL: {e}", flush=True)
-
-# OKX
-try:
-    okx_ann = fetch_json("https://www.okx.com/priapi/v1/assistant/service-center/home/featured-announcements?defi=false&locale=zh_CN")
-    for a in okx_ann.get("data", {}).get("announcements", [])[:5]:
-        t = a["title"]
-        if any(k in t for k in ["杠杆","Margin","借贷","借入","借出","Leverage"]):
-            continue
-        mkt = "合约" if any(k in t for k in ["合约","永续","Perpetual","Futures","Swap"]) else "现货"
-        all_ann.append(("OKX", f"https://www.okx.com{a['url']}", t, int(a["publishTime"]) * 1000, mkt))
-except Exception as e:
-    print(f"  OKX FAIL: {e}", flush=True)
-
-# Bitget
-try:
-    bg_ann = fetch_json("https://api.bitget.com/api/v2/public/annoucements?language=zh_CN&annType=coin_listings&limit=5")
-    for a in bg_ann.get("data", [])[:5]:
-        t = a["annTitle"]
-        if any(k in t for k in ["杠杆","Margin","借贷","借入","借出","Leverage"]):
-            continue
-        mkt = "合约" if any(k in t for k in ["合约","永续","Perpetual","Futures"]) else "现货"
-        ts = int(a["cTime"]) if isinstance(a["cTime"], str) else a["cTime"]
-        all_ann.append(("Bitget", a["annUrl"], t, ts, mkt))
-except Exception as e:
-    print(f"  Bitget FAIL: {e}", flush=True)
-
-# Bybit（使用 en-US 获得英文标题，统一翻译）
-try:
-    bb_ann = fetch_json("https://api.bybit.com/v5/announcements/index?type=new_crypto&locale=en-US")
-    for a in bb_ann["result"]["list"][:5]:
-        t = a["title"]
-        if any(k in t.lower() for k in ["margin","leverage","借贷","杠杆"]):
-            continue
-        mkt = "合约" if any(k in t for k in ["合约","永续","Perpetual","Futures","Contract"]) else "现货"
-        all_ann.append(("Bybit", a["url"], t, a["publishTime"], mkt))
-except Exception as e:
-    print(f"  Bybit FAIL: {e}", flush=True)
-
-all_ann.sort(key=lambda x: -x[3])
-all_ann = all_ann[:8]
-print(f"  Total: {len(all_ann)}", flush=True)
-
-
-# ──────────────────────────────────────────────
-# 7. HN + Cointelegraph
-# ──────────────────────────────────────────────
-print("Fetching HN & CT...", flush=True)
+# ── 辅助函数（供 _fetch_news_and_translate 调用）──
 
 def _fetch_hn_detail(sid):
     try:
@@ -648,20 +496,6 @@ def _fetch_ct():
         return []
 
 
-HN_STORIES = CT_NEWS = []
-with ThreadPoolExecutor(max_workers=4) as pool:
-    hn_fut = pool.submit(_fetch_hn)
-    ct_fut = pool.submit(_fetch_ct)
-    HN_STORIES = hn_fut.result()
-    CT_NEWS = ct_fut.result()
-print(f"  HN: {len(HN_STORIES)}, CT: {len(CT_NEWS)}", flush=True)
-HN_ALL = HN_STORIES[:]
-
-
-# ──────────────────────────────────────────────
-# 8. 翻译
-# ──────────────────────────────────────────────
-
 def _translate_batch(texts):
     """批量翻译文本为中文（Google Translate，无 key）。"""
     if not texts:
@@ -692,35 +526,216 @@ CT_TAG_MAP = {
 }
 
 
-print("Translating...", flush=True)
+# ──────────────────────────────────────────────
+# 6+7+8. 公告 / HN+CT / 翻译（封装为函数，与 klines 并行执行）
+# ──────────────────────────────────────────────
 
-# HN + CT 标题翻译
-all_titles = [s["title"] for s in HN_STORIES] + [n["title"] for n in CT_NEWS]
-if all_titles:
-    trans = _translate_batch(all_titles)
-    for i, s in enumerate(HN_STORIES):
-        if i < len(trans):
-            s["title"] = trans[i]
-    for i, n in enumerate(CT_NEWS):
-        idx = len(HN_STORIES) + i
-        if idx < len(trans):
-            n["title"] = trans[idx]
+def _fetch_news_and_translate():
+    """拉取四所公告 + HN + CT，并翻译标题。"""
+    # ── 公告 ──
+    print("Fetching announcements...", flush=True)
+    ann = []
 
-for n in CT_NEWS:
-    n["tag"] = CT_TAG_MAP.get(n.get("tag", ""), n.get("tag", ""))
+    # Binance
+    try:
+        bn_ann = fetch_json("https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&catalogId=48&pageNo=1&pageSize=5")
+        for a in bn_ann["data"]["catalogs"][0]["articles"][:5]:
+            t = a["title"]
+            if any(k in t for k in ["杠杆","Margin","借贷","借入","借出","Leverage"]):
+                continue
+            mkt = "合约" if any(k in t for k in ["合约","永续","Futures","Perpetual"]) else "现货"
+            ann.append(("Binance", f"https://www.binance.com/zh-CN/support/announcement/{a['code']}", t, a["releaseDate"], mkt))
+    except Exception as e:
+        print(f"  Binance FAIL: {e}", flush=True)
 
-# 公告翻译（仅英文标题）
-eng_indices = [i for i, (_, _, title, _, _) in enumerate(all_ann) if title.isascii() and len(title) > 5]
-if eng_indices:
-    eng_titles = [all_ann[i][2] for i in eng_indices]
-    trans_ann = _translate_batch(eng_titles)
-    for j, ai in enumerate(eng_indices):
-        if j < len(trans_ann):
-            ex, url, _, ts, mkt = all_ann[ai]
-            all_ann[ai] = (ex, url, trans_ann[j], ts, mkt)
-    print(f"  Translated {len(eng_indices)} announcement titles", flush=True)
+    # OKX
+    try:
+        okx_ann = fetch_json("https://www.okx.com/priapi/v1/assistant/service-center/home/featured-announcements?defi=false&locale=zh_CN")
+        for a in okx_ann.get("data", {}).get("announcements", [])[:5]:
+            t = a["title"]
+            if any(k in t for k in ["杠杆","Margin","借贷","借入","借出","Leverage"]):
+                continue
+            mkt = "合约" if any(k in t for k in ["合约","永续","Perpetual","Futures","Swap"]) else "现货"
+            ann.append(("OKX", f"https://www.okx.com{a['url']}", t, int(a["publishTime"]) * 1000, mkt))
+    except Exception as e:
+        print(f"  OKX FAIL: {e}", flush=True)
 
-print("Translation done", flush=True)
+    # Bitget
+    try:
+        bg_ann = fetch_json("https://api.bitget.com/api/v2/public/annoucements?language=zh_CN&annType=coin_listings&limit=5")
+        for a in bg_ann.get("data", [])[:5]:
+            t = a["annTitle"]
+            if any(k in t for k in ["杠杆","Margin","借贷","借入","借出","Leverage"]):
+                continue
+            mkt = "合约" if any(k in t for k in ["合约","永续","Perpetual","Futures"]) else "现货"
+            ts = int(a["cTime"]) if isinstance(a["cTime"], str) else a["cTime"]
+            ann.append(("Bitget", a["annUrl"], t, ts, mkt))
+    except Exception as e:
+        print(f"  Bitget FAIL: {e}", flush=True)
+
+    # Bybit（使用 en-US 获得英文标题，统一翻译）
+    try:
+        bb_ann = fetch_json("https://api.bybit.com/v5/announcements/index?type=new_crypto&locale=en-US")
+        for a in bb_ann["result"]["list"][:5]:
+            t = a["title"]
+            if any(k in t.lower() for k in ["margin","leverage","借贷","杠杆"]):
+                continue
+            mkt = "合约" if any(k in t for k in ["合约","永续","Perpetual","Futures","Contract"]) else "现货"
+            ann.append(("Bybit", a["url"], t, a["publishTime"], mkt))
+    except Exception as e:
+        print(f"  Bybit FAIL: {e}", flush=True)
+
+    ann.sort(key=lambda x: -x[3])
+    ann = ann[:8]
+    print(f"  Total: {len(ann)}", flush=True)
+
+    # ── HN + CT ──
+    print("Fetching HN & CT...", flush=True)
+    hn = ct = []
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        hn_fut = pool.submit(_fetch_hn)
+        ct_fut = pool.submit(_fetch_ct)
+        hn = hn_fut.result()
+        ct = ct_fut.result()
+    print(f"  HN: {len(hn)}, CT: {len(ct)}", flush=True)
+    hn_all = hn[:]
+
+    # ── 翻译 ──
+    print("Translating...", flush=True)
+    all_titles = [s["title"] for s in hn] + [n["title"] for n in ct]
+    if all_titles:
+        trans = _translate_batch(all_titles)
+        for i, s in enumerate(hn):
+            if i < len(trans):
+                s["title"] = trans[i]
+        for i, n in enumerate(ct):
+            idx = len(hn) + i
+            if idx < len(trans):
+                n["title"] = trans[idx]
+    for n in ct:
+        n["tag"] = CT_TAG_MAP.get(n.get("tag", ""), n.get("tag", ""))
+
+    eng_indices = [i for i, (_, _, title, _, _) in enumerate(ann) if title.isascii() and len(title) > 5]
+    if eng_indices:
+        eng_titles = [ann[i][2] for i in eng_indices]
+        trans_ann = _translate_batch(eng_titles)
+        for j, ai in enumerate(eng_indices):
+            if j < len(trans_ann):
+                ex, url, _, ts, mkt = ann[ai]
+                ann[ai] = (ex, url, trans_ann[j], ts, mkt)
+        print(f"  Translated {len(eng_indices)} announcement titles", flush=True)
+    print("Translation done", flush=True)
+
+    return ann, hn, ct, hn_all
+
+
+# ── 启动新闻线程（与 klines 并行）──
+_news_result = [None]
+_news_exc = [None]
+def _news_worker():
+    try:
+        _news_result[0] = _fetch_news_and_translate()
+    except Exception as e:
+        _news_exc[0] = e
+_news_thread = threading.Thread(target=_news_worker, daemon=False)
+_news_thread.start()
+
+print(f"Fetching {len(tasks)} klines ({len(new_pairs)} new + {len(tasks)-len(new_pairs)} top)...", flush=True)
+
+R = {}
+done = 0
+with ThreadPoolExecutor(max_workers=120) as pool:
+    futs = {pool.submit(_parse_kline, ex, s): (ex, s) for ex, s in tasks}
+    for f in as_completed(futs):
+        ex, s = futs[f]
+        result = f.result()
+        if result:
+            R[(ex, s)] = result
+        done += 1
+        if done % 200 == 0:
+            print(f"  Klines: {done}/{len(tasks)}", flush=True)
+
+print(f"Klines done: {done} ({len(R)} valid)", flush=True)
+if _kl_fail:
+    print(f"  Fail reasons: {_kl_fail}", flush=True)
+    print(f"  By exchange: {_kl_ex}", flush=True)
+
+
+# ──────────────────────────────────────────────
+# 5b. 补偿：如果有效数据不足 100 个，追加拉取
+# ──────────────────────────────────────────────
+
+# ticker 数据源映射
+_TICKERS = {
+    "bn_s": bn_st, "bn_f": bn_ft,
+    "okx_s": okx_st, "okx_f": okx_ft,
+    "bg_s": bg_st, "bg_f": bg_ft,
+    "bb_s": bb_st, "bb_f": bb_ft,
+}
+_TICK_KEY = {
+    "bn_s": ("symbol", "quoteVolume"), "bn_f": ("symbol", "quoteVolume"),
+    "okx_s": ("instId", "volCcy24h"),  "okx_f": ("instId", "volCcy24h"),
+    "bg_s": ("symbol", "quoteVolume"), "bg_f": ("symbol", "usdtVolume"),
+    "bb_s": ("symbol", "turnover24h"), "bb_f": ("symbol", "turnover24h"),
+}
+
+retry_round = 0
+for ex_key in list(S.keys()):
+    valid_count = sum(1 for s in S[ex_key] if (ex_key, s) in R)
+    threshold = 100 if ex_key.endswith("_s") else 60
+    if valid_count >= threshold:
+        continue
+    n_target = 140 if ex_key.endswith("_s") else 70
+    retry_round = 0
+    while valid_count < n_target and retry_round < 8:
+        retry_round += 1
+        offset = len(S[ex_key])
+        new_syms = _rank(_TICKERS[ex_key], *_TICK_KEY[ex_key], n_target, S_USDT[ex_key], offset=offset)
+        if not new_syms:
+            break
+        S[ex_key].extend(new_syms)
+        # 拉取新批次的 kline
+        new_tasks = [(ex_key, s) for s in new_syms if (ex_key, s) not in R and (ex_key, s) not in seen]
+        for t in new_tasks:
+            seen.add(t)
+        if new_tasks:
+            with ThreadPoolExecutor(max_workers=40) as pool:
+                futs2 = {pool.submit(_parse_kline, ek, sm): (ek, sm) for ek, sm in new_tasks}
+                for f in as_completed(futs2):
+                    ek, sm = futs2[f]
+                    result = f.result()
+                    if result:
+                        R[(ek, sm)] = result
+        valid_count = sum(1 for s in S[ex_key] if (ex_key, s) in R)
+        print(f"  补偿 {ex_key}: 第{retry_round}轮, 新增{len(new_syms)}, 有效{valid_count}/{n_target}", flush=True)
+
+
+# ── 等待新闻线程完成，合并结果 ──
+_news_thread.join()
+if _news_exc[0]:
+    print(f"  News thread FAIL: {_news_exc[0]}", flush=True)
+    all_ann, HN_STORIES, CT_NEWS, HN_ALL = [], [], [], []
+elif _news_result[0]:
+    all_ann, HN_STORIES, CT_NEWS, HN_ALL = _news_result[0]
+else:
+    all_ann, HN_STORIES, CT_NEWS, HN_ALL = [], [], [], []
+
+
+def _rk(ex, syms, by="vol", n=3):
+    """返回指定交易所某类排名 Top N。"""
+    items = []
+    for s in syms:
+        p, v = R.get((ex, s), (None, None))
+        if v is None or p is None or v <= 0:
+            continue
+        items.append((s, p, v))
+    if by == "vol":
+        items.sort(key=lambda x: -x[2])
+    elif by == "g":
+        items.sort(key=lambda x: -x[1])
+    elif by == "l":
+        items.sort(key=lambda x: x[1])
+    return items[:n]
 
 
 # ──────────────────────────────────────────────
@@ -1101,74 +1116,9 @@ print(f"Snapshot appended: BTC ${btc_p:,.0f} ({btc_c:+.2f}%)", flush=True)
 
 
 # ──────────────────────────────────────────────
-# 13. 推送 GitHub
+# 13. 写入执行结果 log（先写日志，推送异步进行）
 # ──────────────────────────────────────────────
-print("Pushing to GitHub...", flush=True)
 
-
-def _gh_push(path, content, message, _retries=2):
-    """通过 GitHub Contents API 更新文件，409 时自动重试。"""
-    if not GITHUB_TOKEN:
-        print(f"  {path}: SKIP (no token)", flush=True)
-        return
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
-    headers = {"Authorization": f"token {GITHUB_TOKEN}", "User-Agent": "Mozilla/5.0",
-               "Accept": "application/vnd.github.v3+json"}
-
-    for attempt in range(_retries + 1):
-        # 获取当前 SHA
-        sha = None
-        try:
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=8, context=_SSL_CTX) as r:
-                sha = json.loads(r.read()).get("sha")
-        except Exception:
-            pass
-
-        body = {
-            "message": message,
-            "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
-        }
-        if sha:
-            body["sha"] = sha
-
-        try:
-            data = json.dumps(body).encode("utf-8")
-            req = urllib.request.Request(url, data=data, method="PUT",
-                                         headers={**headers, "Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as r:
-                sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
-                print(f"  {path}: OK ({sha_out})", flush=True)
-                return
-        except urllib.error.HTTPError as e:
-            if e.code == 409 and attempt < _retries:
-                print(f"  {path}: 409 conflict, retry {attempt+1}/{_retries}...", flush=True)
-                time.sleep(1)
-                continue
-            print(f"  {path}: FAIL - {e}", flush=True)
-            return
-        except Exception as e:
-            print(f"  {path}: FAIL - {e}", flush=True)
-            return
-
-
-with open(SNAPL_FILE) as _f:
-    _snapl = _f.read()
-msg = f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC"
-pushes = [
-    ("betanews.html", page, msg),
-    ("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False), msg),
-    ("dashboard-snapshots.jsonl", _snapl, msg),
-    ("exchange-pairs-snapshot.json", json.dumps(current, indent=2), msg),
-]
-with ThreadPoolExecutor(max_workers=5) as ex_pool:
-    list(ex_pool.map(lambda p: _gh_push(*p), pushes))
-
-print("\n=== Done ===")
-print(f"BTC: ${btc_p:,.0f} ({btc_c:+.2f}%)  Supply: {btc_supply:,.0f}")
-print(f"Klines: {len(R)} valid  New: {len(new_pairs)}  Ann: {len(all_ann)}  HN: {len(HN_STORIES)}  CT: {len(CT_NEWS)}")
-
-# 写入执行结果 log
 _log_path = os.path.join(DATA_DIR, "gen_page.log")
 try:
     _ex_status = {
@@ -1189,3 +1139,92 @@ try:
         _lf.write(f"ann: {len(all_ann)}  hn: {len(HN_STORIES)}  ct: {len(CT_NEWS)}\n")
 except Exception:
     pass
+
+
+# ──────────────────────────────────────────────
+# 14. 推送 GitHub（异步 + 串行 + 指数退避）
+# ──────────────────────────────────────────────
+print("Pushing to GitHub (async)...", flush=True)
+
+
+def _gh_push_sequential(pushes):
+    """串行推送文件到 GitHub，409 时指数退避重试。返回 [(path, status, attempts), ...]。"""
+    results = []
+    for path, content, message in pushes:
+        if not GITHUB_TOKEN:
+            results.append((path, "SKIP", 0))
+            continue
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
+        headers = {"Authorization": f"token {GITHUB_TOKEN}", "User-Agent": "Mozilla/5.0",
+                   "Accept": "application/vnd.github.v3+json"}
+        max_retries = 3
+        for attempt in range(max_retries):
+            sha = None
+            try:
+                req = urllib.request.Request(url, headers=headers)
+                with urllib.request.urlopen(req, timeout=8, context=_SSL_CTX) as r:
+                    sha = json.loads(r.read()).get("sha")
+            except Exception:
+                pass
+            body = {
+                "message": message,
+                "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
+            }
+            if sha:
+                body["sha"] = sha
+            try:
+                data = json.dumps(body).encode("utf-8")
+                req = urllib.request.Request(url, data=data, method="PUT",
+                                             headers={**headers, "Content-Type": "application/json"})
+                with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as r:
+                    sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
+                    results.append((path, f"OK({sha_out})", attempt + 1))
+                    break
+            except urllib.error.HTTPError as e:
+                if e.code == 409 and attempt < max_retries - 1:
+                    delay = 2 ** attempt  # 1s, 2s, 4s
+                    time.sleep(delay)
+                    continue
+                results.append((path, f"FAIL({e.code})", attempt + 1))
+                break
+            except Exception as e:
+                results.append((path, f"ERR({type(e).__name__})", attempt + 1))
+                break
+    return results
+
+
+with open(SNAPL_FILE) as _f:
+    _snapl = _f.read()
+_msg = f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC"
+_pushes = [
+    ("exchange-pairs-snapshot.json", json.dumps(current, indent=2), _msg),
+    ("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False), _msg),
+    ("dashboard-snapshots.jsonl", _snapl, _msg),
+    ("betanews.html", page, _msg),
+]
+_push_results = [None]
+def _push_worker():
+    _push_results[0] = _gh_push_sequential(_pushes)
+_push_thread = threading.Thread(target=_push_worker, daemon=False)
+_push_thread.start()
+
+
+print("\n=== Done ===")
+print(f"BTC: ${btc_p:,.0f} ({btc_c:+.2f}%)  Supply: {btc_supply:,.0f}")
+print(f"Klines: {len(R)} valid  New: {len(new_pairs)}  Ann: {len(all_ann)}  HN: {len(HN_STORIES)}  CT: {len(CT_NEWS)}")
+
+
+# ──────────────────────────────────────────────
+# 15. 等待推送完成，追加推送结果到日志
+# ──────────────────────────────────────────────
+_push_thread.join()
+
+if _push_results[0]:
+    try:
+        with open(_log_path, "a") as _lf:
+            _lf.write("github:\n")
+            for _path, _status, _attempts in _push_results[0]:
+                _retry_info = f" (x{_attempts})" if _attempts > 1 else ""
+                _lf.write(f"  {_path}: {_status}{_retry_info}\n")
+    except Exception:
+        pass
