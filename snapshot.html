@@ -53,18 +53,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .snap-menu__item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
 .snap-menu__item:hover{background:var(--surface-2);color:var(--fg)}
 .snap-menu__item.is-active{background:var(--brand-t08);color:var(--brand-400);font-weight:600}
-.snap-nav{position:sticky;top:var(--header-h);z-index:30;background:rgba(8,8,10,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);display:none;align-items:center;gap:12px;padding:0 clamp(16px,3vw,40px);height:44px;max-width:100%}
-.snap-nav.is-show{display:flex}
-.snap-nav .snap-idx{font-size:11px;color:var(--fg-3);font-family:var(--mono)}
-.snap-nav .snap-time{font-size:12px;color:var(--fg-2);font-family:var(--mono)}
-.snap-nav button{height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer;transition:all var(--dur-fast) var(--ease)}
-.snap-nav button:hover:not(:disabled){background:var(--surface-2);color:var(--fg);border-color:var(--hairline-2)}
-.snap-nav button:disabled{opacity:.3;cursor:not-allowed}
 
 .shell{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,40px)}
 .section__head{position:sticky;top:var(--header-h);bottom:0;z-index:20;background:var(--bg);display:flex;align-items:center;gap:12px;margin-top:clamp(14px,2.2vw,24px);margin-bottom:6px;padding:0;height:var(--header-h)}
 .section__title{font-size:19px;font-weight:900;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}
-.section__title .bar{width:4px;height:18px;border-radius:2px;background:var(--lime)}
+.section__title .bar{width:4px;height:18px;border-radius:2px;background:var(--lime);transition:box-shadow .4s var(--ease)}
+.section__title .bar.is-active{box-shadow:0 0 6px 1px rgba(209,255,85,0.55),0 0 14px 3px rgba(209,255,85,0.25)}
 .section__sub{font-size:12px;color:var(--fg-3);font-weight:400}
 .grow{flex:1}
 .card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl);display:flex;flex-direction:column}
@@ -131,6 +125,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .ex-row__right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:1px}
 .ex-row__val{font-size:13px;font-weight:700;font-family:var(--mono)}
 .ex-row__sub{font-size:10.5px;color:var(--fg-3);font-family:var(--mono)}
+.streak{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:800;padding:2px 7px 2px 5px;border-radius:var(--r-pill);color:#fff;background:var(--brand);border:none;vertical-align:middle;line-height:1}
+.streak svg{width:12px;height:12px;flex-shrink:0}
 .feed__list{overflow-y:auto;flex:1;min-height:0;padding:6px}
 .foot{margin-top:40px;padding:22px 0;border-top:1px solid var(--hairline);display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--fg-3)}
 .foot .srcs{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -164,9 +160,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .section__title{font-size:17px}
   .feeds .card__head{flex-wrap:wrap;height:auto;overflow:visible}
   .seg button{padding:8px 6px}
+  #segMetric button[data-mobile] span{display:none}
+  #segMetric button[data-mobile]::after{content:attr(data-mobile);font:inherit;font-weight:inherit}
   .foot{flex-wrap:wrap;gap:6px 8px}
   .foot .grow{display:none}
-  .foot .srcs{flex-wrap:nowrap}
+  .foot .srcs{flex-wrap:wrap}
 }
 @media(max-width:420px){.news-row__meta{gap:7px}.lst__1h{flex-wrap:wrap;gap:4px 8px}}
 </style>
@@ -196,11 +194,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         <span>返回主页</span>
       </a>
+      <span class="snap-idx" id="snap-idx" style="font-size:11px;color:var(--fg-3);font-family:var(--mono);display:none"></span>
+      <button id="nav-prev" style="display:none;height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer" onclick="navTo(_curIdx-1)">← 上一条</button>
+      <button id="nav-next" style="display:none;height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer" onclick="navTo(_curIdx+1)">下一条 →</button>
     </div>
   </div>
 </header>
-
-<div class="snap-nav" id="snap-nav"></div>
 
 <main class="shell" id="main">
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px">
@@ -210,7 +209,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 </main>
 
-<footer class="foot" id="foot" style="display:none">
+<footer class="foot shell" id="foot" style="display:none">
   <span class="foot__info"><span>数据来源</span><span class="srcs"><span>Binance</span><span>OKX</span><span>Bitget</span><span>Bybit</span><span>Cointelegraph</span><span>Hacker News</span></span></span>
   <span class="grow"></span>
   <span>© 2026 · Peter · 每小时更新 · 快照查看器</span>
@@ -274,6 +273,7 @@ function ft_ts(ts){
 }
 
 function renderSnap(s,idx,total){
+  _curIdx=idx;
   var d=new Date(s.ts);
   var timeStr=d.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
   var btc=s.btc||{};
@@ -283,15 +283,13 @@ function renderSnap(s,idx,total){
   var btcCls=btcC>=0?'up':'down';
   var btcArrow=btcC>=0?'▲':'▼';
 
-  /* ── Snap nav bar (in header) ── */
-  var navBar=document.getElementById('snap-nav');
-  navBar.className='snap-nav is-show';
-  navBar.innerHTML=
-    '<span class="snap-time">快照：'+timeStr+'</span>'+
-    '<span class="grow"></span>'+
-    '<button'+(idx<=0?' disabled':'')+' onclick="navTo('+(idx-1)+')">← 上一条</button>'+
-    '<span class="snap-idx">'+(idx+1)+' / '+total+'</span>'+
-    '<button'+(idx>=total-1?' disabled':'')+' onclick="navTo('+(idx+1)+')">下一条 →</button>';
+  /* ── Topbar nav buttons ── */
+  var idxEl=document.getElementById('snap-idx');
+  var prevBtn=document.getElementById('nav-prev');
+  var nextBtn=document.getElementById('nav-next');
+  if(idxEl){idxEl.style.display='';idxEl.textContent=(idx+1)+' / '+total}
+  if(prevBtn){prevBtn.style.display='';prevBtn.disabled=idx<=0}
+  if(nextBtn){nextBtn.style.display='';nextBtn.disabled=idx>=total-1}
 
   /* Update header live time */
   var hdrLiveTime=document.querySelector('.live__time');
@@ -440,6 +438,24 @@ function renderSnap(s,idx,total){
   document.getElementById('main').innerHTML=h;
   document.getElementById('foot').style.display='';
   convertTimes();
+  /* seg 按钮手机端缩短文字 */
+  var segMap={vol:'1h Vol.',gain:'1h ▲',loss:'1h ▼'};
+  document.querySelectorAll('#segMetric button[data-metric]').forEach(function(b){b.dataset.mobile=segMap[b.dataset.metric]||''});
+  /* scrollspy: section bar glow */
+  (function(){
+    var headerH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'))||66;
+    var heads=document.querySelectorAll('.section__head');
+    function update(){
+      var threshold=headerH+2;
+      var atBottom=(window.innerHeight+window.scrollY)>=document.body.scrollHeight-2;
+      var last=null;
+      heads.forEach(function(h){var rect=h.getBoundingClientRect();if(threshold>=rect.top&&threshold<=rect.bottom+200)last=h});
+      if(atBottom)last=heads[heads.length-1]||null;
+      heads.forEach(function(h){var bar=h.querySelector('.bar');if(bar)bar.classList.toggle('is-active',h===last)});
+    }
+    window.addEventListener('scroll',update,{passive:true});
+    update();
+  })();
 }
 
 function convertTimes(){
@@ -481,6 +497,7 @@ function switchExTab(id){
 }
 
 var _allSnaps=[];
+var _curIdx=0;
 function loadSnapMenu(snaps,idx){
   _allSnaps=snaps;
   var menu=document.getElementById('snap-menu');
