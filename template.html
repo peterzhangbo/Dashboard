@@ -155,10 +155,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* ── Footer ── */
 .foot{margin-top:40px;padding:22px 0;border-top:1px solid var(--hairline);display:flex;align-items:center;justify-content:flex-start;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--fg-3)}
-.foot .srcs{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center}
+.foot .srcs{display:inline-flex;gap:8px;flex-wrap:nowrap;align-items:center}
 .foot .srcs span{padding:2px 10px;border-radius:var(--r-pill);background:var(--surface-2);font-size:11px}
 .foot .grow{flex:1}
-.foot__info{display:inline-flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.foot__info{display:inline-flex;align-items:center;gap:8px;flex-wrap:nowrap;white-space:nowrap}
 
 /* ── Modal ── */
 .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;justify-content:center;align-items:center}
@@ -204,7 +204,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   #segMetric button[data-mobile]::after{content:attr(data-mobile);font:inherit;font-weight:inherit}
   .foot{flex-wrap:wrap;align-items:center;gap:6px 8px}
   .foot .grow{display:none}
-  .foot .srcs{flex-wrap:wrap}
+  .foot .srcs{flex-wrap:nowrap}
 }
 @media(max-width:420px){
   .news-row__meta{gap:7px}
@@ -279,9 +279,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <h2 class="section__title"><span class="bar"></span>竞品监控</h2>
   <span class="section__sub">Binance · OKX · Bitget · Bybit</span>
   <div class="seg" id="segMetric">
-    <button class="is-on" data-metric="vol" onclick="switchExTab('vol')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><rect x="7" y="11" width="3" height="6"></rect><rect x="12" y="7" width="3" height="10"></rect><rect x="17" y="13" width="3" height="4"></rect></svg>1h 成交额</button>
-    <button data-metric="gain" onclick="switchExTab('gain')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg>1h 涨幅</button>
-    <button data-metric="loss" onclick="switchExTab('loss')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"></path><path d="M14 17h7v-7"></path></svg>1h 跌幅</button>
+    <button class="is-on" data-metric="vol" onclick="switchExTab('vol')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><rect x="7" y="11" width="3" height="6"></rect><rect x="12" y="7" width="3" height="10"></rect><rect x="17" y="13" width="3" height="4"></rect></svg><span>1h 成交额</span></button>
+    <button data-metric="gain" onclick="switchExTab('gain')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg><span>1h 涨幅</span></button>
+    <button data-metric="loss" onclick="switchExTab('loss')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"></path><path d="M14 17h7v-7"></path></svg><span>1h 跌幅</span></button>
   </div>
   <span class="grow"></span>
   <button class="snap-select snap-select--icon" onclick="openMethod()" type="button">
