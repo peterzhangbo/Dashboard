@@ -41,8 +41,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .back-link{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
 .back-link:hover{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .back-link svg{width:15px;height:15px;flex-shrink:0}
-.topbar__nav{display:none;align-items:center;justify-content:center;gap:14px;width:100%;padding:4px 0}
-.topbar__nav.is-visible{display:flex}
+.topbar__nav{display:none;align-items:center;gap:6px}
+.topbar__nav.is-visible{display:inline-flex}
+.topbar__live{display:none;align-items:center;gap:7px;font-size:12px;color:var(--fg-2);white-space:nowrap}
+.topbar__live.is-visible{display:inline-flex}
 .topbar__nav button{height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer;white-space:nowrap}
 .topbar__nav button:hover{background:var(--surface-2);color:var(--fg)}
 .topbar__nav button:disabled{opacity:.35;cursor:default}
@@ -56,7 +58,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .snap-wrap.is-open .snap-select .chev{transform:rotate(180deg)}
 .snap-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:320px;padding:6px;background:var(--surface);border:1px solid var(--hairline-2);border-radius:var(--r-md);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);max-height:380px;overflow-y:auto}
 .snap-wrap.is-open .snap-menu{opacity:1;transform:none;pointer-events:auto}
-.snap-menu__item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
+.snap-menu__item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
 .snap-menu__item:hover{background:var(--surface-2);color:var(--fg)}
 .snap-menu__item .snap-t{font-family:var(--mono);font-weight:500;flex-shrink:0}
 .snap-menu__item .snap-p{font-family:var(--mono);text-align:right;min-width:72px}
@@ -146,7 +148,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .error-box h2{font-size:17px;font-weight:900;margin-bottom:10px}
 .error-box p{color:var(--fg-3);font-size:13px}
 .tabs{display:inline-flex;gap:2px;padding:3px;margin-left:auto;background:var(--surface-3);border-radius:var(--r-pill)}
-.tab{font-size:12px;font-weight:600;color:var(--fg-3);padding:5px 12px;border-radius:var(--r-sm);transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);white-space:nowrap;cursor:pointer;border:none;background:transparent}
+.tab{font-size:12px;font-weight:600;color:var(--fg-3);padding:5px 12px;border-radius:var(--r-md);transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);white-space:nowrap;cursor:pointer;border:none;background:transparent}
 .tab.is-on{background:var(--brand);color:#fff}
 .tab:hover:not(.is-on){color:var(--fg)}
 @media(max-width:1100px){
@@ -159,7 +161,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @media(max-width:760px){
   .topbar__in{gap:10px;padding:0 16px;flex-wrap:wrap}
   .topbar__spacer{display:none}
-  .topbar__meta{width:100%;gap:8px}
+  .topbar__meta{width:100%;gap:8px;flex-wrap:wrap}
+  .topbar__live{order:3;flex-basis:100%;justify-content:center;padding:2px 0}
+  .topbar__nav{order:4;flex-basis:100%;justify-content:center}
   .ex-block__grid{grid-template-columns:1fr}
   .listings-grid{grid-template-columns:1fr}
   .kpi-row{grid-template-columns:1fr}
@@ -169,7 +173,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .snap-select{min-width:0;width:auto}
   .snap-menu{width:min(90vw,320px)}
   .section__title{font-size:17px}
-  #head-monitor .section__sub{display:none}
+  #head-monitor{row-gap:10px}
+  #head-feeds .section__sub,#head-monitor .section__sub{display:none}
   .feeds .card__head{flex-wrap:wrap;height:auto;overflow:visible}
   .seg button{padding:8px 6px}
   #segMetric button[data-mobile] span{display:none}
@@ -220,11 +225,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         </button>
         <div class="snap-menu" id="snap-menu"></div>
       </span>
-    </div>
-    <div class="topbar__nav" id="topbar-nav" style="display:none">
-      <button id="nav-prev" onclick="navTo(_curIdx-1)">← 上一条</button>
-      <span class="live"><span class="live__dot"></span><span class="live__time">加载中...</span></span>
-      <button id="nav-next" onclick="navTo(_curIdx+1)">下一条 →</button>
+      <span class="topbar__live" id="topbar-live"><span class="live__dot"></span><span class="live__time">加载中...</span></span>
+      <span class="topbar__nav" id="topbar-nav">
+        <button id="nav-prev" onclick="navTo(_curIdx-1)">← 上一条</button>
+        <button id="nav-next" onclick="navTo(_curIdx+1)">下一条 →</button>
+      </span>
     </div>
   </div>
 </header>
@@ -328,9 +333,11 @@ function renderSnap(s,idx,total){
 
   /* ── Topbar nav buttons ── */
   var navEl=document.getElementById('topbar-nav');
+  var liveEl=document.getElementById('topbar-live');
   var prevBtn=document.getElementById('nav-prev');
   var nextBtn=document.getElementById('nav-next');
   if(navEl){navEl.classList.add('is-visible')}
+  if(liveEl){liveEl.classList.add('is-visible')}
   if(prevBtn){prevBtn.disabled=idx<=0}
   if(nextBtn){nextBtn.disabled=idx>=total-1}
 
