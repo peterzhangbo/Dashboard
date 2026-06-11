@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "exchange": "bn",
+    "symbol": "STXXUSDT",
+    "market": "fut",
+    "listing_time": 1781136000,
+    "change": -0.15,
+    "volume": 56425.19
+  },
+  {
+    "exchange": "bn",
+    "symbol": "UVXYUSDT",
+    "market": "fut",
+    "listing_time": 1781136000,
+    "change": -0.06,
+    "volume": 89674.52
+  }
+]
