@@ -200,9 +200,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   #head-monitor{row-gap:10px}
   #head-feeds .section__sub,#head-monitor .section__sub{display:none}
   .seg button{padding:8px 6px}
+  #segMetric button[data-mobile] span{display:none}
+  #segMetric button[data-mobile]::after{content:attr(data-mobile);font:inherit;font-weight:inherit}
   .foot{flex-wrap:wrap;align-items:center;gap:6px 8px}
   .foot .grow{display:none}
-  .foot .srcs{flex-wrap:nowrap}
+  .foot .srcs{flex-wrap:wrap}
 }
 @media(max-width:420px){
   .news-row__meta{gap:7px}
@@ -238,8 +240,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <main class="shell">
 
 <div class="section__head" id="head-listings">
-  <h2 class="section__title"><span class="bar"></span>12h 内上线 · 1h 成交额 · 1h 涨跌幅</h2>
-  <span class="section__count" id="listings-count"></span>
+  <h2 class="section__title"><span class="bar"></span>12h 内上线</h2>
+  <span class="section__sub"><span id="listings-count"></span> · 1h 成交额 · 1h 涨跌幅</span>
 </div>
 <div id="block-listings">
   <div class="listings-grid" id="list-grid">
@@ -318,6 +320,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 </div>
 
 <script>
+/* ── 手机端缩短 seg 按钮文字 ── */
+(function(){
+  var map={vol:'1h Vol.',gain:'1h ▲',loss:'1h ▼'};
+  document.querySelectorAll('#segMetric button[data-metric]').forEach(function(b){b.dataset.mobile=map[b.dataset.metric]||''});
+})();
 /* ── Section head click-to-anchor ── */
 document.querySelectorAll('.section__head').forEach(function(head){
   head.style.cursor='pointer';
