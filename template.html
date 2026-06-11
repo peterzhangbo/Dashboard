@@ -50,11 +50,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .snap-wrap{position:relative}
 .snap-wrap.is-open .snap-select{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .snap-wrap.is-open .snap-select .chev{transform:rotate(180deg)}
-.snap-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:240px;padding:6px;background:var(--surface);border:1px solid var(--hairline-2);border-radius:var(--r-md);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);max-height:380px;overflow-y:auto}
+.snap-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:320px;padding:6px;background:var(--surface);border:1px solid var(--hairline-2);border-radius:var(--r-md);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);max-height:380px;overflow-y:auto}
 .snap-wrap.is-open .snap-menu{opacity:1;transform:none;pointer-events:auto}
 .snap-menu__head{font-size:11px;color:var(--fg-3);padding:6px 10px 4px;text-transform:uppercase;letter-spacing:.4px}
 .snap-menu__item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
 .snap-menu__item:hover{background:var(--surface-2);color:var(--fg)}
+.snap-menu__item .snap-t{font-family:var(--mono);font-weight:500;flex-shrink:0}
+.snap-menu__item .snap-p{font-family:var(--mono);text-align:right;min-width:72px}
+.snap-menu__item .snap-c{font-family:var(--mono);text-align:right;min-width:56px}
 
 /* ── Shell ── */
 .shell{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,40px)}
@@ -78,7 +81,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* ── Feed tabs ── */
 .tabs{display:inline-flex;gap:2px;padding:3px;margin-left:auto;background:var(--surface-3);border-radius:var(--r-pill)}
-.tab{font-size:12px;font-weight:600;color:var(--fg-3);padding:5px 12px;border-radius:var(--r-pill);transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);white-space:nowrap;cursor:pointer;border:none;background:transparent}
+.tab{font-size:12px;font-weight:600;color:var(--fg-3);padding:5px 12px;border-radius:var(--r-md);transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);white-space:nowrap;cursor:pointer;border:none;background:transparent}
 .tab.is-on{background:var(--brand);color:#fff}
 .tab:hover:not(.is-on){color:var(--fg)}
 
@@ -193,7 +196,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .live__prefix{display:none}
   .snap-select:not(.snap-select--icon){min-width:0;width:auto}
   .snap-select span:not(.chev){display:none}
-  .snap-menu{width:min(78vw,260px)}
+  .snap-menu{width:min(90vw,320px)}
   .section__title{font-size:17px}
   .feeds .card__head{flex-wrap:wrap}
   .feeds .card__head{height:auto;overflow:visible}
@@ -204,7 +207,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   #segMetric button[data-mobile]::after{content:attr(data-mobile);font:inherit;font-weight:inherit}
   .foot{flex-wrap:wrap;align-items:center;gap:6px 8px}
   .foot .grow{display:none}
-  .foot .srcs{flex-wrap:nowrap}
+  .foot .srcs{flex-wrap:wrap}
+  .foot__info{flex-wrap:wrap;white-space:normal}
 }
 @media(max-width:420px){
   .news-row__meta{gap:7px}
@@ -416,9 +420,11 @@ function parseSnaps(txt){
     var d=new Date(s.ts);
     var t=document.createElement('div');
     t.className='snap-menu__item';
-    var btcStr='';
-    if(s.btc)btcStr=' · $'+Number(s.btc.price).toLocaleString()+' '+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%';
-    t.innerHTML='<span style="font-family:var(--mono);font-weight:500">'+d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span><span>'+btcStr+'</span>';
+    var dateStr=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    var priceStr=s.btc?'$'+Number(s.btc.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):'';
+    var chgStr=s.btc?(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%':'';
+    var chgCls=s.btc?(s.btc.change>=0?'up':'down'):'';
+    t.innerHTML='<span class="snap-t">'+dateStr+'</span><span class="snap-p">'+priceStr+'</span><span class="snap-c '+chgCls+'">'+chgStr+'</span>';
     t.onclick=function(){openSnapPage(idx)};
     menu.appendChild(t);
   });
