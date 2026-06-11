@@ -41,6 +41,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .back-link{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
 .back-link:hover{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .back-link svg{width:15px;height:15px;flex-shrink:0}
+.topbar__nav{display:none;align-items:center;justify-content:center;gap:14px;width:100%;padding:4px 0}
+.topbar__nav.is-visible{display:flex}
+.topbar__nav button{height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer;white-space:nowrap}
+.topbar__nav button:hover{background:var(--surface-2);color:var(--fg)}
+.topbar__nav button:disabled{opacity:.35;cursor:default}
+.topbar__nav button:disabled:hover{background:var(--surface);color:var(--fg-2)}
 .snap-select{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;width:120px;padding:0 14px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);font-size:13px;white-space:nowrap;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
 .snap-select:hover{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .snap-select svg{width:15px;height:15px;flex-shrink:0}
@@ -48,10 +54,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .snap-wrap{position:relative}
 .snap-wrap.is-open .snap-select{background:var(--surface-2);border-color:var(--hairline-2);color:var(--fg)}
 .snap-wrap.is-open .snap-select .chev{transform:rotate(180deg)}
-.snap-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:240px;padding:6px;background:var(--surface);border:1px solid var(--hairline-2);border-radius:var(--r-md);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);max-height:380px;overflow-y:auto}
+.snap-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:320px;padding:6px;background:var(--surface);border:1px solid var(--hairline-2);border-radius:var(--r-md);box-shadow:0 8px 32px rgba(0,0,0,.4);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);max-height:380px;overflow-y:auto}
 .snap-wrap.is-open .snap-menu{opacity:1;transform:none;pointer-events:auto}
-.snap-menu__item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
+.snap-menu__item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--fg-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);cursor:pointer}
 .snap-menu__item:hover{background:var(--surface-2);color:var(--fg)}
+.snap-menu__item .snap-t{font-family:var(--mono);font-weight:500;flex-shrink:0}
+.snap-menu__item .snap-p{font-family:var(--mono);text-align:right;min-width:72px}
+.snap-menu__item .snap-c{font-family:var(--mono);text-align:right;min-width:56px}
 .snap-menu__item.is-active{background:var(--brand-t08);color:var(--brand-400);font-weight:600}
 
 .shell{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,40px)}
@@ -137,7 +146,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .error-box h2{font-size:17px;font-weight:900;margin-bottom:10px}
 .error-box p{color:var(--fg-3);font-size:13px}
 .tabs{display:inline-flex;gap:2px;padding:3px;margin-left:auto;background:var(--surface-3);border-radius:var(--r-pill)}
-.tab{font-size:12px;font-weight:600;color:var(--fg-3);padding:5px 12px;border-radius:var(--r-pill);transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);white-space:nowrap;cursor:pointer;border:none;background:transparent}
+.tab{font-size:12px;font-weight:600;color:var(--fg-3);padding:5px 12px;border-radius:var(--r-sm);transition:color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);white-space:nowrap;cursor:pointer;border:none;background:transparent}
 .tab.is-on{background:var(--brand);color:#fff}
 .tab:hover:not(.is-on){color:var(--fg)}
 @media(max-width:1100px){
@@ -150,8 +159,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @media(max-width:760px){
   .topbar__in{gap:10px;padding:0 16px;flex-wrap:wrap}
   .topbar__spacer{display:none}
-  .topbar__meta{flex-wrap:wrap;justify-content:flex-end;width:100%;gap:8px}
-  .topbar__meta .back-link{display:none}
+  .topbar__meta{width:100%;gap:8px}
   .ex-block__grid{grid-template-columns:1fr}
   .listings-grid{grid-template-columns:1fr}
   .kpi-row{grid-template-columns:1fr}
@@ -159,7 +167,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .brand__title{font-size:15px}
   .snap-select span:not(.chev){display:none}
   .snap-select{min-width:0;width:auto}
-  .snap-menu{width:min(78vw,260px)}
+  .snap-menu{width:min(90vw,320px)}
   .section__title{font-size:17px}
   #head-monitor .section__sub{display:none}
   .feeds .card__head{flex-wrap:wrap;height:auto;overflow:visible}
@@ -172,6 +180,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .foot__info{flex-wrap:wrap;white-space:normal}
 }
 @media(max-width:420px){.news-row__meta{gap:7px}.lst__1h{flex-wrap:wrap;gap:4px 8px}}
+.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;justify-content:center;align-items:center}
+.scrim.is-open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-xl);box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:580px;width:90%;max-height:80vh;overflow-y:auto}
+.modal__head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--divider)}
+.modal__head h2{font-size:17px;font-weight:900;display:flex;align-items:center;gap:10px}
+.modal__head h2 .bar{width:4px;height:16px;border-radius:2px;background:var(--lime)}
+.modal__close{width:38px;height:38px;border-radius:var(--r-md);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);display:grid;place-items:center}
+.modal__close:hover{background:var(--surface-2);color:var(--fg)}
+.modal__close svg{width:18px;height:18px}
+.modal__body{padding:20px 24px}
+.modal__body h4{font-size:12px;font-weight:700;color:var(--brand-400);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.3px}
+.modal__body li{font-size:12px;color:var(--fg-2);line-height:1.7;margin-bottom:4px}
+.modal__body ul{padding-left:18px;margin-bottom:10px}
+.modal__body code{font-family:var(--mono);font-size:11px;background:var(--surface-3);padding:2px 6px;border-radius:var(--r-sm)}
 </style>
 </head>
 <body>
@@ -186,7 +208,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     </a>
     <span class="topbar__spacer"></span>
     <div class="topbar__meta">
-      <span class="live"><span class="live__dot"></span><span class="live__time">加载中...</span></span>
+      <a class="back-link" href="betanews.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>返回主页</span>
+      </a>
       <span class="snap-wrap" id="snap-wrap">
         <button class="snap-select" onclick="toggleSnap()" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
@@ -195,13 +220,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         </button>
         <div class="snap-menu" id="snap-menu"></div>
       </span>
-      <a class="back-link" href="betanews.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        <span>返回主页</span>
-      </a>
-      <span class="snap-idx" id="snap-idx" style="font-size:11px;color:var(--fg-3);font-family:var(--mono);display:none"></span>
-      <button id="nav-prev" style="display:none;height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer" onclick="navTo(_curIdx-1)">← 上一条</button>
-      <button id="nav-next" style="display:none;height:30px;padding:0 10px;font-size:11px;border-radius:var(--r-sm);border:1px solid var(--hairline);background:var(--surface);color:var(--fg-2);cursor:pointer" onclick="navTo(_curIdx+1)">下一条 →</button>
+    </div>
+    <div class="topbar__nav" id="topbar-nav" style="display:none">
+      <button id="nav-prev" onclick="navTo(_curIdx-1)">← 上一条</button>
+      <span class="live"><span class="live__dot"></span><span class="live__time">加载中...</span></span>
+      <button id="nav-next" onclick="navTo(_curIdx+1)">下一条 →</button>
     </div>
   </div>
 </header>
@@ -219,6 +242,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <span class="grow"></span>
   <span>© 2026 · Peter · 每小时更新 · 快照查看器</span>
 </footer>
+
+<div class="scrim" id="method-modal">
+  <div class="modal">
+    <div class="modal__head">
+      <h2><span class="bar"></span>竞品监控 · 统计方法说明</h2>
+      <button class="modal__close" onclick="closeMethod()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+    </div>
+    <div class="modal__body">
+      <h4>数据筛选</h4><ul><li>按 24h ticker 成交额排序，现货各取前 <b>200</b> 名，合约各取前 <b>100</b> 名</li><li>仅保留 USDT 计价对</li><li>排除大市值币（BTC、ETH、SOL、BNB、XRP 等 44 项）、稳定币（USDT、USDC、BUSD 等）、杠杆代币（UP/DOWN/BULL/BEAR）、法币对（TRY、IDR、EUR 等 16 项）</li><li>若有效数据不足 100 个，自动追加下一批 200 条候选并重新拉取 K线，最多补偿 8 轮</li></ul>
+      <h4>计算方法</h4><ul><li>取最近 2 根 1H K线，使用倒数第二根（最近已收盘）那根计算涨跌幅和成交额</li><li>涨跌幅 = <code>(收盘 − 开盘) / 开盘 × 100%</code>（单根 K线内涨跌幅）</li><li>成交额 = quote 计价成交量（USDT），若 quote 成交量为 0 则 fallback 为 base_volume × close_price</li><li>K线不足 2 根或成交额为 0 时排除该币对</li></ul>
+      <h4>榜单规则</h4><ul><li>三种榜单统计相互独立，不跨榜累计</li><li>连续在榜会在其后标注近期在榜次数（×N 徽标）</li></ul>
+      <h4>更新频率</h4><ul><li>所有数据每小时自动更新</li></ul>
+    </div>
+  </div>
+</div>
 
 <script>
 var REPO='peterzhangbo/Dashboard';
@@ -289,12 +327,12 @@ function renderSnap(s,idx,total){
   var btcArrow=btcC>=0?'▲':'▼';
 
   /* ── Topbar nav buttons ── */
-  var idxEl=document.getElementById('snap-idx');
+  var navEl=document.getElementById('topbar-nav');
   var prevBtn=document.getElementById('nav-prev');
   var nextBtn=document.getElementById('nav-next');
-  if(idxEl){idxEl.style.display='';idxEl.textContent=(idx+1)+' / '+total}
-  if(prevBtn){prevBtn.style.display='';prevBtn.disabled=idx<=0}
-  if(nextBtn){nextBtn.style.display='';nextBtn.disabled=idx>=total-1}
+  if(navEl){navEl.classList.add('is-visible')}
+  if(prevBtn){prevBtn.disabled=idx<=0}
+  if(nextBtn){nextBtn.disabled=idx>=total-1}
 
   /* Update header live time */
   var hdrLiveTime=document.querySelector('.live__time');
@@ -432,7 +470,9 @@ function renderSnap(s,idx,total){
     h+='<button class="is-on" data-metric="vol" onclick="switchExTab(\'vol\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><rect x="7" y="11" width="3" height="6"></rect><rect x="12" y="7" width="3" height="10"></rect><rect x="17" y="13" width="3" height="4"></rect></svg><span>1h 成交额</span></button>';
     h+='<button data-metric="gain" onclick="switchExTab(\'gain\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg><span>1h 涨幅</span></button>';
     h+='<button data-metric="loss" onclick="switchExTab(\'loss\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"></path><path d="M14 17h7v-7"></path></svg><span>1h 跌幅</span></button>';
-    h+='</div><span class="grow"></span></div>';
+    h+='</div><span class="grow"></span>';
+    h+='<button class="snap-select snap-select--icon" onclick="openMethod()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg></button>';
+    h+='</div>';
     h+='<div class="card" style="padding:18px"><div class="ex-grid">';
     h+=(panels.vol||'');
     h+=(panels.gain||'');
@@ -511,19 +551,24 @@ function loadSnapMenu(snaps,idx){
     var d=new Date(s.ts);
     var t=document.createElement('div');
     t.className='snap-menu__item'+(i===idx?' is-active':'');
-    var btcStr='';
-    if(s.btc)btcStr='  $'+Number(s.btc.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'  '+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%';
-    t.innerHTML='<span style="font-family:var(--mono);font-weight:500">'+d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span><span>'+btcStr+'</span>';
+    var dateStr=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    var priceStr=s.btc?'$'+Number(s.btc.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):'';
+    var chgStr=s.btc?(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%':'';
+    var chgCls=s.btc?(s.btc.change>=0?'up':'down'):'';
+    t.innerHTML='<span class="snap-t">'+dateStr+'</span><span class="snap-p">'+priceStr+'</span><span class="snap-c '+chgCls+'">'+chgStr+'</span>';
     t.onclick=function(){location.hash='#'+i;location.reload()};
     menu.appendChild(t);
   });
   var hdr=document.querySelector('.live__time');
   if(hdr)hdr.dataset.ts=snaps[idx].ts;
 }
+function openMethod(){document.getElementById('method-modal').classList.add('is-open')}
+function closeMethod(){document.getElementById('method-modal').classList.remove('is-open')}
 function toggleSnap(){document.getElementById('snap-wrap').classList.toggle('is-open')}
 function navTo(idx){location.hash='#'+idx;location.reload()}
 document.addEventListener('click',function(e){
   if(!e.target.closest('.snap-wrap'))document.getElementById('snap-wrap').classList.remove('is-open');
+  if(e.target===document.getElementById('method-modal'))closeMethod();
 });
 
 (function(){loadJSONL()})();
