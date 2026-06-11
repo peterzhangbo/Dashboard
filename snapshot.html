@@ -148,7 +148,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .feeds .card__head{min-height:0}
 }
 @media(max-width:760px){
-  .topbar__in{gap:10px;padding:0 16px;flex-wrap:nowrap}
+  .topbar__in{gap:10px;padding:0 16px;flex-wrap:wrap}
+  .topbar__spacer{display:none}
+  .topbar__meta{flex-wrap:wrap;justify-content:flex-end;width:100%;gap:8px}
+  .topbar__meta .back-link{display:none}
   .ex-block__grid{grid-template-columns:1fr}
   .listings-grid{grid-template-columns:1fr}
   .kpi-row{grid-template-columns:1fr}
@@ -158,13 +161,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .snap-select{min-width:0;width:auto}
   .snap-menu{width:min(78vw,260px)}
   .section__title{font-size:17px}
+  #head-monitor .section__sub{display:none}
   .feeds .card__head{flex-wrap:wrap;height:auto;overflow:visible}
   .seg button{padding:8px 6px}
   #segMetric button[data-mobile] span{display:none}
   #segMetric button[data-mobile]::after{content:attr(data-mobile);font:inherit;font-weight:inherit}
   .foot{flex-wrap:wrap;gap:6px 8px}
   .foot .grow{display:none}
-  .foot .srcs{flex-wrap:nowrap}
+  .foot .srcs{flex-wrap:wrap}
+  .foot__info{flex-wrap:wrap;white-space:normal}
 }
 @media(max-width:420px){.news-row__meta{gap:7px}.lst__1h{flex-wrap:wrap;gap:4px 8px}}
 </style>
@@ -507,7 +512,7 @@ function loadSnapMenu(snaps,idx){
     var t=document.createElement('div');
     t.className='snap-menu__item'+(i===idx?' is-active':'');
     var btcStr='';
-    if(s.btc)btcStr=' · $'+Number(s.btc.price).toLocaleString()+' '+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%';
+    if(s.btc)btcStr='  $'+Number(s.btc.price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'  '+(s.btc.change>=0?'+':'')+s.btc.change.toFixed(2)+'%';
     t.innerHTML='<span style="font-family:var(--mono);font-weight:500">'+d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})+'</span><span>'+btcStr+'</span>';
     t.onclick=function(){location.hash='#'+i;location.reload()};
     menu.appendChild(t);
