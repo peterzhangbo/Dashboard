@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "exchange": "bg",
+    "symbol": "RSPCXUSDT",
+    "market": "spot",
+    "listing_time": 1781255651,
+    "change": 0,
+    "volume": 0
+  }
+]
