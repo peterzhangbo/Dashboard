@@ -1142,54 +1142,68 @@ except Exception:
 
 
 # ──────────────────────────────────────────────
-# 14. 推送 GitHub（异步 + 串行 + 指数退避）
+# 14. 推送 GitHub（并发 + 补偿重试）
 # ──────────────────────────────────────────────
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 print("Pushing to GitHub (async)...", flush=True)
 
 
-def _gh_push_sequential(pushes):
-    """串行推送文件到 GitHub，409 时指数退避重试。返回 [(path, status, attempts), ...]。"""
+def _gh_push_one(path, content, message):
+    """推送单个文件到 GitHub，409 时指数退避重试。返回 (path, status, attempts)。"""
+    if not GITHUB_TOKEN:
+        return (path, "SKIP", 0)
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}", "User-Agent": "Mozilla/5.0",
+               "Accept": "application/vnd.github.v3+json"}
+    max_retries = 3
+    for attempt in range(max_retries):
+        sha = None
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=8, context=_SSL_CTX) as r:
+                sha = json.loads(r.read()).get("sha")
+        except Exception:
+            pass
+        body = {
+            "message": message,
+            "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
+        }
+        if sha:
+            body["sha"] = sha
+        try:
+            data = json.dumps(body).encode("utf-8")
+            req = urllib.request.Request(url, data=data, method="PUT",
+                                         headers={**headers, "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as r:
+                sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
+                return (path, f"OK({sha_out})", attempt + 1)
+        except urllib.error.HTTPError as e:
+            if e.code == 409 and attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            return (path, f"FAIL({e.code})", attempt + 1)
+        except Exception as e:
+            return (path, f"ERR({type(e).__name__})", attempt + 1)
+    return (path, "FAIL(max_retry)", max_retries)
+
+
+def _gh_push_concurrent(pushes, message):
+    """并发推送全部文件，失败的再串行补偿重试。返回 [(path, status, attempts), ...]。"""
     results = []
-    for path, content, message in pushes:
-        if not GITHUB_TOKEN:
-            results.append((path, "SKIP", 0))
-            continue
-        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
-        headers = {"Authorization": f"token {GITHUB_TOKEN}", "User-Agent": "Mozilla/5.0",
-                   "Accept": "application/vnd.github.v3+json"}
-        max_retries = 3
-        for attempt in range(max_retries):
-            sha = None
-            try:
-                req = urllib.request.Request(url, headers=headers)
-                with urllib.request.urlopen(req, timeout=8, context=_SSL_CTX) as r:
-                    sha = json.loads(r.read()).get("sha")
-            except Exception:
-                pass
-            body = {
-                "message": message,
-                "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
-            }
-            if sha:
-                body["sha"] = sha
-            try:
-                data = json.dumps(body).encode("utf-8")
-                req = urllib.request.Request(url, data=data, method="PUT",
-                                             headers={**headers, "Content-Type": "application/json"})
-                with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as r:
-                    sha_out = json.loads(r.read()).get("content", {}).get("sha", "")[:8]
-                    results.append((path, f"OK({sha_out})", attempt + 1))
-                    break
-            except urllib.error.HTTPError as e:
-                if e.code == 409 and attempt < max_retries - 1:
-                    delay = 2 ** attempt  # 1s, 2s, 4s
-                    time.sleep(delay)
-                    continue
-                results.append((path, f"FAIL({e.code})", attempt + 1))
-                break
-            except Exception as e:
-                results.append((path, f"ERR({type(e).__name__})", attempt + 1))
-                break
+    failed_pushes = []
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futs = {pool.submit(_gh_push_one, p, c, message): (p, c) for p, c in pushes}
+        for fut in as_completed(futs):
+            path, status, attempts = fut.result()
+            results.append((path, status, attempts))
+            if not status.startswith("OK") and status != "SKIP":
+                failed_pushes.append(futs[fut])
+    # 补偿：失败的串行重试一次
+    if failed_pushes:
+        for p, c in failed_pushes:
+            r = _gh_push_one(p, c, message)
+            results = [r if x[0] == p else x for x in results]
     return results
 
 
@@ -1197,14 +1211,14 @@ with open(SNAPL_FILE) as _f:
     _snapl = _f.read()
 _msg = f"Dashboard update {now.strftime('%Y-%m-%d %H:%M')} UTC"
 _pushes = [
-    ("exchange-pairs-snapshot.json", json.dumps(current, indent=2), _msg),
-    ("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False), _msg),
-    ("dashboard-snapshots.jsonl", _snapl, _msg),
-    ("betanews.html", page, _msg),
+    ("exchange-pairs-snapshot.json", json.dumps(current, indent=2)),
+    ("new-listings.json", json.dumps(deduped, indent=2, ensure_ascii=False)),
+    ("dashboard-snapshots.jsonl", _snapl),
+    ("betanews.html", page),
 ]
 _push_results = [None]
 def _push_worker():
-    _push_results[0] = _gh_push_sequential(_pushes)
+    _push_results[0] = _gh_push_concurrent(_pushes, _msg)
 _push_thread = threading.Thread(target=_push_worker, daemon=False)
 _push_thread.start()
 
