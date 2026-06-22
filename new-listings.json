@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "exchange": "bg",
+    "symbol": "ARXUSDT",
+    "market": "spot",
+    "listing_time": 1782129600,
+    "change": 0,
+    "volume": 0
+  }
+]
