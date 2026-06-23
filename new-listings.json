@@ -1,18 +1,1 @@
-[
-  {
-    "exchange": "bg",
-    "symbol": "ARXUSDT",
-    "market": "spot",
-    "listing_time": 1782129600,
-    "change": 0,
-    "volume": 0
-  },
-  {
-    "exchange": "bg",
-    "symbol": "KLACUSDT",
-    "market": "fut",
-    "listing_time": 1782127909,
-    "change": 0.97,
-    "volume": 6393.01
-  }
-]
+[]
